@@ -58,9 +58,7 @@ public class GridManager : MonoBehaviour
         {
             startCellPos += (Vector3Int)direction;
             if (!gridMap.ContainsKey(startCellPos) || !gridMap[startCellPos])
-            {
                 break;
-            }
 
             result.directions.Add(direction);
 

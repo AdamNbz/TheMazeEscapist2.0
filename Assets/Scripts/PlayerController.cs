@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] bool lockMoving = false;
-    //new input system
+    
     public void OnJump()
     {
         Debug.Log("Jump!");
@@ -14,7 +15,6 @@ public class PlayerController : MonoBehaviour
     {
         if (lockMoving) return;
 
-
         Vector2 input = value.Get<Vector2>();
         Debug.Log($"Move: {input}");
 
@@ -23,18 +23,20 @@ public class PlayerController : MonoBehaviour
             return;
 
         var path = GridManager.Instance.FindPathFromWorld(transform.position, direction);
-        var _ = TestingMovingAnim(path);
+        MoveWithPath(path);
     }
 
-    public async Awaitable TestingMovingAnim(Path path)
+    public void MoveWithPath(Path path)
     {
         lockMoving = true;
+        var sequence = DOTween.Sequence();
+        var currentPos = transform.position;
         foreach (var dir in path.directions)
         {
-            //play anim
-            await Awaitable.WaitForSecondsAsync(0.5f);
-            transform.position += new Vector3(dir.x, dir.y, 0);
+            sequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0), 0.1f)
+                .SetEase(Ease.Linear));
+            currentPos += new Vector3(dir.x, dir.y, 0);
         }
-        lockMoving = false;
+        sequence.OnComplete(() => lockMoving = false);
     }
 }
