@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/MainMenu/MainMenu.uss?fileID=7433441132597879392&amp;guid=1db99fea0927aa4459e79dad41d86ca2&amp;type=3#MainMenu" />
+    <ui:Label text="Đậu Đậu" name="BigTitle" style="height: 251px; position: relative; top: 380px; left: 0; font-size: 180px; -unity-text-align: middle-center;" />
+    <ui:Label text="The Maze Escapist" name="SmallTitile" style="height: 104px; position: relative; top: 380px; left: 0; font-size: 72px; -unity-text-align: middle-center;" />
+    <ui:Label text="Chạm để bắt đầu" name="ClickToContinue" style="height: 136px; position: relative; top: 75%; left: 0; font-size: 72px; -unity-text-align: middle-center; opacity: 1;" />
+</ui:UXML>
