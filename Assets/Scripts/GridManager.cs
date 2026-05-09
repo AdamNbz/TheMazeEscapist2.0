@@ -53,7 +53,11 @@ public class GridManager : MonoBehaviour
 
     public Path FindPathFromCell(Vector3Int startCellPos, Vector2Int direction)
     {
-        var result = new Path();
+        var result = new Path
+        {
+            stepLength = grid.transform.localScale.x
+        };
+        
         while (true)
         {
             startCellPos += (Vector3Int)direction;
