@@ -3,4 +3,5 @@
     <ui:Label text="Đậu Đậu" name="BigTitle" style="height: 251px; position: relative; top: 380px; left: 0; font-size: 180px; -unity-text-align: middle-center;" />
     <ui:Label text="The Maze Escapist" name="SmallTitile" style="height: 104px; position: relative; top: 380px; left: 0; font-size: 72px; -unity-text-align: middle-center;" />
     <ui:Label text="Chạm để bắt đầu" name="ClickToContinue" style="height: 136px; position: relative; top: 75%; left: 0; font-size: 72px; -unity-text-align: middle-center; opacity: 1;" />
+    <ui:VisualElement name="ClickOverlay" style="flex-grow: 1; position: absolute; top: 0; bottom: 0; right: 0; left: 0;" />
 </ui:UXML>
