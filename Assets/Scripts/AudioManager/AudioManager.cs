@@ -81,8 +81,8 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Start()
     {
-        Debug.Log(_musicLookupDict["TestBGM"]);
-        PlayBGM("TestBGM");
+        //Debug.Log(_musicLookupDict["TestBGM"]);
+        //PlayBGM("TestBGM");
     }
 
     private bool TryAcquireEmitter(out PooledEmitter emitter)
