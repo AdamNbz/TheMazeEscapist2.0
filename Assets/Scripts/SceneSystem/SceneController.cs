@@ -11,6 +11,7 @@ public class SceneController : Singleton<SceneController>
 
     public void TransitionToScene(string sceneName, Action onDone = null)
     {
+        AudioManager.Instance.PlaySfx("click_to_start", Vector2.zero);
         StartCoroutine(TransitionToSceneCoroutine(sceneName, onDone));
     }
 
