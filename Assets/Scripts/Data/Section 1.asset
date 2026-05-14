@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SectionData
   levels:
   - levelId: 4
-    position: {x: 0, y: -275}
+    position: {x: 50, y: -350}
   - levelId: 5
-    position: {x: 150, y: 0}
+    position: {x: 200, y: 0}
   - levelId: 6
-    position: {x: -100, y: 275}
+    position: {x: -100, y: 300}
