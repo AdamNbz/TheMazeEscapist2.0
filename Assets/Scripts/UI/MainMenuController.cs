@@ -12,8 +12,9 @@ public class MainMenuController : MonoBehaviour
 
         var clickToStart = new Clickable(() =>
         {
-            Debug.Log("change scene");
-            SceneController.Instance.TransitionToScene("TestGrid");
+            //Debug.Log("change scene");
+            //AudioManager.Instance.PlaySfx("click_to_start", Vector2.zero);
+            SceneController.Instance.TransitionToScene("LevelSelection");
         });
         var clickOverlay = _uiDocument.rootVisualElement.Q<VisualElement>("ClickOverlay");
         clickOverlay.AddManipulator(clickToStart);

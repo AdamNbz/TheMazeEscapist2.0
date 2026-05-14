@@ -41,6 +41,6 @@ public class LevelNodeView : MonoBehaviour
 
     void OnClick()
     {
-        SceneManager.LoadScene("Level " + levelId);
+        SceneController.Instance.TransitionToScene($"Level {levelId}");
     }
 }
