@@ -51,6 +51,8 @@ public class WorldMapRecycler : MonoBehaviour
         SetupContent();
 
         CreateInitialSections();
+
+        scrollRect.verticalNormalizedPosition = 0f;
     }
     public void PlusLevel()
     {
