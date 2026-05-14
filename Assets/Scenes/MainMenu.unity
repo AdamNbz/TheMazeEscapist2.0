@@ -496,6 +496,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._cooldownSeconds
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._pitchRange.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._volumeRange.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._volumeRange.y
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 3294548624916339280, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -508,10 +524,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4169943496736581276, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
-      propertyPath: _sceneTransitionOverlay
-      value: 
-      objectReference: {fileID: 1957387819734662635}
     - target: {fileID: 4931545490191822170, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
       propertyPath: m_Name
       value: PersistentObject
@@ -561,17 +573,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
---- !u!114 &1957387819734662635 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8581408753526221859, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
-  m_PrefabInstance: {fileID: 1957387819734662634}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

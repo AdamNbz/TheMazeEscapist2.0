@@ -317,6 +317,106 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._id
+      value: click_to_start
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._id
+      value: player_move
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._priority
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._priority
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._mixerGroup
+      value: 
+      objectReference: {fileID: -1201993092187521900, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._mixerGroup
+      value: 
+      objectReference: {fileID: -1201993092187521900, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._maxDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._minDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._maxDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._minDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._cooldownSeconds
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._cooldownSeconds
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._variationList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._variationList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._variationList.Array.data[0]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._variationList.Array.data[0]._pitchRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._variationList.Array.data[0]._pitchRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._pitchRange.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._pitchRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._variationList.Array.data[0]._volumeRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[0]._variationList.Array.data[0]._volumeRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._volumeRange.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._volumeRange.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8351870184021320690, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

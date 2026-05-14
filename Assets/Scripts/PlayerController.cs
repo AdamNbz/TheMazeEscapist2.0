@@ -33,8 +33,12 @@ public class PlayerController : MonoBehaviour
         var currentPos = transform.position;
         foreach (var dir in path.directions)
         {
+            AudioManager.Instance.PlaySfx("player_move", transform.position);
             sequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
-                .SetEase(Ease.Linear));
+                .SetEase(Ease.Linear).OnComplete(() =>
+                {
+                    AudioManager.Instance.PlaySfx("player_move", transform.position);
+                }));
             currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
         }
         sequence.OnComplete(() => lockMoving = false);
