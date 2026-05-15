@@ -39,7 +39,7 @@ public class WinGameUI : MonoBehaviour
 
         int currentLevel = int.Parse(currentScene.Replace("Level ", ""));
 
-        if(currentLevel >= PlayerProgress.CurrentLevel)
+        if(currentLevel+1 >= PlayerProgress.CurrentLevel)
         {
             PlayerProgress.SetCurrentLevel(currentLevel);
         }    
