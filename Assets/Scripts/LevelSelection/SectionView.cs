@@ -113,6 +113,10 @@ public class SectionView : MonoBehaviour
                 spawnedNodes[i],
                 spawnedNodes[i + 1]);
         }
+        CreateLine(
+            spawnedNodes[spawnedNodes.Count - 1],
+            spawnedNodes[0].anchoredPosition + new Vector2(0, Rect.rect.height)
+        );
     }
 
     void CreateLine(
@@ -142,6 +146,51 @@ public class SectionView : MonoBehaviour
         rect.anchoredPosition =
             (a.anchoredPosition +
              b.anchoredPosition) / 2f;
+
+        float angle =
+            Mathf.Atan2(
+                dir.y,
+                dir.x)
+            * Mathf.Rad2Deg;
+
+        rect.rotation =
+            Quaternion.Euler(
+                0,
+                0,
+                angle);
+
+        line.transform.SetAsFirstSibling();
+
+        spawnedLines.Add(line.gameObject);
+    }
+
+    void CreateLine(
+    RectTransform a,
+    Vector2 b)
+    {
+        Image line =
+            Instantiate(
+                linePrefab,
+                pathContainer);
+
+        RectTransform rect =
+            line.rectTransform;
+
+        Vector2 dir =
+            b -
+            a.anchoredPosition;
+
+        float distance =
+            dir.magnitude;
+
+        rect.sizeDelta =
+            new Vector2(
+                distance,
+                12);
+
+        rect.anchoredPosition =
+            (a.anchoredPosition +
+             b) / 2f;
 
         float angle =
             Mathf.Atan2(

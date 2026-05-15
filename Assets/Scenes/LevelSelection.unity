@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 2424024}
   - component: {fileID: 2424023}
   - component: {fileID: 2424022}
+  - component: {fileID: 2424025}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -252,6 +253,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2424020}
   m_CullTransparentMesh: 1
+--- !u!223 &2424025
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2424020}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 20
+  m_TargetDisplay: 0
 --- !u!1 &91559675
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,7 +639,7 @@ MonoBehaviour:
   m_Content: {fileID: 484496446}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
@@ -1007,16 +1031,16 @@ MonoBehaviour:
   sectionHeight: 800
   visibleCount: 5
   allData:
-  - {fileID: 11400000, guid: 09e1623b31ee15945b1638ac086277fd, type: 2}
-  - {fileID: 11400000, guid: 107cc25d830fa2d49b5fdfc495eb731a, type: 2}
-  - {fileID: 11400000, guid: c871d1614699f824e8b29eb539dd40ba, type: 2}
-  - {fileID: 11400000, guid: 7a269a7cda901b348b1bb070fc209eeb, type: 2}
-  - {fileID: 11400000, guid: 8e2a2226bae6fdc4f92811bf5171fa19, type: 2}
-  - {fileID: 11400000, guid: 935af26cb286f8a41b05b02d1a26b6ea, type: 2}
-  - {fileID: 11400000, guid: 30c9a9f6f4b3b07449802c33cedd606d, type: 2}
-  - {fileID: 11400000, guid: f3acd0184543bb542934da7df06e5cc0, type: 2}
-  - {fileID: 11400000, guid: e68092c9b7018414e89fd6bde5ff0dbe, type: 2}
   - {fileID: 11400000, guid: 3649d45274346a0469a6b65c1f07551d, type: 2}
+  - {fileID: 11400000, guid: e68092c9b7018414e89fd6bde5ff0dbe, type: 2}
+  - {fileID: 11400000, guid: f3acd0184543bb542934da7df06e5cc0, type: 2}
+  - {fileID: 11400000, guid: 30c9a9f6f4b3b07449802c33cedd606d, type: 2}
+  - {fileID: 11400000, guid: 935af26cb286f8a41b05b02d1a26b6ea, type: 2}
+  - {fileID: 11400000, guid: 8e2a2226bae6fdc4f92811bf5171fa19, type: 2}
+  - {fileID: 11400000, guid: 7a269a7cda901b348b1bb070fc209eeb, type: 2}
+  - {fileID: 11400000, guid: c871d1614699f824e8b29eb539dd40ba, type: 2}
+  - {fileID: 11400000, guid: 107cc25d830fa2d49b5fdfc495eb731a, type: 2}
+  - {fileID: 11400000, guid: 09e1623b31ee15945b1638ac086277fd, type: 2}
 --- !u!1 &1815537629
 GameObject:
   m_ObjectHideFlags: 0
