@@ -854,6 +854,10 @@ PrefabInstance:
       propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._volumeRange.y
       value: 0.7
       objectReference: {fileID: 0}
+    - target: {fileID: 3073285871768701878, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: m_SortingOrder
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3294548624916339280, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
