@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 inputPosition = Vector2.zero;
 
     private Sequence moveSequence;
+    private Animator animator;
 
     void OnEnable()
     {
@@ -20,6 +21,11 @@ public class PlayerController : MonoBehaviour
     void OnDisable()
     {
         WinPoint.OnLevelComplete -= CompleteLevel;
+    }
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
     }
 
     private void CompleteLevel()
@@ -93,9 +99,21 @@ public class PlayerController : MonoBehaviour
         lockMoving = true;
         moveSequence = DOTween.Sequence();
         var currentPos = transform.position;
+
+        if (animator != null)
+        {
+            animator.Play("Walk");
+        }
+
         foreach (var dir in path.directions)
         {
-            AudioManager.Instance.PlaySfx("player_move", transform.position);
+            var localScale = transform.localScale;
+            if (dir.x != 0)
+            {
+                localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                transform.localScale = localScale;
+            }
+
             moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
                 .SetEase(Ease.Linear).OnComplete(() =>
                 {
@@ -103,6 +121,12 @@ public class PlayerController : MonoBehaviour
                 }));
             currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
         }
-        moveSequence.OnComplete(() => lockMoving = false);
+        moveSequence.OnComplete(() => {
+            lockMoving = false;
+            if (animator != null)
+            {
+                animator.Play("Idle");
+            }
+        });
     }
 }
