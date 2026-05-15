@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using static UnityEngine.InputSystem.InputAction;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] bool lockMoving = false;
+    private Vector2 touchPosition = Vector2.zero;
+    private Vector2 releasePosition = Vector2.zero;
+    private Vector2 inputPosition = Vector2.zero;
 
     private Sequence moveSequence;
 
@@ -32,11 +36,6 @@ public class PlayerController : MonoBehaviour
         lockMoving = false;
     }
 
-    public void OnJump()
-    {
-        Debug.Log("Jump!");
-    }
-
     public void OnMove(InputValue value)
     {
         if (lockMoving) return;
@@ -50,6 +49,43 @@ public class PlayerController : MonoBehaviour
 
         var path = GridManager.Instance.FindPathFromWorld(transform.position, direction);
         MoveWithPath(path);
+    }
+
+    public void OnPrimaryContact(InputValue value)
+    {
+        if (lockMoving) return;
+        if (value.Get<float>() > 0.5f)
+        {
+            Debug.Log("Primary Contact Started");
+            touchPosition = inputPosition;
+            Debug.Log($"Touch Position: {touchPosition}");
+        }
+        else
+        {
+            Debug.Log("Primary Contact Canceled");
+            releasePosition = inputPosition;
+            Debug.Log($"Release Position: {releasePosition}");
+
+            var direction = Vector2Int.zero;
+            var swipeVector = releasePosition - touchPosition;
+
+            if (Mathf.Abs(swipeVector.x) > Mathf.Abs(swipeVector.y))
+            {
+                direction.x = swipeVector.x > 0 ? 1 : -1;
+            }
+            else
+            {
+                direction.y = swipeVector.y > 0 ? 1 : -1;
+            }
+            var path = GridManager.Instance.FindPathFromWorld(transform.position, direction);
+            MoveWithPath(path);
+        }
+    }
+
+    public void OnPrimaryPosition(InputValue value)
+    {
+        inputPosition = value.Get<Vector2>();
+        // Debug.Log($"Primary Position: {inputPosition}");
     }
 
     public void MoveWithPath(Path path)
