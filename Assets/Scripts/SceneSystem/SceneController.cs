@@ -11,13 +11,14 @@ public class SceneController : Singleton<SceneController>
 
     public void TransitionToScene(string sceneName, Action onDone = null)
     {
-        AudioManager.Instance.PlaySfx("click_to_start", Vector2.zero);
         StartCoroutine(TransitionToSceneCoroutine(sceneName, onDone));
     }
 
     private IEnumerator TransitionToSceneCoroutine(string sceneName, Action onDone = null)
     {
         _sceneTransitionOverlay.raycastTarget = true;
+        AudioManager.Instance.PlaySfx("click_to_start", Vector2.zero);
+        AudioManager.Instance.StopBGM();
 
         float startSize = 2f;
         while (startSize > 0f)

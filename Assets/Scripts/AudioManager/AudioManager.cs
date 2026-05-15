@@ -155,7 +155,7 @@ public class AudioManager : Singleton<AudioManager>
         return true;
     }
 
-    private void StopBGM()
+    public void StopBGM()
     {
         if (_backgroundMusicSource == null)
             return;
