@@ -230,7 +230,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -250, y: 4995}
+  m_AnchoredPosition: {x: -250, y: 5100}
   m_SizeDelta: {x: 460, y: 500}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &5160848663637799584
@@ -766,7 +766,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 284, y: 2900}
+  m_AnchoredPosition: {x: 284, y: 3300}
   m_SizeDelta: {x: 460, y: 500}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &3387375680735281591
@@ -1024,8 +1024,8 @@ MonoBehaviour:
   scrollRect: {fileID: 3069512159592503139}
   content: {fileID: 2732841300193841399}
   sectionPrefab: {fileID: 1292277170215156773, guid: ad91e0c151aeed54ba1d8117d74abef0, type: 3}
-  sectionHeight: 800
-  visibleCount: 5
+  sectionHeight: 1200
+  visibleCount: 3
   allData:
   - {fileID: 11400000, guid: 3649d45274346a0469a6b65c1f07551d, type: 2}
   - {fileID: 11400000, guid: e68092c9b7018414e89fd6bde5ff0dbe, type: 2}
@@ -1259,7 +1259,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -250, y: 1000}
+  m_AnchoredPosition: {x: -250, y: 1500}
   m_SizeDelta: {x: 551.34, y: 520.4302}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &1460591543316565894
