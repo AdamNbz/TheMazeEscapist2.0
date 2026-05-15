@@ -333,14 +333,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 413732064541214578, guid: 994d421013effea24b9479f10c757ceb, type: 3}
-      propertyPath: m_SortingLayer
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 413732064541214578, guid: 994d421013effea24b9479f10c757ceb, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 695024665
-      objectReference: {fileID: 0}
     - target: {fileID: 1890344839597962273, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: m_Name
       value: Grid
