@@ -39,10 +39,12 @@ public class WinGameUI : MonoBehaviour
 
         int currentLevel = int.Parse(currentScene.Replace("Level ", ""));
 
-        if(currentLevel+1 >= PlayerProgress.CurrentLevel)
-        {
-            PlayerProgress.SetCurrentLevel(currentLevel);
-        }    
+        if (currentLevel == 10) BackToSelectLevel();
+
+        //if (currentLevel == PlayerProgress.CurrentLevel)
+        //{
+        //    PlayerProgress.UnlockNextLevel();
+        //}
 
         SceneController.Instance .TransitionToScene($"Level {currentLevel + 1}");
     }
