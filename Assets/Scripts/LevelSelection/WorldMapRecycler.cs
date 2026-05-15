@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -44,15 +45,15 @@ public class WorldMapRecycler : MonoBehaviour
             return;
         }
 
-        PlayerProgress.SetCurrentLevel(1);
+        //PlayerProgress.SetCurrentLevel(25);
 
-        Debug.Log( "Cur level " + PlayerProgress.CurrentLevel);
+        Debug.Log("Cur level " + PlayerProgress.CurrentLevel);
 
         SetupContent();
 
         CreateInitialSections();
 
-        scrollRect.verticalNormalizedPosition = 0f;
+        ScrollToCurrentLevelSmooth();
     }
     public void PlusLevel()
     {
@@ -243,8 +244,80 @@ public class WorldMapRecycler : MonoBehaviour
             "Recycle Up -> Section "
             + topIndex);
     }
+    void ScrollToCurrentLevelSmooth()
+    {
+        int currentLevel =
+            PlayerProgress.CurrentLevel;
+
+        int targetIndex =
+            Mathf.Clamp(
+                currentLevel - 1,
+                0,
+                allData.Count - 1);
+
+        float targetY =
+            (allData.Count - 1 - targetIndex)
+            * sectionHeight;
+
+        float maxY =
+            content.rect.height -
+            scrollRect.viewport.rect.height;
+
+        targetY =
+            Mathf.Clamp(
+                targetY,
+                0,
+                maxY);
+
+        // bắt đầu từ bottom
+        content.anchoredPosition =
+            new Vector2(0, maxY);
+
+        StartCoroutine(
+            SmoothScroll(targetY));
+    }
+
+    IEnumerator SmoothScroll(float targetY)
+    {
+        //for (int i = 0; i < 20; i++)
+        //{
+        //    CheckRecycleDown();
+        //}
+
+        float duration = 3f;
+
+        float elapsed = 0f;
+
+        float startY =
+            content.anchoredPosition.y;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+
+            float t =
+                Mathf.SmoothStep(
+                    0,
+                    1,
+                    elapsed / duration);
+
+            float newY =
+                Mathf.Lerp(
+                    startY,
+                    targetY,
+                    t);
+
+            content.anchoredPosition =
+                new Vector2(0, newY);
+
+            yield return null;
+        }
+
+        content.anchoredPosition =
+            new Vector2(0, targetY);
+    }
     public void LoadCurrentLevel()
     {
         SceneManager.LoadScene("Level " + PlayerProgress.CurrentLevel);
-    }    
+    }
 }
