@@ -1,3 +1,11 @@
+# Hướng dẫn chơi
+
+## Mục tiêu
+Hãy điều khiển Đậu Đậu thoát khỏi mê cung hiểm trở để kịp đến dự buổi lễ kỷ niệm 20 năm thành lập Trường Đại học Công nghệ Thông tin (UIT)!!!
+
+## Điều khiển
+Vuốt theo hướng trái/phải/lên/xuống để chọn hướng đi tiếp theo của nhân vật
+
 # Hướng Dẫn Cài Đặt Game Trên Android
 
 ## 📥 Tải File APK
