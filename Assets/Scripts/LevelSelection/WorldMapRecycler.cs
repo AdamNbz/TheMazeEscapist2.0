@@ -18,7 +18,7 @@ public class WorldMapRecycler : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    private float sectionHeight = 800f;
+    private float sectionHeight = 1200f;
 
     [SerializeField]
     private int visibleCount = 3;
@@ -44,11 +44,6 @@ public class WorldMapRecycler : MonoBehaviour
 
             return;
         }
-
-        //PlayerProgress.SetCurrentLevel(25);
-
-        Debug.Log("Cur level " + PlayerProgress.CurrentLevel);
-
         SetupContent();
 
         CreateInitialSections();
@@ -249,33 +244,89 @@ public class WorldMapRecycler : MonoBehaviour
         int currentLevel =
             PlayerProgress.CurrentLevel;
 
-        int targetIndex =
+        int sectionIndex =
+            (currentLevel - 1) / 3;
+
+        sectionIndex =
             Mathf.Clamp(
-                currentLevel - 1,
+                sectionIndex,
                 0,
                 allData.Count - 1);
 
         float targetY =
-            (allData.Count - 1 - targetIndex)
+            (allData.Count - 1 - sectionIndex)
             * sectionHeight;
 
         float maxY =
             content.rect.height -
             scrollRect.viewport.rect.height;
 
-        targetY =
-            Mathf.Clamp(
-                targetY,
-                0,
-                maxY);
+        // Chỉ center nếu không quá gần đầu/cuối
+        bool canCenter =
+            sectionIndex > 1 &&
+            sectionIndex < allData.Count - 2;
 
-        // bắt đầu từ bottom
+        if (canCenter)
+        {
+            float viewportHalf =
+                scrollRect.viewport.rect.height / 2f;
+
+            targetY -=
+                viewportHalf -
+                sectionHeight / 2f;
+        }
+        else if (sectionIndex <= 1)
+        {
+            content.anchoredPosition =
+            new Vector2(0, maxY);
+            return;
+        } 
+            
+
+            targetY =
+                Mathf.Clamp(
+                    targetY,
+                    0,
+                    maxY);
+
         content.anchoredPosition =
             new Vector2(0, maxY);
 
         StartCoroutine(
             SmoothScroll(targetY));
     }
+    //void ScrollToCurrentLevelSmooth()
+    //{
+    //    int currentLevel =
+    //        PlayerProgress.CurrentLevel;
+
+    //    int targetIndex =
+    //        Mathf.Clamp(
+    //            currentLevel - 1,
+    //            0,
+    //            allData.Count - 1);
+
+    //    float targetY =
+    //        (allData.Count - 1 - targetIndex)
+    //        * sectionHeight;
+
+    //    float maxY =
+    //        content.rect.height -
+    //        scrollRect.viewport.rect.height;
+
+    //    targetY =
+    //        Mathf.Clamp(
+    //            targetY,
+    //            0,
+    //            maxY);
+
+    //    // bắt đầu từ bottom
+    //    content.anchoredPosition =
+    //        new Vector2(0, maxY);
+
+    //    StartCoroutine(
+    //        SmoothScroll(targetY));
+    //}
 
     IEnumerator SmoothScroll(float targetY)
     {

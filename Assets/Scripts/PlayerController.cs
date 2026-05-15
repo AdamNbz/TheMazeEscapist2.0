@@ -27,8 +27,8 @@ public class PlayerController : MonoBehaviour
         lockMoving = true;
         moveSequence?.Kill();
 
-        PlayerProgress.UnlockNextLevel();
-        SceneController.Instance.TransitionToScene($"Level {PlayerProgress.CurrentLevel}");
+        //PlayerProgress.UnlockNextLevel();
+        //SceneController.Instance.TransitionToScene($"Level {PlayerProgress.CurrentLevel}");
     }
 
     private void UnlockMoving()
