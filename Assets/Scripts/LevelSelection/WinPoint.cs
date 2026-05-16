@@ -11,6 +11,7 @@ public class WinPoint : MonoBehaviour
         {
             CheckLevel();
             OnLevelComplete?.Invoke();
+            AudioManager.Instance.PlaySfx("victory", Vector2.zero);
             Debug.Log("Level Complete!");
         }
     }
