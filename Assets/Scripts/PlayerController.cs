@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using static UnityEngine.InputSystem.InputAction;
+using Cysharp.Threading.Tasks;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,11 +17,13 @@ public class PlayerController : MonoBehaviour
     void OnEnable()
     {
         WinPoint.OnLevelComplete += CompleteLevel;
+        Portal.OnPlayerTeleport += HandleTeleport;
     }
 
     void OnDisable()
     {
         WinPoint.OnLevelComplete -= CompleteLevel;
+        Portal.OnPlayerTeleport -= HandleTeleport;
     }
 
     private void Start()
@@ -128,5 +131,19 @@ public class PlayerController : MonoBehaviour
                 animator.Play("Idle");
             }
         });
+    }
+
+    public async void HandleTeleport(TeleportData data)
+    {
+        moveSequence?.Kill();
+        lockMoving = true;
+
+        Vector3 currentScale = transform.localScale;
+        await transform.DOScale(Vector3.zero, 0.25f).SetEase(Ease.InBack).ToUniTask();
+        transform.position = data.TargetPosition;
+        await transform.DOScale(currentScale, 0.25f).SetEase(Ease.OutBack).ToUniTask();
+
+        lockMoving = false;
+        data.LinkedPortal.UnlockPortal();
     }
 }
