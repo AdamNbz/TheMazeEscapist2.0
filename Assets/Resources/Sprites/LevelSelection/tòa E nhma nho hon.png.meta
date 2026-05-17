@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ec079272717a720489ad69f7b5904ad5
+guid: 7b520107520f0afd681ea44d7d57f6aa
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6205962360887952238
-    second: Caheo_0
+      213: -9201038147350405144
+    second: "t\xF2a E c\xF3 b\u1EE5c_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,10 +48,10 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 600
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -109,17 +109,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 1
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Caheo_0
+      name: "t\xF2a E c\xF3 b\u1EE5c_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 419
-        height: 726
+        x: 85
+        y: 77
+        width: 862
+        height: 860
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 29c34d50d1effd9a0800000000000000
-      internalID: -6205962360887952238
+      spriteID: 8ef5c5edd885f4080800000000000000
+      internalID: -9201038147350405144
       vertices: []
       indices: 
       edges: []
@@ -148,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Caheo_0: -6205962360887952238
+      "t\xF2a E c\xF3 b\u1EE5c_0": -9201038147350405144
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
