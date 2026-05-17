@@ -44,6 +44,7 @@ public class RecycleBin : MonoBehaviour
             PlayInteractedLine().Forget();
             trashHandled += trashCollected;
             trashCollected = 0;
+            AudioManager.Instance.PlaySfx("recycle_trash", transform.position);
 
             if (trashHandled >= trashToHandle)
                 WinPoint.OnUnlockedConditionMet?.Invoke();
@@ -57,7 +58,7 @@ public class RecycleBin : MonoBehaviour
         await textLineCanvasGroup.transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).ToUniTask();
 
         await UniTask.Delay((int)(textDisplayDuration * 1000));
-        
+
         await textLineCanvasGroup.transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).ToUniTask();
         textLine.text = idleLine;
 
