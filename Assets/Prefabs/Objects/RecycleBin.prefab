@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "H\xE3y cho toi r\xE1c"
+  m_text: "H\xE3y cho toi r\xE1c!!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -92,8 +92,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.36
-  m_fontSizeBase: 0.36
+  m_fontSize: 0.34
+  m_fontSizeBase: 0.34
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 3318683331595456778}
   - component: {fileID: 7050831751355794479}
   - component: {fileID: 3093452875163298518}
+  - component: {fileID: 931592749836166745}
   m_Layer: 0
   m_Name: Image
   m_TagString: Untagged
@@ -213,6 +214,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &931592749836166745
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4783322784795968449}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5126991835455539024
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,7 +375,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd852a10bf984bf0a81faa61539e257a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RecycleBin
-  trashToHandle: 2
+  trashToHandle: 3
+  textLineCanvasGroup: {fileID: 931592749836166745}
+  textLine: {fileID: 7843063253800097985}
+  idleLine: "H\xE3y cho toi r\xE1c!!"
+  interactedLine: "C\u1EA3m \u01A1n b\u1EA1n!"
+  textDisplayDuration: 2
+  winpointUnlockCondition: {fileID: 11400000, guid: 8d681d15a85146327bf1de75e03c11c5, type: 2}
 --- !u!212 &1025872070924018801
 SpriteRenderer:
   m_ObjectHideFlags: 0

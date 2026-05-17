@@ -18,6 +18,12 @@ public class RecycleBin : MonoBehaviour
     [SerializeField] private string interactedLine = "Cảm ơn bạn!";
 
     [SerializeField] private float textDisplayDuration = 2f;
+    [SerializeField] private WinpointUnlockCondition winpointUnlockCondition;
+
+    void Start()
+    {
+        textLine.text = idleLine;
+    }
 
     void OnEnable()
     {
@@ -47,7 +53,7 @@ public class RecycleBin : MonoBehaviour
             AudioManager.Instance.PlaySfx("recycle_trash", transform.position);
 
             if (trashHandled >= trashToHandle)
-                WinPoint.OnUnlockedConditionMet?.Invoke();
+                WinPoint.OnUnlockedConditionMet?.Invoke(winpointUnlockCondition.conditionName);
         }
     }
 

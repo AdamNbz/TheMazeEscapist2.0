@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,17 +7,27 @@ using UnityEngine.SceneManagement;
 public class WinPoint : MonoBehaviour
 {
     public static UnityAction OnLevelComplete;
-    [SerializeField] private bool isLockedByDefault = false;
-    private bool isLocked;
+    [SerializeField] private List<WinpointUnlockCondition> unlockConditions = new();
+    public static UnityAction<string> OnUnlockedConditionMet;
 
-    public static UnityAction OnUnlockedConditionMet;
+    private Dictionary<string, bool> conditionStatus = new();
+    private int conditionsNotMetCount = 0;
 
     void Awake()
     {
-        if (isLockedByDefault)
+        if (unlockConditions.Count > 0)
         {
             gameObject.SetActive(false);
-            isLocked = true;
+            conditionsNotMetCount = unlockConditions.Count;
+            foreach (var condition in unlockConditions)
+            {
+                if (conditionStatus.ContainsKey(condition.conditionName))
+                {
+                    Debug.LogError($"Duplicate condition: {condition.conditionName} in WinPoint: {gameObject.name}");
+                    continue;
+                }
+                conditionStatus[condition.conditionName] = false;
+            }
         }
 
         OnUnlockedConditionMet += UnlockWinPoint;
@@ -27,9 +38,17 @@ public class WinPoint : MonoBehaviour
         OnUnlockedConditionMet -= UnlockWinPoint;
     }
 
-    private void UnlockWinPoint()
+    private void UnlockWinPoint(string conditionName)
     {
-        isLocked = false;
+        if (!conditionStatus.ContainsKey(conditionName) || conditionStatus[conditionName])
+            return;
+
+        conditionStatus[conditionName] = true;
+        conditionsNotMetCount--;
+
+        if (conditionsNotMetCount > 0)
+            return;
+
         gameObject.SetActive(true);
         AudioManager.Instance.PlaySfx("win_point_unlocked", transform.position);
         transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
