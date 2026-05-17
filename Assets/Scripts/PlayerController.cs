@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
-using static UnityEngine.InputSystem.InputAction;
 using Cysharp.Threading.Tasks;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,16 +14,21 @@ public class PlayerController : MonoBehaviour
     private Sequence moveSequence;
     private Animator animator;
 
+    public static UnityAction OnLoseGame;
+    public static UnityAction OnTurnMove;
+
     void OnEnable()
     {
         WinPoint.OnLevelComplete += CompleteLevel;
         Portal.OnPlayerTeleport += HandleTeleport;
+        OnLoseGame += HandleLoseGame;
     }
 
     void OnDisable()
     {
         WinPoint.OnLevelComplete -= CompleteLevel;
         Portal.OnPlayerTeleport -= HandleTeleport;
+        OnLoseGame -= HandleLoseGame;
     }
 
     private void Start()
@@ -38,6 +43,12 @@ public class PlayerController : MonoBehaviour
 
         //PlayerProgress.UnlockNextLevel();
         //SceneController.Instance.TransitionToScene($"Level {PlayerProgress.CurrentLevel}");
+    }
+
+    private void HandleLoseGame()
+    {
+        CompleteLevel();
+        Debug.Log("Player Lost! Restarting level...");
     }
 
     private void UnlockMoving()
@@ -94,7 +105,6 @@ public class PlayerController : MonoBehaviour
     public void OnPrimaryPosition(InputValue value)
     {
         inputPosition = value.Get<Vector2>();
-        // Debug.Log($"Primary Position: {inputPosition}");
     }
 
     public void MoveWithPath(Path path)
@@ -124,12 +134,14 @@ public class PlayerController : MonoBehaviour
                 }));
             currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
         }
-        moveSequence.OnComplete(() => {
+        moveSequence.OnComplete(() =>
+        {
             lockMoving = false;
             if (animator != null)
             {
                 animator.Play("Idle");
             }
+            OnTurnMove?.Invoke();
         });
     }
 
@@ -146,5 +158,6 @@ public class PlayerController : MonoBehaviour
 
         lockMoving = false;
         data.LinkedPortal.UnlockPortal();
+        OnTurnMove?.Invoke();
     }
 }
