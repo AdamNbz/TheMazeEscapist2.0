@@ -10,6 +10,7 @@ public class RecycleBin : MonoBehaviour
 {
     // private int trashCollected = 0;
     private List<Trash> collectedTrash = new();
+    private Queue<Trash> handlingTrashQueue = new();
     private int trashHandled = 0;
     [SerializeField] private int trashToHandle = 3;
 
@@ -51,12 +52,15 @@ public class RecycleBin : MonoBehaviour
         {
             trashHandled += collectedTrash.Count;
             foreach (var trash in collectedTrash)
+                handlingTrashQueue.Enqueue(trash);
+            collectedTrash.Clear();
+            while (handlingTrashQueue.Count > 0)
             {
+                var trash = handlingTrashQueue.Dequeue();
                 AudioManager.Instance.PlaySfx("recycle_trash", transform.position);
                 Debug.Log($"Handling trash: {trash.gameObject.name}");
                 await trash.DiscardTrash(transform.position);
             }
-            collectedTrash.Clear();
             await PlayInteractedLine();
 
             if (trashHandled >= trashToHandle)
