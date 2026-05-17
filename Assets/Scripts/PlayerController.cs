@@ -139,6 +139,7 @@ public class PlayerController : MonoBehaviour
         lockMoving = true;
 
         Vector3 currentScale = transform.localScale;
+        AudioManager.Instance.PlaySfx("teleport", transform.position);
         await transform.DOScale(Vector3.zero, 0.25f).SetEase(Ease.InBack).ToUniTask();
         transform.position = data.TargetPosition;
         await transform.DOScale(currentScale, 0.25f).SetEase(Ease.OutBack).ToUniTask();

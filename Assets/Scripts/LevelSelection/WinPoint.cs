@@ -51,6 +51,7 @@ public class WinPoint : MonoBehaviour
 
         gameObject.SetActive(true);
         AudioManager.Instance.PlaySfx("win_point_unlocked", transform.position);
+        transform.localScale = Vector3.zero;
         transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
     }
 

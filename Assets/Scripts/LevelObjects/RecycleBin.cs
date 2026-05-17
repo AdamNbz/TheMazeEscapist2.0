@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
@@ -7,7 +8,8 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class RecycleBin : MonoBehaviour
 {
-    private int trashCollected = 0;
+    // private int trashCollected = 0;
+    private List<Trash> collectedTrash = new();
     private int trashHandled = 0;
     [SerializeField] private int trashToHandle = 3;
 
@@ -37,20 +39,25 @@ public class RecycleBin : MonoBehaviour
 
     private void HandlePlayerCollectTrash(Trash trash)
     {
-        trashCollected++;
-        Debug.Log($"Trash collected: {trashCollected}");
+        collectedTrash.Add(trash);
+        Debug.Log($"Trash collected: {collectedTrash.Count}");
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    async UniTaskVoid OnTriggerEnter2D(Collider2D collision)
     {
-        if (trashCollected <= 0)
+        if (collectedTrash.Count <= 0)
             return;
         if (collision.CompareTag("Player"))
         {
-            PlayInteractedLine().Forget();
-            trashHandled += trashCollected;
-            trashCollected = 0;
-            AudioManager.Instance.PlaySfx("recycle_trash", transform.position);
+            trashHandled += collectedTrash.Count;
+            foreach (var trash in collectedTrash)
+            {
+                AudioManager.Instance.PlaySfx("recycle_trash", transform.position);
+                Debug.Log($"Handling trash: {trash.gameObject.name}");
+                await trash.DiscardTrash(transform.position);
+            }
+            collectedTrash.Clear();
+            await PlayInteractedLine();
 
             if (trashHandled >= trashToHandle)
                 WinPoint.OnUnlockedConditionMet?.Invoke(winpointUnlockCondition.conditionName);

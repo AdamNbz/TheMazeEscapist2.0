@@ -838,6 +838,54 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._id
+      value: teleport
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._priority
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._mixerGroup
+      value: 
+      objectReference: {fileID: -1201993092187521900, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._maxDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._minDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._variationList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._variationList.Array.data[0]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 0d464f8e1c012c06292f7184c841a7d2, type: 3}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._variationList.Array.data[0]._pitchRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._variationList.Array.data[0]._pitchRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._variationList.Array.data[0]._volumeRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1944381204678925715, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
+      propertyPath: _sfxEventList.Array.data[8]._variationList.Array.data[0]._volumeRange.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3294548624916339280, guid: 9044ab76e6b08f946ba74709a7965172, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
