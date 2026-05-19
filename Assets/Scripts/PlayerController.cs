@@ -4,6 +4,7 @@ using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -76,12 +77,9 @@ public class PlayerController : MonoBehaviour
     public void OnPrimaryContact(InputValue value)
     {
         if (lockMoving) return;
-
-        // if touch outside the maze, ignore the input
-        Vector2 worldPoint = Camera.main.ScreenToWorldPoint(inputPosition);
-        if (!GridManager.Instance.IsNodeInteractable(GridManager.Instance.WorldToCell(worldPoint)))
+        if (EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.Log("Touch outside the maze, ignoring input.");
+            Debug.Log("Pointer is over UI, ignoring input.");
             return;
         }
 
