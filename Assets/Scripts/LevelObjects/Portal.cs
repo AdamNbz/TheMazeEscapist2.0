@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class Portal : SpecialTile
 {
     public static UnityAction<TeleportData> OnPlayerTeleport;
-    [SerializeField] Portal linkedPortal;
+    public Portal linkedPortal;
     private bool isEnabled = true;
 
     public override TileType Type => TileType.Portal;

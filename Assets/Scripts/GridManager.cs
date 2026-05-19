@@ -17,13 +17,28 @@ public class GridManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        foreach (var pos in walkableTilemap.cellBounds.allPositionsWithin)
+        {
+            // Do something with each position
+            gridMap[pos] = new Node { position = pos, type = TileType.Walkable };
+            if (wallTilemap.HasTile(pos))
+            {
+                gridMap[pos] = new Node { position = pos, type = TileType.Wall };
+            }
+        }
     }
     #endregion
     [SerializeField] Tilemap walkableTilemap;
     [SerializeField] Tilemap wallTilemap;
     [SerializeField] Grid grid;
 
-    Dictionary<Vector3Int, TileType> gridMap = new(); //true for walkable, false for wall
+    Dictionary<Vector3Int, Node> gridMap = new(); //true for walkable, false for wall
+
+    public Dictionary<Vector3Int, Node> GetGrid()
+    {
+        return gridMap;
+    }
 
     void OnEnable()
     {
@@ -40,15 +55,7 @@ public class GridManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        foreach (var pos in walkableTilemap.cellBounds.allPositionsWithin)
-        {
-            // Do something with each position
-            gridMap[pos] = TileType.Walkable;
-            if (wallTilemap.HasTile(pos))
-            {
-                gridMap[pos] = TileType.Wall;
-            }
-        }
+        
     }
 
     public Path FindPathFromWorld(Vector3 startWorldPos, Vector2Int direction)
@@ -96,11 +103,22 @@ public class GridManager : MonoBehaviour
 
     public bool IsWalkable(Vector3Int cellPos)
     {
-        return gridMap.ContainsKey(cellPos) && gridMap[cellPos] == TileType.Walkable;
+        return gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall;
     }
 
-    private void HandleSpecialTileInstantiated(SpTileData data)
+    public Vector3Int WorldToCell(Vector3 worldPos)
     {
-        gridMap[grid.WorldToCell(data.Position)] = data.Type;
+        return grid.WorldToCell(worldPos);
+    }
+
+    public Vector3 CellToWorld(Vector3Int cellPos)
+    {
+        return grid.CellToWorld(cellPos);
+    }
+
+    private void HandleSpecialTileInstantiated(SpecialTile tile)
+    {
+        gridMap[WorldToCell(tile.transform.position)].type = tile.Type;
+        gridMap[WorldToCell(tile.transform.position)].specialTile = tile;
     }
 }

@@ -3,15 +3,12 @@ using UnityEngine.Events;
 
 public abstract class SpecialTile : MonoBehaviour
 {
-    public static UnityAction<SpTileData> OnSpecialTileInstantiated;
+    public static UnityAction<SpecialTile> OnSpecialTileInstantiated;
+    public static UnityAction<SpecialTile> OnSpecialTileInteracted;
     public abstract TileType Type { get; }
     protected virtual void OnInstantiated()
     {
-        OnSpecialTileInstantiated?.Invoke(new SpTileData
-        {
-            Position = transform.position,
-            Type = Type
-        });
+        OnSpecialTileInstantiated?.Invoke(this);
     }
 
 }
