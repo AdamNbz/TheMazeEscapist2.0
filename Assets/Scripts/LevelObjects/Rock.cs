@@ -6,11 +6,13 @@ using UnityEngine.Events;
 public class Rock : MonoBehaviour
 {
     [SerializeField] private GameObject rock;
+    private SpriteRenderer hiddenRock;
 
     public static UnityAction<Vector3> OnRockEnabled;
 
     void Start()
     {
+        hiddenRock = GetComponent<SpriteRenderer>();
         rock.SetActive(false);
     }
 
@@ -25,6 +27,7 @@ public class Rock : MonoBehaviour
     public void EnableRock()
     {
         rock.SetActive(true);
+        hiddenRock.enabled = false;
         rock.transform.localScale = Vector3.zero;
         rock.transform.DOScale(1, 0.3f).SetEase(Ease.OutBack);
         OnRockEnabled?.Invoke(rock.transform.position);
