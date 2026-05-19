@@ -23,7 +23,9 @@ public class GridManager : MonoBehaviour
     [SerializeField] Tilemap wallTilemap;
     [SerializeField] Grid grid;
 
-    Dictionary<Vector3Int, bool> gridMap = new Dictionary<Vector3Int, bool>(); //true for walkable, false for wall
+    Dictionary<Vector3Int, bool> gridMap = new(); //true for walkable, false for wall
+
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -43,6 +45,11 @@ public class GridManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    void InitializeGridGraph()
+    {
+        
     }
 
     public Path FindPathFromWorld(Vector3 startWorldPos, Vector2Int direction)
@@ -87,4 +94,14 @@ public class GridManager : MonoBehaviour
         }
         return result;
     }
+}
+
+public enum TileType
+{
+    Wall,
+    Walkable,
+    Portal,
+    Trash,
+    RecycleBin,
+    StudentCard
 }
