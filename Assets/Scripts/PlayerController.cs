@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -47,8 +48,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLoseGame()
     {
-        CompleteLevel();
         Debug.Log("Player Lost! Restarting level...");
+        SceneController.Instance.TransitionToScene(SceneManager.GetActiveScene().name);
     }
 
     private void UnlockMoving()
