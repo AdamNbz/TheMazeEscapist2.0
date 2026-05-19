@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class WinPoint : MonoBehaviour
+public class WinPoint : SpecialTile
 {
     public static UnityAction OnLevelComplete;
     [SerializeField] private List<WinpointUnlockCondition> unlockConditions = new();
@@ -12,6 +12,8 @@ public class WinPoint : MonoBehaviour
 
     private Dictionary<string, bool> conditionStatus = new();
     private int conditionsNotMetCount = 0;
+
+    public override TileType Type => TileType.WinPoint;
 
     void Awake()
     {
@@ -53,6 +55,7 @@ public class WinPoint : MonoBehaviour
         AudioManager.Instance.PlaySfx("win_point_unlocked", transform.position);
         transform.localScale = Vector3.zero;
         transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+        OnInstantiated();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

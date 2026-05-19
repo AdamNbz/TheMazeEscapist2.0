@@ -15,7 +15,7 @@ public class PathFindingHandler
     {
         List<Vector3Int> walkableDirections = new();
 
-        Vector3Int[] directions = new Vector3Int[]
+        Vector3Int[] neighborDirs = new Vector3Int[]
         {
                 new(1, 0, 0), // right
                 new(-1, 0, 0), // left
@@ -23,13 +23,18 @@ public class PathFindingHandler
                 new(0, -1, 0) // down
         };
 
-        foreach (var dir in directions)
+        foreach (var dir in neighborDirs)
         {
             Vector3Int neighborPos = start + dir;
-            if (rawGrid.ContainsKey(neighborPos) && rawGrid[neighborPos] != TileType.Wall)
+            if (IsNodeWalkable(neighborPos))
                 walkableDirections.Add(dir);
         }
 
         return walkableDirections;
+    }
+
+    private bool IsNodeWalkable(Vector3Int position)
+    {
+        return rawGrid.ContainsKey(position) && rawGrid[position] != TileType.Wall;
     }
 }

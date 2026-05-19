@@ -6,7 +6,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class RecycleBin : MonoBehaviour
+public class RecycleBin : SpecialTile
 {
     // private int trashCollected = 0;
     private List<Trash> collectedTrash = new();
@@ -23,9 +23,12 @@ public class RecycleBin : MonoBehaviour
     [SerializeField] private float textDisplayDuration = 2f;
     [SerializeField] private WinpointUnlockCondition winpointUnlockCondition;
 
+    public override TileType Type => TileType.RecycleBin;
+
     void Start()
     {
         textLine.text = idleLine;
+        OnInstantiated();
     }
 
     void OnEnable()

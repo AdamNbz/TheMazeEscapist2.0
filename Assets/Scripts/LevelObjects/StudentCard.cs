@@ -1,9 +1,16 @@
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class StudentCard : MonoBehaviour
+public class StudentCard : SpecialTile
 {
     [SerializeField] private WinpointUnlockCondition winpointUnlockCondition;
+
+    public override TileType Type => TileType.StudentCard;
+
+    void Start()
+    {
+        OnInstantiated();
+    }
 
     void OnTriggerEnter2D(Collider2D collision)
     {

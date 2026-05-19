@@ -23,9 +23,19 @@ public class GridManager : MonoBehaviour
     [SerializeField] Tilemap wallTilemap;
     [SerializeField] Grid grid;
 
-    Dictionary<Vector3Int, bool> gridMap = new(); //true for walkable, false for wall
+    Dictionary<Vector3Int, TileType> gridMap = new(); //true for walkable, false for wall
 
-    
+    void OnEnable()
+    {
+        SpecialTile.OnSpecialTileInstantiated += HandleSpecialTileInstantiated;
+    }
+
+    void OnDisable()
+    {
+        SpecialTile.OnSpecialTileInstantiated -= HandleSpecialTileInstantiated;
+    }
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,23 +43,12 @@ public class GridManager : MonoBehaviour
         foreach (var pos in walkableTilemap.cellBounds.allPositionsWithin)
         {
             // Do something with each position
-            gridMap[pos] = true;
+            gridMap[pos] = TileType.Walkable;
             if (wallTilemap.HasTile(pos))
             {
-                gridMap[pos] = false;
+                gridMap[pos] = TileType.Wall;
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    void InitializeGridGraph()
-    {
-        
     }
 
     public Path FindPathFromWorld(Vector3 startWorldPos, Vector2Int direction)
@@ -64,11 +63,11 @@ public class GridManager : MonoBehaviour
         {
             stepLength = grid.transform.localScale.x
         };
-        
+
         while (true)
         {
             startCellPos += (Vector3Int)direction;
-            if (!gridMap.ContainsKey(startCellPos) || !gridMap[startCellPos])
+            if (!IsWalkable(startCellPos))
                 break;
 
             result.directions.Add(direction);
@@ -82,7 +81,7 @@ public class GridManager : MonoBehaviour
                     continue;
 
                 var nextCellPos = startCellPos + (Vector3Int)dir;
-                if (gridMap.ContainsKey(nextCellPos) && gridMap[nextCellPos])
+                if (IsWalkable(nextCellPos))
                 {
                     countPossibleDirections++;
                     direction = dir;
@@ -94,14 +93,14 @@ public class GridManager : MonoBehaviour
         }
         return result;
     }
-}
 
-public enum TileType
-{
-    Wall,
-    Walkable,
-    Portal,
-    Trash,
-    RecycleBin,
-    StudentCard
+    public bool IsWalkable(Vector3Int cellPos)
+    {
+        return gridMap.ContainsKey(cellPos) && gridMap[cellPos] == TileType.Walkable;
+    }
+
+    private void HandleSpecialTileInstantiated(SpTileData data)
+    {
+        gridMap[grid.WorldToCell(data.Position)] = data.Type;
+    }
 }
