@@ -67,10 +67,11 @@ public class RecycleBin : SpecialTile
                 Debug.Log($"Handling trash: {trash.gameObject.name}");
                 await trash.DiscardTrash(transform.position);
             }
-            await PlayInteractedLine();
 
             if (trashHandled >= trashToHandle)
                 WinPoint.OnUnlockedConditionMet?.Invoke(winpointUnlockCondition.conditionName);
+
+            await PlayInteractedLine();
         }
     }
 
