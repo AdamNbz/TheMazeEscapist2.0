@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PathFindingHandler
+public class PathFindingLogic
 {
     Dictionary<Vector3Int, Node> gridNodes = new();
 
     readonly Vector3Int[] neighborDirs = { new(1, 0, 0), new(-1, 0, 0), new(0, 1, 0), new(0, -1, 0) };
 
-    public PathFindingHandler()
+    public PathFindingLogic()
     {
         foreach (var kvp in GridManager.Instance.GetGrid())
         {
@@ -24,31 +24,26 @@ public class PathFindingHandler
 
     public IEnumerable<Node> WalkableNeighbor(Node node)
     {
-        bool isFindPortal = false;
         if (node.type == TileType.Portal)
         {
             var portal = node.specialTile as Portal;
-            if (portal != null)
+            if (portal.linkedPortal != null)
             {
-                var linkedPortal = portal.linkedPortal;
-                if (linkedPortal != null)
+                Vector3Int linkedPortalPos = GridManager.Instance.WorldToCell(portal.linkedPortal.transform.position);
+                foreach (var dir in neighborDirs)
                 {
-                    var linkedNode = gridNodes[GridManager.Instance.WorldToCell(linkedPortal.transform.position)];
-                    if (linkedNode.connection == null && IsNodeWalkable(linkedNode.position))
-                    {
-                        isFindPortal = true;
-                        yield return linkedNode;
-                    }
+                    Vector3Int neighborPos = linkedPortalPos + dir;
+                    if (IsNodeWalkable(neighborPos))
+                        yield return gridNodes[neighborPos];
                 }
             }
         }
-        if (!isFindPortal)
-            foreach (var dir in neighborDirs)
-            {
-                Vector3Int neighborPos = node.position + dir;
-                if (IsNodeWalkable(neighborPos))
-                    yield return gridNodes[neighborPos];
-            }
+        else foreach (var dir in neighborDirs)
+        {
+            Vector3Int neighborPos = node.position + dir;
+            if (IsNodeWalkable(neighborPos))
+                yield return gridNodes[neighborPos];
+        }
     }
 
     public List<Node> FindPath(Node startNode, Node targetNode)
@@ -100,17 +95,29 @@ public class PathFindingHandler
                 }
             }
         }
+        Debug.LogWarning($"No path found from {startNode.position}, type: {startNode.specialTile?.name ?? "Unknown"} to {targetNode.position}, type: {targetNode.specialTile?.name ?? "Unknown"}");
         return null;
     }
 
     public List<Node> FindPathFromPlayer(Vector3 playerWorldPos, SpecialTile targetTile)
     {
         var startNode = gridNodes[GridManager.Instance.WorldToCell(playerWorldPos)];
+        if (startNode == null)
+        {
+            Debug.LogError($"Player position {playerWorldPos} is not on the grid!");
+            return null;
+        }
+
         var targetNode = gridNodes[GridManager.Instance.WorldToCell(targetTile.transform.position)];
+        if (targetNode == null)
+        {
+            Debug.LogError($"Target tile {targetTile.name} position {targetTile.transform.position} is not on the grid!");
+            return null;
+        }
+
 
         Debug.Log($"Finding path from {startNode.position} to {targetNode.position}");
         return FindPath(startNode, targetNode);
-        // return new List<Node>();
     }
 
     private bool IsNodeWalkable(Vector3Int pos)

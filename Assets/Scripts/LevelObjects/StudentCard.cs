@@ -19,6 +19,7 @@ public class StudentCard : SpecialTile
             WinPoint.OnUnlockedConditionMet?.Invoke(winpointUnlockCondition.conditionName);
             AudioManager.Instance.PlaySfx("student_card_collected", transform.position);
             gameObject.SetActive(false);
+            OnSpecialTileInteracted?.Invoke(this);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -8,23 +9,26 @@ public class PathGuider : MonoBehaviour
     [SerializeField] private PlayerController player;
     [SerializeField] private Vector3 gridAnchor = new(0.5f, 0.5f, 0);
     [SerializeField] private List<SpecialTile> specialTiles = new();
+    [SerializeField] private List<TargetSpecialTile> targetSpecialTiles = new();
     private bool isFindingPath = false;
-    private PathFindingHandler pathFindingHandler;
+    private PathFindingLogic pathFindingHandler;
     private Sequence moveSequence;
 
     void Start()
     {
-        pathFindingHandler = new PathFindingHandler();
+        pathFindingHandler = new PathFindingLogic();
     }
 
     void OnEnable()
     {
         SpecialTile.OnSpecialTileInstantiated += HandleSpecialTileInstantiated;
+        SpecialTile.OnSpecialTileInteracted += HandleSpecialTileInteracted;
     }
 
     void OnDisable()
     {
         SpecialTile.OnSpecialTileInstantiated -= HandleSpecialTileInstantiated;
+        SpecialTile.OnSpecialTileInteracted -= HandleSpecialTileInteracted;
     }
 
     void Update()
@@ -38,23 +42,27 @@ public class PathGuider : MonoBehaviour
 
     public void FindPath()
     {
-        if (isFindingPath || specialTiles.Count == 0) return;
-        Debug.Log("Finding path...");
-        var path = pathFindingHandler.FindPathFromPlayer(player.transform.position, specialTiles[0]);
-        isFindingPath = true;
+        if (isFindingPath) return;
+
         transform.position = player.transform.position;
         moveSequence = DOTween.Sequence();
 
-        if (path == null)
+        ReloadTargetSpecialTiles();
+        var currentPos = transform.position;
+        isFindingPath = true;
+        foreach (var target in targetSpecialTiles)
         {
-            Debug.Log("No path found!");
-            isFindingPath = false;
-            return;
+            var path = pathFindingHandler.FindPathFromPlayer(currentPos, target.tile);
+            foreach (var node in path)
+            {
+                moveSequence.Append(transform.DOMove(GridManager.Instance.CellToWorld(node.position) + gridAnchor, 0.1f))
+                    .SetEase(Ease.Linear);
+            }
+            moveSequence.AppendInterval(0.5f);
+            currentPos = target.tile.transform.position;
         }
 
-        foreach (var node in path)
-            moveSequence.Append(transform.DOMove(GridManager.Instance.CellToWorld(node.position) + gridAnchor, 0.1f)
-                .SetEase(Ease.Linear));
+
         moveSequence.OnComplete(() => isFindingPath = false);
     }
 
@@ -63,11 +71,63 @@ public class PathGuider : MonoBehaviour
         specialTiles.Add(data);
     }
 
-    private void HandleTrashCollected(Trash trash)
+    private void HandleSpecialTileInteracted(SpecialTile data)
     {
-        if (specialTiles.Contains(trash))
-            specialTiles.Remove(trash);
+        if (data.Type == TileType.Trash || data.Type == TileType.StudentCard || data.Type == TileType.WinPoint)
+        {
+            if (specialTiles.Contains(data))
+                specialTiles.Remove(data);
+        }
     }
 
-    
+    private void ReloadTargetSpecialTiles()
+    {
+        targetSpecialTiles.Clear();
+        Debug.Log("Reloading target special tiles...");
+        var trashCount = 0;
+        foreach (var tile in specialTiles)
+        {
+            if (tile.Type == TileType.Trash || tile.Type == TileType.StudentCard || tile.Type == TileType.WinPoint)
+            {
+                if (tile.Type == TileType.Trash)
+                    trashCount++;
+
+                var path = pathFindingHandler.FindPathFromPlayer(player.transform.position, tile);
+
+                Debug.Log($"Distance to {tile.Type} at {tile.transform.position}: {path?.Count ?? int.MaxValue}");
+                targetSpecialTiles.Add(new TargetSpecialTile { tile = tile, distance = path?.Count ?? int.MaxValue });
+            }
+        }
+        targetSpecialTiles.Sort((a, b) => a.distance.CompareTo(b.distance));
+        if (trashCount > 0)
+        {
+            var recycleBin = specialTiles.Find(t => t.Type == TileType.RecycleBin);
+            if (recycleBin != null)
+            {
+                var distance = pathFindingHandler.FindPathFromPlayer(player.transform.position, recycleBin)?.Count ?? int.MaxValue;
+                bool inserted = false;
+                for (int i = 0; i < targetSpecialTiles.Count; i++)
+                {
+                    if (trashCount <= 0 && targetSpecialTiles[i].distance > distance)
+                    {
+                        targetSpecialTiles.Insert(i, new TargetSpecialTile { tile = recycleBin, distance = distance });
+                        inserted = true;
+                        break;
+                    }
+
+                    if (targetSpecialTiles[i].tile.Type == TileType.Trash)
+                        trashCount--;
+                }
+                if (!inserted)
+                    targetSpecialTiles.Add(new TargetSpecialTile { tile = recycleBin, distance = distance });
+            }
+        }
+    }
+}
+
+[Serializable]
+public struct TargetSpecialTile
+{
+    public SpecialTile tile;
+    public int distance;
 }

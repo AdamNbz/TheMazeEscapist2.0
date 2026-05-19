@@ -720,6 +720,7 @@ MonoBehaviour:
   player: {fileID: 1755302504}
   gridAnchor: {x: 0.5, y: 0.5, z: 0}
   specialTiles: []
+  targetSpecialTiles: []
 --- !u!1 &1719159653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,11 +1047,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 8d681d15a85146327bf1de75e03c11c5, type: 2}
     - target: {fileID: 4776056792344269136, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.5
+      value: -2.47
       objectReference: {fileID: 0}
     - target: {fileID: 4776056792344269136, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.5
+      value: 10.44
       objectReference: {fileID: 0}
     - target: {fileID: 6934076616593473380, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: m_Size.x
