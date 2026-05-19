@@ -40,6 +40,15 @@ public class WinPoint : SpecialTile
         OnUnlockedConditionMet -= UnlockWinPoint;
     }
 
+    void Start()
+    {
+        if (unlockConditions.Count == 0)
+        {
+            gameObject.SetActive(true);
+            OnInstantiated();
+        }
+    }
+
     private void UnlockWinPoint(string conditionName)
     {
         if (!conditionStatus.ContainsKey(conditionName) || conditionStatus[conditionName])
