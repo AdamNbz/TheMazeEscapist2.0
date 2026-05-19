@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
-using static UnityEngine.InputSystem.InputAction;
+using Cysharp.Threading.Tasks;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,15 +13,28 @@ public class PlayerController : MonoBehaviour
     private Vector2 inputPosition = Vector2.zero;
 
     private Sequence moveSequence;
+    private Animator animator;
+
+    public static UnityAction OnLoseGame;
+    public static UnityAction OnTurnMove;
 
     void OnEnable()
     {
         WinPoint.OnLevelComplete += CompleteLevel;
+        Portal.OnPlayerTeleport += HandleTeleport;
+        OnLoseGame += HandleLoseGame;
     }
 
     void OnDisable()
     {
         WinPoint.OnLevelComplete -= CompleteLevel;
+        Portal.OnPlayerTeleport -= HandleTeleport;
+        OnLoseGame -= HandleLoseGame;
+    }
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
     }
 
     private void CompleteLevel()
@@ -27,8 +42,14 @@ public class PlayerController : MonoBehaviour
         lockMoving = true;
         moveSequence?.Kill();
 
-        PlayerProgress.UnlockNextLevel();
-        SceneController.Instance.TransitionToScene($"Level {PlayerProgress.CurrentLevel}");
+        //PlayerProgress.UnlockNextLevel();
+        //SceneController.Instance.TransitionToScene($"Level {PlayerProgress.CurrentLevel}");
+    }
+
+    private void HandleLoseGame()
+    {
+        Debug.Log("Player Lost! Restarting level...");
+        SceneController.Instance.TransitionToScene(SceneManager.GetActiveScene().name);
     }
 
     private void UnlockMoving()
@@ -85,7 +106,6 @@ public class PlayerController : MonoBehaviour
     public void OnPrimaryPosition(InputValue value)
     {
         inputPosition = value.Get<Vector2>();
-        // Debug.Log($"Primary Position: {inputPosition}");
     }
 
     public void MoveWithPath(Path path)
@@ -93,9 +113,21 @@ public class PlayerController : MonoBehaviour
         lockMoving = true;
         moveSequence = DOTween.Sequence();
         var currentPos = transform.position;
+
+        if (animator != null)
+        {
+            animator.Play("Walk");
+        }
+
         foreach (var dir in path.directions)
         {
-            AudioManager.Instance.PlaySfx("player_move", transform.position);
+            var localScale = transform.localScale;
+            if (dir.x != 0)
+            {
+                localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                transform.localScale = localScale;
+            }
+
             moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
                 .SetEase(Ease.Linear).OnComplete(() =>
                 {
@@ -103,6 +135,30 @@ public class PlayerController : MonoBehaviour
                 }));
             currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
         }
-        moveSequence.OnComplete(() => lockMoving = false);
+        moveSequence.OnComplete(() =>
+        {
+            lockMoving = false;
+            if (animator != null)
+            {
+                animator.Play("Idle");
+            }
+            OnTurnMove?.Invoke();
+        });
+    }
+
+    public async void HandleTeleport(TeleportData data)
+    {
+        moveSequence?.Kill();
+        lockMoving = true;
+
+        Vector3 currentScale = transform.localScale;
+        AudioManager.Instance.PlaySfx("teleport", transform.position);
+        await transform.DOScale(Vector3.zero, 0.25f).SetEase(Ease.InBack).ToUniTask();
+        transform.position = data.TargetPosition;
+        await transform.DOScale(currentScale, 0.25f).SetEase(Ease.OutBack).ToUniTask();
+
+        lockMoving = false;
+        data.LinkedPortal.UnlockPortal();
+        OnTurnMove?.Invoke();
     }
 }
