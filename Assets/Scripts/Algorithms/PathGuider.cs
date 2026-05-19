@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PathGuider : MonoBehaviour
 {
@@ -10,14 +11,14 @@ public class PathGuider : MonoBehaviour
     [SerializeField] private Vector3 gridAnchor = new(0.5f, 0.5f, 0);
     [SerializeField] private List<SpecialTile> specialTiles = new();
     [SerializeField] private List<TargetSpecialTile> targetSpecialTiles = new();
+    [SerializeField] private Button findPathButton;
     private bool isFindingPath = false;
-    private PathFindingLogic pathFindingHandler;
+    private PathFindingLogic pathFindingHandler = null;
     private Sequence moveSequence;
     private SpriteRenderer spriteRenderer;
 
     void Start()
     {
-        pathFindingHandler = new PathFindingLogic();
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.enabled = false;
     }
@@ -26,12 +27,16 @@ public class PathGuider : MonoBehaviour
     {
         SpecialTile.OnSpecialTileInstantiated += HandleSpecialTileInstantiated;
         SpecialTile.OnSpecialTileInteracted += HandleSpecialTileInteracted;
+        PlayerController.OnStartMoving += DisableButton;
+        PlayerController.OnTurnMove += EnableButton;
     }
 
     void OnDisable()
     {
         SpecialTile.OnSpecialTileInstantiated -= HandleSpecialTileInstantiated;
         SpecialTile.OnSpecialTileInteracted -= HandleSpecialTileInteracted;
+        PlayerController.OnStartMoving -= DisableButton;
+        PlayerController.OnTurnMove -= EnableButton;
     }
 
     void Update()
@@ -45,6 +50,7 @@ public class PathGuider : MonoBehaviour
 
     public void FindPath()
     {
+        pathFindingHandler ??= new PathFindingLogic();
         if (isFindingPath) return;
 
         transform.position = player.transform.position;
@@ -54,6 +60,7 @@ public class PathGuider : MonoBehaviour
         var currentPos = transform.position;
         isFindingPath = true;
         spriteRenderer.enabled = true;
+        findPathButton.interactable = false;
         foreach (var target in targetSpecialTiles)
         {
             var path = pathFindingHandler.FindPathFromPlayer(currentPos, target.tile);
@@ -67,9 +74,11 @@ public class PathGuider : MonoBehaviour
         }
 
 
-        moveSequence.OnComplete(() => {
+        moveSequence.OnComplete(() =>
+        {
             isFindingPath = false;
             spriteRenderer.enabled = false;
+            findPathButton.interactable = true;
         });
     }
 
@@ -89,6 +98,7 @@ public class PathGuider : MonoBehaviour
 
     private void ReloadTargetSpecialTiles()
     {
+        pathFindingHandler ??= new PathFindingLogic();
         targetSpecialTiles.Clear();
         Debug.Log("Reloading target special tiles...");
         var trashCount = 0;
@@ -129,6 +139,18 @@ public class PathGuider : MonoBehaviour
                     targetSpecialTiles.Add(new TargetSpecialTile { tile = recycleBin, distance = distance });
             }
         }
+    }
+
+    public void DisableButton()
+    {
+        if (findPathButton != null)
+            findPathButton.interactable = false;
+    }
+
+    public void EnableButton()
+    {
+        if (findPathButton != null && !isFindingPath)
+            findPathButton.interactable = true;
     }
 }
 

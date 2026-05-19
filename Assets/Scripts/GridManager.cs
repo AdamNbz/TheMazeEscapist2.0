@@ -55,7 +55,7 @@ public class GridManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     public Path FindPathFromWorld(Vector3 startWorldPos, Vector2Int direction)
@@ -120,5 +120,10 @@ public class GridManager : MonoBehaviour
     {
         gridMap[WorldToCell(tile.transform.position)].type = tile.Type;
         gridMap[WorldToCell(tile.transform.position)].specialTile = tile;
+    }
+
+    public bool IsNodeInteractable(Vector3Int cellPos)
+    {
+        return gridMap.ContainsKey(cellPos);
     }
 }
