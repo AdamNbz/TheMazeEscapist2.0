@@ -30,16 +30,6 @@ public class GridManager : MonoBehaviour
     }
     #endregion
     
-    void OnEnable()
-    {
-        Rock.OnRockEnabled += HandleRockEnabled;
-    }
-
-    void OnDisable()
-    {
-        Rock.OnRockEnabled -= HandleRockEnabled;
-    }
-    
     [SerializeField] Tilemap walkableTilemap;
     [SerializeField] Tilemap wallTilemap;
     [SerializeField] Grid grid;
@@ -54,11 +44,13 @@ public class GridManager : MonoBehaviour
     void OnEnable()
     {
         SpecialTile.OnSpecialTileInstantiated += HandleSpecialTileInstantiated;
+        Rock.OnRockEnabled += HandleRockEnabled;
     }
 
     void OnDisable()
     {
         SpecialTile.OnSpecialTileInstantiated -= HandleSpecialTileInstantiated;
+        Rock.OnRockEnabled -= HandleRockEnabled;
     }
 
 
@@ -141,6 +133,6 @@ public class GridManager : MonoBehaviour
     private void HandleRockEnabled(Vector3 rockPosition)
     {
         Vector3Int cellPos = wallTilemap.WorldToCell(rockPosition);
-        gridMap[cellPos] = false;
+        gridMap[cellPos].type = TileType.Wall;
     }
 }
