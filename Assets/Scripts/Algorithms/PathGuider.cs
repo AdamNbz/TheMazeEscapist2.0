@@ -58,9 +58,12 @@ public class PathGuider : MonoBehaviour
 
         ReloadTargetSpecialTiles();
         var currentPos = transform.position;
+
         isFindingPath = true;
         spriteRenderer.enabled = true;
         findPathButton.interactable = false;
+        AudioManager.Instance.PlaySfx("path_finding", transform.position);
+
         foreach (var target in targetSpecialTiles)
         {
             var path = pathFindingHandler.FindPathFromPlayer(currentPos, target.tile);

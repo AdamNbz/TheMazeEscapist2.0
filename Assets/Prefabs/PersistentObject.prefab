@@ -369,7 +369,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.size
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.size
@@ -412,6 +412,10 @@ PrefabInstance:
       value: teleport
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._id
+      value: path_finding
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.data[0]._id
       value: start_bgm
       objectReference: {fileID: 0}
@@ -452,6 +456,10 @@ PrefabInstance:
       value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._priority
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.data[0]._priority
       value: 128
       objectReference: {fileID: 0}
@@ -489,6 +497,10 @@ PrefabInstance:
       objectReference: {fileID: -1201993092187521900, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[8]._mixerGroup
+      value: 
+      objectReference: {fileID: -1201993092187521900, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._mixerGroup
       value: 
       objectReference: {fileID: -1201993092187521900, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
@@ -564,6 +576,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._maxDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._minDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.data[0]._mixerGroup
       value: 
       objectReference: {fileID: 1499056565531126519, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
@@ -620,6 +640,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._variationList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.data[0]._variationList.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -659,6 +683,10 @@ PrefabInstance:
       propertyPath: _sfxEventList.Array.data[8]._variationList.Array.data[0]._clip
       value: 
       objectReference: {fileID: 8300000, guid: 0d464f8e1c012c06292f7184c841a7d2, type: 3}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._variationList.Array.data[0]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 7077049262d914cd6a454b8f9bed3373, type: 3}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.data[0]._variationList.Array.data[0]._clip
       value: 
@@ -736,6 +764,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._variationList.Array.data[0]._pitchRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._variationList.Array.data[0]._pitchRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[0]._variationList.Array.data[0]._volumeRange.x
       value: 1
       objectReference: {fileID: 0}
@@ -805,6 +841,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[8]._variationList.Array.data[0]._volumeRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._variationList.Array.data[0]._volumeRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[9]._variationList.Array.data[0]._volumeRange.y
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
