@@ -5,11 +5,18 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Portal : MonoBehaviour
+public class Portal : SpecialTile
 {
     public static UnityAction<TeleportData> OnPlayerTeleport;
-    [SerializeField] Portal linkedPortal;
+    public Portal linkedPortal;
     private bool isEnabled = true;
+
+    public override TileType Type => TileType.Portal;
+
+    void Start()
+    {
+        OnInstantiated();
+    }
 
     void OnTriggerEnter2D(Collider2D collision)
     {

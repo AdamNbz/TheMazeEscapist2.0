@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     public static UnityAction OnLoseGame;
     public static UnityAction OnTurnMove;
+    public static UnityAction OnStartMoving;
 
     void OnEnable()
     {
@@ -75,6 +76,15 @@ public class PlayerController : MonoBehaviour
     public void OnPrimaryContact(InputValue value)
     {
         if (lockMoving) return;
+
+        // if touch outside the maze, ignore the input
+        Vector2 worldPoint = Camera.main.ScreenToWorldPoint(inputPosition);
+        if (!GridManager.Instance.IsNodeInteractable(GridManager.Instance.WorldToCell(worldPoint)))
+        {
+            Debug.Log("Touch outside the maze, ignoring input.");
+            return;
+        }
+
         if (value.Get<float>() > 0.5f)
         {
             Debug.Log("Primary Contact Started");
@@ -119,6 +129,7 @@ public class PlayerController : MonoBehaviour
             animator.Play("Walk");
         }
 
+        OnStartMoving?.Invoke();
         foreach (var dir in path.directions)
         {
             var localScale = transform.localScale;

@@ -4,18 +4,25 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Trash : MonoBehaviour
+public class Trash : SpecialTile
 {
-    public static UnityAction<Trash> OnTrashCollected;
     [SerializeField] private string soundEffectName = "trash_can_collected";
     private bool isCollected = false;
+
+    public override TileType Type => TileType.Trash;
+
+    void Start()
+    {
+        OnInstantiated();
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (isCollected) return;
         if (collision.CompareTag("Player"))
         {
             isCollected = true;
-            OnTrashCollected?.Invoke(this);
+            OnSpecialTileInteracted?.Invoke(this);
             gameObject.SetActive(false);
             AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
         }

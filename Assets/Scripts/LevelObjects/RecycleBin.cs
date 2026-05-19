@@ -6,7 +6,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class RecycleBin : MonoBehaviour
+public class RecycleBin : SpecialTile
 {
     // private int trashCollected = 0;
     private List<Trash> collectedTrash = new();
@@ -23,25 +23,31 @@ public class RecycleBin : MonoBehaviour
     [SerializeField] private float textDisplayDuration = 2f;
     [SerializeField] private WinpointUnlockCondition winpointUnlockCondition;
 
+    public override TileType Type => TileType.RecycleBin;
+
     void Start()
     {
         textLine.text = idleLine;
+        OnInstantiated();
     }
 
     void OnEnable()
     {
-        Trash.OnTrashCollected += HandlePlayerCollectTrash;
+        SpecialTile.OnSpecialTileInteracted += HandlePlayerCollectTrash;
     }
 
     void OnDisable()
     {
-        Trash.OnTrashCollected -= HandlePlayerCollectTrash;
+        SpecialTile.OnSpecialTileInteracted -= HandlePlayerCollectTrash;
     }
 
-    private void HandlePlayerCollectTrash(Trash trash)
+    private void HandlePlayerCollectTrash(SpecialTile data)
     {
-        collectedTrash.Add(trash);
-        Debug.Log($"Trash collected: {collectedTrash.Count}");
+        if (data.Type == TileType.Trash)
+        {
+            collectedTrash.Add((Trash)data);
+            Debug.Log($"Trash collected: {collectedTrash.Count}");
+        }
     }
 
     async UniTaskVoid OnTriggerEnter2D(Collider2D collision)
