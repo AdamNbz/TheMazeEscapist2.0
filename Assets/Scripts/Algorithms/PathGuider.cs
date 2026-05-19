@@ -13,10 +13,13 @@ public class PathGuider : MonoBehaviour
     private bool isFindingPath = false;
     private PathFindingLogic pathFindingHandler;
     private Sequence moveSequence;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
         pathFindingHandler = new PathFindingLogic();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.enabled = false;
     }
 
     void OnEnable()
@@ -50,6 +53,7 @@ public class PathGuider : MonoBehaviour
         ReloadTargetSpecialTiles();
         var currentPos = transform.position;
         isFindingPath = true;
+        spriteRenderer.enabled = true;
         foreach (var target in targetSpecialTiles)
         {
             var path = pathFindingHandler.FindPathFromPlayer(currentPos, target.tile);
@@ -63,7 +67,10 @@ public class PathGuider : MonoBehaviour
         }
 
 
-        moveSequence.OnComplete(() => isFindingPath = false);
+        moveSequence.OnComplete(() => {
+            isFindingPath = false;
+            spriteRenderer.enabled = false;
+        });
     }
 
     private void HandleSpecialTileInstantiated(SpecialTile data)
