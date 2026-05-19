@@ -25,6 +25,16 @@ public class GridManager : MonoBehaviour
 
     Dictionary<Vector3Int, bool> gridMap = new Dictionary<Vector3Int, bool>(); //true for walkable, false for wall
 
+    void OnEnable()
+    {
+        Rock.OnRockEnabled += HandleRockEnabled;
+    }
+
+    void OnDisable()
+    {
+        Rock.OnRockEnabled -= HandleRockEnabled;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -57,7 +67,7 @@ public class GridManager : MonoBehaviour
         {
             stepLength = grid.transform.localScale.x
         };
-        
+
         while (true)
         {
             startCellPos += (Vector3Int)direction;
@@ -86,5 +96,11 @@ public class GridManager : MonoBehaviour
                 break;
         }
         return result;
+    }
+
+    private void HandleRockEnabled(Vector3 rockPosition)
+    {
+        Vector3Int cellPos = wallTilemap.WorldToCell(rockPosition);
+        gridMap[cellPos] = false;
     }
 }
