@@ -22,14 +22,18 @@ public class PlayerController : MonoBehaviour
 
     void OnEnable()
     {
-        WinPoint.OnLevelComplete += CompleteLevel;
+        WinPoint.OnLevelComplete += LockInput;
+        TurnTimer.OnTimeOut += LockInput;
+        LevelTimer.OnTimeOut += LockInput;
         Portal.OnPlayerTeleport += HandleTeleport;
         OnLoseGame += HandleLoseGame;
     }
 
     void OnDisable()
     {
-        WinPoint.OnLevelComplete -= CompleteLevel;
+        WinPoint.OnLevelComplete -= LockInput;
+        TurnTimer.OnTimeOut -= LockInput;
+        LevelTimer.OnTimeOut -= LockInput;
         Portal.OnPlayerTeleport -= HandleTeleport;
         OnLoseGame -= HandleLoseGame;
     }
@@ -39,13 +43,10 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void CompleteLevel()
+    private void LockInput()
     {
         lockMoving = true;
         moveSequence?.Kill();
-
-        //PlayerProgress.UnlockNextLevel();
-        //SceneController.Instance.TransitionToScene($"Level {PlayerProgress.CurrentLevel}");
     }
 
     private void HandleLoseGame()

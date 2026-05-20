@@ -1,12 +1,14 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TurnTimer : MonoBehaviour
 {
     [SerializeField] private int turnLimit = 5;
     [SerializeField] private string turnDisplayFormat = "Số lượt còn lại: {0}";
     [SerializeField] private TextMeshProUGUI turnText;
+    public static UnityAction OnTimeOut;
 
     private int currentTurn = 0;
 
@@ -29,8 +31,10 @@ public class TurnTimer : MonoBehaviour
         currentTurn++;
         turnText.text = string.Format(turnDisplayFormat, turnLimit - currentTurn);
         if (currentTurn >= turnLimit)
-        { 
+        {
             turnText.text = "NO MORE TURNS !!!";
+            OnTimeOut?.Invoke();
+            AudioManager.Instance.PlaySfx("lose", Vector3.zero);
             DoAnimation();
         }
     }
