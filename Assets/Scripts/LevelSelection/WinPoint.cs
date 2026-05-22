@@ -82,7 +82,7 @@ public class WinPoint : SpecialTile
 
         int currentLevel = int.Parse(currentScene.Replace("Level ", ""));
 
-        if (currentLevel == PlayerProgress.CurrentLevel && currentLevel != 10)
+        if (currentLevel == PlayerProgress.CurrentLevel && currentLevel != 15)
         {
             PlayerProgress.UnlockNextLevel();
         }

@@ -1,6 +1,7 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LevelTimer : MonoBehaviour
 {
@@ -10,11 +11,22 @@ public class LevelTimer : MonoBehaviour
 
     [SerializeField] private string timerDisplayFormat = "Thời gian còn lại: {0:0.00}";
     [SerializeField] private TextMeshProUGUI timerText;
+    public static UnityAction OnTimeOut;
 
     private void Start()
     {
         timeRemaining = timeLimit;
         StartTimer();
+    }
+
+    void OnEnable()
+    {
+        WinPoint.OnLevelComplete += StopTimer;
+    }
+
+    void OnDisable()
+    {
+        WinPoint.OnLevelComplete -= StopTimer;
     }
 
     private void Update()
@@ -26,6 +38,8 @@ public class LevelTimer : MonoBehaviour
             {
                 timeRemaining = 0;
                 timerRunning = false;
+                OnTimeOut?.Invoke();
+                AudioManager.Instance.PlaySfx("lose", Vector3.zero);
                 DoAnimation();
             }
             UpdateTimerDisplay();
@@ -35,7 +49,7 @@ public class LevelTimer : MonoBehaviour
     private void UpdateTimerDisplay()
     {
         timerText.text = string.Format(timerDisplayFormat, timeRemaining);
-        if(timeRemaining <= 0) timerText.text = "TIME OUT!";
+        if (timeRemaining <= 0) timerText.text = "TIME OUT!";
     }
 
     public void StartTimer()
@@ -61,7 +75,7 @@ public class LevelTimer : MonoBehaviour
         RectTransform rect = timerText.rectTransform;
 
         // Lưu world position hiện tại
-        Vector3 worldPos = rect.position + new Vector3(0,-100,0);
+        Vector3 worldPos = rect.position + new Vector3(0, -100, 0);
 
         // Đổi anchor/pivot
         rect.anchorMin = new Vector2(0.5f, 0.5f);

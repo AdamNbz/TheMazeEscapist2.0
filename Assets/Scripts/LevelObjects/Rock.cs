@@ -28,6 +28,7 @@ public class Rock : MonoBehaviour
     {
         rock.SetActive(true);
         hiddenRock.enabled = false;
+        AudioManager.Instance.PlaySfx("rock", transform.position);
         rock.transform.localScale = Vector3.zero;
         rock.transform.DOScale(1, 0.3f).SetEase(Ease.OutBack);
         OnRockEnabled?.Invoke(rock.transform.position);
