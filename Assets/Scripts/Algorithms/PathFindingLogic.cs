@@ -107,4 +107,10 @@ public class PathFindingLogic
     {
         return gridNodes.ContainsKey(pos) && gridNodes[pos].type != TileType.Wall;
     }
+
+    public void SetNodeType(Vector3Int pos, TileType type)
+    {
+        if (gridNodes.ContainsKey(pos))
+            gridNodes[pos].type = type;
+    }
 }

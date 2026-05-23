@@ -27,5 +27,6 @@ public enum TileType
     Trash,
     RecycleBin,
     StudentCard,
-    WinPoint
+    WinPoint,
+    Rock
 }

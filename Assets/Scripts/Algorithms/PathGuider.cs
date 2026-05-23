@@ -57,16 +57,15 @@ public class PathGuider : MonoBehaviour
         moveSequence = DOTween.Sequence();
 
         ReloadTargetSpecialTiles();
-        var currentPos = transform.position;
+        StartFindingPath();
 
-        isFindingPath = true;
-        spriteRenderer.enabled = true;
-        findPathButton.interactable = false;
-        AudioManager.Instance.PlaySfx("path_finding", transform.position);
+        var currentPos = transform.position;
+        var countWalkablePath = 0;
 
         foreach (var target in targetSpecialTiles)
         {
             var path = pathFindingHandler.FindPathFromPlayer(currentPos, target.tile);
+            countWalkablePath += path.Count;
             foreach (var node in path)
             {
                 moveSequence.Append(transform.DOMove(GridManager.Instance.CellToWorld(node.position) + gridAnchor, 0.1f))
@@ -76,13 +75,30 @@ public class PathGuider : MonoBehaviour
             currentPos = target.tile.transform.position;
         }
 
-
-        moveSequence.OnComplete(() =>
+        if (countWalkablePath == 0)
         {
-            isFindingPath = false;
-            spriteRenderer.enabled = false;
-            findPathButton.interactable = true;
-        });
+            StopFindingPath();
+            Debug.Log("No walkable path to any target special tile!");
+            return;
+        }
+
+
+        moveSequence.OnComplete(StopFindingPath);
+    }
+
+    private void StartFindingPath()
+    {
+        isFindingPath = true;
+        spriteRenderer.enabled = true;
+        findPathButton.interactable = false;
+        AudioManager.Instance.PlaySfx("path_finding", transform.position);
+    }
+
+    private void StopFindingPath()
+    {
+        isFindingPath = false;
+        spriteRenderer.enabled = false;
+        findPathButton.interactable = true;
     }
 
     private void HandleSpecialTileInstantiated(SpecialTile data)
@@ -96,6 +112,11 @@ public class PathGuider : MonoBehaviour
         {
             if (specialTiles.Contains(data))
                 specialTiles.Remove(data);
+        }
+        if (data.Type == TileType.Rock)
+        {
+            pathFindingHandler ??= new PathFindingLogic();
+            pathFindingHandler.SetNodeType(GridManager.Instance.WorldToCell(data.transform.position), TileType.Wall);
         }
     }
 
