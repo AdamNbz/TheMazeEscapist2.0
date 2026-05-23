@@ -8,6 +8,9 @@ public class PathFindingLogic
 
     readonly Vector3Int[] neighborDirs = { new(1, 0, 0), new(-1, 0, 0), new(0, 1, 0), new(0, -1, 0) };
 
+    bool lockPortal = false;
+    bool isStartNode = false;
+
     public PathFindingLogic()
     {
         foreach (var kvp in GridManager.Instance.GetGrid())
@@ -24,15 +27,26 @@ public class PathFindingLogic
 
     public IEnumerable<Node> WalkableNeighbor(Node node)
     {
+        if (node == null)
+            yield break;
         if (node.type == TileType.Portal)
         {
-            var portal = node.specialTile as Portal;
-            if (portal.linkedPortal != null)
+            if (!lockPortal && !isStartNode)
             {
-                Vector3Int linkedPortalPos = GridManager.Instance.WorldToCell(portal.linkedPortal.transform.position);
+                lockPortal = true;
+                var portal = node.specialTile as Portal;
+                if (portal.linkedPortal != null)
+                {
+                    Vector3Int linkedPortalPos = GridManager.Instance.WorldToCell(portal.linkedPortal.transform.position);
+                    yield return gridNodes[linkedPortalPos];
+                }
+            }
+            else
+            {
+                lockPortal = false;
                 foreach (var dir in neighborDirs)
                 {
-                    Vector3Int neighborPos = linkedPortalPos + dir;
+                    Vector3Int neighborPos = node.position + dir;
                     if (IsNodeWalkable(neighborPos))
                         yield return gridNodes[neighborPos];
                 }
@@ -52,6 +66,7 @@ public class PathFindingLogic
         Dictionary<Node, Node> cameFrom = new();
         openList.Enqueue(startNode);
         cameFrom[startNode] = null;
+        isStartNode = true;
 
         while (openList.Count > 0)
         {
@@ -77,6 +92,7 @@ public class PathFindingLogic
                 cameFrom[neighbor] = node;
                 openList.Enqueue(neighbor);
             }
+            isStartNode = false;
         }
 
         return new List<Node>();
