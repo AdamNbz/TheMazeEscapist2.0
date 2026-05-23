@@ -48,55 +48,38 @@ public class PathFindingLogic
 
     public List<Node> FindPath(Node startNode, Node targetNode)
     {
-        var toSearch = new List<Node> { startNode };
-        var processed = new List<Node>();
+        Queue<Node> openList = new();
+        Dictionary<Node, Node> cameFrom = new();
+        openList.Enqueue(startNode);
+        cameFrom[startNode] = null;
 
-        while (toSearch.Count > 0)
+        while (openList.Count > 0)
         {
-            var current = toSearch[0];
-            foreach (var node in toSearch)
-                if (node.F < current.F || (node.F == current.F && node.H < current.H))
-                    current = node;
-
-            processed.Add(current);
-            toSearch.Remove(current);
-
-            if (current == targetNode)
+            var node = openList.Dequeue();
+            if (node == targetNode)
             {
-                var path = new List<Node>();
+                List<Node> path = new();
+                Node current = node;
                 while (current != null)
                 {
                     path.Add(current);
-                    current = current.connection;
+                    current = cameFrom.ContainsKey(current) ? cameFrom[current] : null;
                 }
                 path.Reverse();
-
-                CleanUpNodes(toSearch);
-                CleanUpNodes(processed);
-
                 return path;
             }
 
-            foreach (var neighbor in WalkableNeighbor(current).Where(n => !processed.Contains(n)))
+            foreach (var neighbor in WalkableNeighbor(node))
             {
-                var inSearch = toSearch.Contains(neighbor);
-                var costToNeighbor = current.G + 1;
+                if (cameFrom.ContainsKey(neighbor))
+                    continue;
 
-                if (!inSearch || costToNeighbor < neighbor.G)
-                {
-                    neighbor.G = costToNeighbor;
-                    neighbor.connection = current;
-
-                    if (!inSearch)
-                    {
-                        neighbor.H = Vector3Int.Distance(neighbor.position, targetNode.position);
-                        toSearch.Add(neighbor);
-                    }
-                }
+                cameFrom[neighbor] = node;
+                openList.Enqueue(neighbor);
             }
         }
-        Debug.LogWarning($"No path found from {startNode.position}, type: {startNode.specialTile?.name ?? "Unknown"} to {targetNode.position}, type: {targetNode.specialTile?.name ?? "Unknown"}");
-        return null;
+
+        return new List<Node>();
     }
 
     public List<Node> FindPathFromPlayer(Vector3 playerWorldPos, SpecialTile targetTile)
@@ -123,15 +106,5 @@ public class PathFindingLogic
     private bool IsNodeWalkable(Vector3Int pos)
     {
         return gridNodes.ContainsKey(pos) && gridNodes[pos].type != TileType.Wall;
-    }
-
-    private void CleanUpNodes(List<Node> nodes)
-    {
-        foreach (var node in nodes)
-        {
-            node.G = float.MaxValue;
-            node.H = 0;
-            node.connection = null;
-        }
     }
 }
