@@ -8,6 +8,9 @@ public class PathFindingLogic
 
     readonly Vector3Int[] neighborDirs = { new(1, 0, 0), new(-1, 0, 0), new(0, 1, 0), new(0, -1, 0) };
 
+    bool lockPortal = false;
+    bool isStartNode = false;
+
     public PathFindingLogic()
     {
         foreach (var kvp in GridManager.Instance.GetGrid())
@@ -24,15 +27,26 @@ public class PathFindingLogic
 
     public IEnumerable<Node> WalkableNeighbor(Node node)
     {
+        if (node == null)
+            yield break;
         if (node.type == TileType.Portal)
         {
-            var portal = node.specialTile as Portal;
-            if (portal.linkedPortal != null)
+            if (!lockPortal && !isStartNode)
             {
-                Vector3Int linkedPortalPos = GridManager.Instance.WorldToCell(portal.linkedPortal.transform.position);
+                lockPortal = true;
+                var portal = node.specialTile as Portal;
+                if (portal.linkedPortal != null)
+                {
+                    Vector3Int linkedPortalPos = GridManager.Instance.WorldToCell(portal.linkedPortal.transform.position);
+                    yield return gridNodes[linkedPortalPos];
+                }
+            }
+            else
+            {
+                lockPortal = false;
                 foreach (var dir in neighborDirs)
                 {
-                    Vector3Int neighborPos = linkedPortalPos + dir;
+                    Vector3Int neighborPos = node.position + dir;
                     if (IsNodeWalkable(neighborPos))
                         yield return gridNodes[neighborPos];
                 }
@@ -48,55 +62,40 @@ public class PathFindingLogic
 
     public List<Node> FindPath(Node startNode, Node targetNode)
     {
-        var toSearch = new List<Node> { startNode };
-        var processed = new List<Node>();
+        Queue<Node> openList = new();
+        Dictionary<Node, Node> cameFrom = new();
+        openList.Enqueue(startNode);
+        cameFrom[startNode] = null;
+        isStartNode = true;
 
-        while (toSearch.Count > 0)
+        while (openList.Count > 0)
         {
-            var current = toSearch[0];
-            foreach (var node in toSearch)
-                if (node.F < current.F || (node.F == current.F && node.H < current.H))
-                    current = node;
-
-            processed.Add(current);
-            toSearch.Remove(current);
-
-            if (current == targetNode)
+            var node = openList.Dequeue();
+            if (node == targetNode)
             {
-                var path = new List<Node>();
+                List<Node> path = new();
+                Node current = node;
                 while (current != null)
                 {
                     path.Add(current);
-                    current = current.connection;
+                    current = cameFrom.ContainsKey(current) ? cameFrom[current] : null;
                 }
                 path.Reverse();
-
-                CleanUpNodes(toSearch);
-                CleanUpNodes(processed);
-
                 return path;
             }
 
-            foreach (var neighbor in WalkableNeighbor(current).Where(n => !processed.Contains(n)))
+            foreach (var neighbor in WalkableNeighbor(node))
             {
-                var inSearch = toSearch.Contains(neighbor);
-                var costToNeighbor = current.G + 1;
+                if (cameFrom.ContainsKey(neighbor))
+                    continue;
 
-                if (!inSearch || costToNeighbor < neighbor.G)
-                {
-                    neighbor.G = costToNeighbor;
-                    neighbor.connection = current;
-
-                    if (!inSearch)
-                    {
-                        neighbor.H = Vector3Int.Distance(neighbor.position, targetNode.position);
-                        toSearch.Add(neighbor);
-                    }
-                }
+                cameFrom[neighbor] = node;
+                openList.Enqueue(neighbor);
             }
+            isStartNode = false;
         }
-        Debug.LogWarning($"No path found from {startNode.position}, type: {startNode.specialTile?.name ?? "Unknown"} to {targetNode.position}, type: {targetNode.specialTile?.name ?? "Unknown"}");
-        return null;
+
+        return new List<Node>();
     }
 
     public List<Node> FindPathFromPlayer(Vector3 playerWorldPos, SpecialTile targetTile)
@@ -125,13 +124,9 @@ public class PathFindingLogic
         return gridNodes.ContainsKey(pos) && gridNodes[pos].type != TileType.Wall;
     }
 
-    private void CleanUpNodes(List<Node> nodes)
+    public void SetNodeType(Vector3Int pos, TileType type)
     {
-        foreach (var node in nodes)
-        {
-            node.G = float.MaxValue;
-            node.H = 0;
-            node.connection = null;
-        }
+        if (gridNodes.ContainsKey(pos))
+            gridNodes[pos].type = type;
     }
 }

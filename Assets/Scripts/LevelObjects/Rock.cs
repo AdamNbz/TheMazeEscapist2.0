@@ -3,12 +3,14 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Rock : MonoBehaviour
+public class Rock : SpecialTile
 {
     [SerializeField] private GameObject rock;
     private SpriteRenderer hiddenRock;
 
     public static UnityAction<Vector3> OnRockEnabled;
+
+    public override TileType Type => TileType.Rock;
 
     void Start()
     {
@@ -31,6 +33,7 @@ public class Rock : MonoBehaviour
         AudioManager.Instance.PlaySfx("rock", transform.position);
         rock.transform.localScale = Vector3.zero;
         rock.transform.DOScale(1, 0.3f).SetEase(Ease.OutBack);
+        OnSpecialTileInteracted?.Invoke(this);
         OnRockEnabled?.Invoke(rock.transform.position);
     }
 }

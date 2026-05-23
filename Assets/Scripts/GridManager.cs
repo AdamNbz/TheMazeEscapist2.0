@@ -17,7 +17,7 @@ public class GridManager : MonoBehaviour
         {
             _instance = this;
         }
-    
+
         foreach (var pos in walkableTilemap.cellBounds.allPositionsWithin)
         {
             // Do something with each position
@@ -29,7 +29,7 @@ public class GridManager : MonoBehaviour
         }
     }
     #endregion
-    
+
     [SerializeField] Tilemap walkableTilemap;
     [SerializeField] Tilemap wallTilemap;
     [SerializeField] Grid grid;
@@ -44,13 +44,13 @@ public class GridManager : MonoBehaviour
     void OnEnable()
     {
         SpecialTile.OnSpecialTileInstantiated += HandleSpecialTileInstantiated;
-        Rock.OnRockEnabled += HandleRockEnabled;
+        SpecialTile.OnSpecialTileInteracted += HandleSpecialTileInteracted;
     }
 
     void OnDisable()
     {
         SpecialTile.OnSpecialTileInstantiated -= HandleSpecialTileInstantiated;
-        Rock.OnRockEnabled -= HandleRockEnabled;
+        SpecialTile.OnSpecialTileInteracted -= HandleSpecialTileInteracted;
     }
 
 
@@ -130,9 +130,12 @@ public class GridManager : MonoBehaviour
         return gridMap.ContainsKey(cellPos);
     }
 
-    private void HandleRockEnabled(Vector3 rockPosition)
+    private void HandleSpecialTileInteracted(SpecialTile tile)
     {
-        Vector3Int cellPos = wallTilemap.WorldToCell(rockPosition);
-        gridMap[cellPos].type = TileType.Wall;
+        if (tile.Type == TileType.Rock)
+        {
+            Vector3Int cellPos = wallTilemap.WorldToCell(tile.transform.position);
+            gridMap[cellPos].type = TileType.Wall;
+        }
     }
 }
