@@ -1,37 +1,78 @@
-# Hướng dẫn chơi
+![UIT](https://img.shields.io/badge/from-UIT%20VNUHCM-blue?style=for-the-badge&link=https%3A%2F%2Fwww.uit.edu.vn%2F)
 
-## Mục tiêu
-Hãy điều khiển Đậu Đậu thoát khỏi mê cung hiểm trở để kịp đến dự buổi lễ kỷ niệm 20 năm thành lập Trường Đại học Công nghệ Thông tin (UIT)!!!
+Đậu Đậu The Maze Escapist
 
-## Điều khiển
-Vuốt theo hướng trái/phải/lên/xuống để chọn hướng đi tiếp theo của nhân vật
+**Contributors**:
 
-# Hướng Dẫn Cài Đặt Game Trên Android
+- [Role: Name - Student ID - Github link]
+- Leader: Nguyễn Lê Tuấn Anh - 22520056 - [Github](https://github.com/tuananhnguyen2004)
+- Member: Nguyễn Thị Mỹ Như - 23521127 - [Github](https://github.com/ntmynhu)
+- Member: Bùi Bách Nguyên - 23521036 - [Github](https://github.com/BuiBachNguyen)
+- Member: Tiền Minh Dương - 23520357 - [Github](https://github.com/tienminhduong)
+- Member: Nguyễn Võ Ái Nhã - 25521265 - [Github](https://github.com/iinha)
 
-## 📥 Tải File APK
+**Description**: Đậu Đậu The Maze Escapist is a puzzle-adventure game specially created to celebrate the 20th anniversary of University of Information Technology. By guiding the mascot Đậu Đậu through challenging labyrinths on a journey to school., players must help Đậu Đậu arrive in time for the grand anniversary celebration.
 
-1. Truy cập vào mục **Releases** của repository này.
-2. Tải xuống file `.apk` mới nhất từ phiên bản phát hành gần đây nhất.
-3. Mở file `.apk` vừa tải trên thiết bị Android của bạn.
-4. Nếu hệ thống yêu cầu, hãy bật:
-   - **Cho phép cài đặt ứng dụng không rõ nguồn gốc**
-   - hoặc **Allow installation from this source**
-5. Tiếp tục quá trình cài đặt.
-6. Chờ quá trình cài đặt hoàn tất.
-7. Mở game từ màn hình ứng dụng của thiết bị.
+**How to use**: Swipe left, right, up, or down to choose the character’s next direction.
 
-## ⚠️ Lưu Ý
+**Additional information**: No additional information is available at this time.
 
-- Game hiện chỉ hỗ trợ trên nền tảng **Android**.
-- Hãy đảm bảo thiết bị còn đủ dung lượng trước khi cài đặt.
-- Một số thiết bị có thể hiển thị cảnh báo khi cài đặt APK ngoài Google Play Store. Đây là hành vi bình thường đối với ứng dụng cài thủ công.
+**Code of conducting**:
 
-## 🔄 Cập Nhật Game
+We are committed to creating a friendly, respectful, and collaborative environment for everyone who contributes to this project. This game was developed to celebrate the 20th anniversary of University of Information Technology, and we encourage all contributors and players to help maintain a positive community spirit.
 
-Để cập nhật phiên bản mới:
+*Our Standards*
 
-1. Tải file APK mới nhất trong mục **Releases**.
-2. Cài đặt trực tiếp phiên bản mới lên phiên bản cũ.
-3. Dữ liệu game có thể sẽ được giữ nguyên tùy theo phiên bản cập nhật.
+Be respectful and supportive toward other contributors.
+Use welcoming and inclusive language.
+Accept constructive feedback gracefully.
+Focus on collaboration and learning.
+Respect different opinions and experiences.
 
-Chúc các bạn chơi game vui vẻ!
+*Unacceptable Behavior*
+
+Harassment, discrimination, or hateful speech.
+Personal attacks or toxic behavior.
+Spamming, trolling, or intentionally disruptive actions.
+Sharing inappropriate or offensive content.
+
+*Contribution Guidelines*
+
+Write clean and understandable code.
+Follow the project structure and coding conventions.
+Clearly document major changes or new features.
+Test your changes before submitting contributions.
+
+By participating in this project, you agree to follow these guidelines and help create a positive experience for everyone.
+
+**License**: MIT License
+
+## Installation Guide for Android
+
+### 📥 Download the APK File
+
+1. Go to the **Releases** section of this repository.
+2. Download the latest `.apk` file from the most recent release.
+3. Open the downloaded `.apk` file on your Android device.
+4. If prompted by the system, enable:
+   - **Allow installation from unknown sources**
+   - or **Allow installation from this source**
+5. Continue the installation process.
+6. Wait for the installation to finish.
+7. Launch the game from your device’s application screen.
+
+### ⚠️ Notes
+
+- The game currently supports **Android devices only**.
+- Make sure your device has enough available storage before installation.
+- Some devices may display a warning when installing APK files outside of the Google Play Store. This is normal for manually installed applications.
+
+### 🔄 Updating the Game
+
+To update to a newer version:
+
+1. Download the latest APK file from the **Releases** section.
+2. Install the new version directly over the existing one.
+3. Game data may be preserved depending on the update version.
+
+Enjoy the game!
