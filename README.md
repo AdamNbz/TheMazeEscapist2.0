@@ -1,8 +1,8 @@
 ![UIT](https://img.shields.io/badge/from-UIT%20VNUHCM-blue?style=for-the-badge&link=https%3A%2F%2Fwww.uit.edu.vn%2F)
 
-Đậu Đậu The Maze Escapist
+# Đậu Đậu The Maze Escapist
 
-**Contributors**:
+## Contributors:
 
 - [Role: Name - Student ID - Github link]
 - Leader: Nguyễn Lê Tuấn Anh - 22520056 - [Github](https://github.com/tuananhnguyen2004)
@@ -11,17 +11,20 @@
 - Member: Tiền Minh Dương - 23520357 - [Github](https://github.com/tienminhduong)
 - Member: Nguyễn Võ Ái Nhã - 25521265 - [Github](https://github.com/iinha)
 
-**Description**: Đậu Đậu The Maze Escapist is a puzzle-adventure game specially created to celebrate the 20th anniversary of University of Information Technology. By guiding the mascot Đậu Đậu through challenging labyrinths on a journey to school., players must help Đậu Đậu arrive in time for the grand anniversary celebration.
+## Description: 
+Đậu Đậu The Maze Escapist is a puzzle-adventure game specially created to celebrate the 20th anniversary of University of Information Technology. By guiding the mascot Đậu Đậu through challenging labyrinths on a journey to school., players must help Đậu Đậu arrive in time for the grand anniversary celebration.
 
-**How to use**: Swipe left, right, up, or down to choose the character’s next direction.
+## How to use: 
+Swipe left, right, up, or down to choose the character’s next direction.
 
-**Additional information**: No additional information is available at this time.
+## Additional information: 
+No additional information is available at this time.
 
-**Code of conducting**:
+## Code of conducting:
 
 We are committed to creating a friendly, respectful, and collaborative environment for everyone who contributes to this project. This game was developed to celebrate the 20th anniversary of University of Information Technology, and we encourage all contributors and players to help maintain a positive community spirit.
 
-*Our Standards*
+### Our Standards
 
 Be respectful and supportive toward other contributors.
 Use welcoming and inclusive language.
@@ -29,14 +32,14 @@ Accept constructive feedback gracefully.
 Focus on collaboration and learning.
 Respect different opinions and experiences.
 
-*Unacceptable Behavior*
+### Unacceptable Behavior
 
 Harassment, discrimination, or hateful speech.
 Personal attacks or toxic behavior.
 Spamming, trolling, or intentionally disruptive actions.
 Sharing inappropriate or offensive content.
 
-*Contribution Guidelines*
+### Contribution Guidelines
 
 Write clean and understandable code.
 Follow the project structure and coding conventions.
@@ -45,7 +48,8 @@ Test your changes before submitting contributions.
 
 By participating in this project, you agree to follow these guidelines and help create a positive experience for everyone.
 
-**License**: MIT License
+## License: 
+MIT License
 
 ## Installation Guide for Android
 
