@@ -4,7 +4,6 @@
 
 ## Contributors:
 
-- [Role: Name - Student ID - Github link]
 - Leader: Nguyễn Lê Tuấn Anh - 22520056 - [Github](https://github.com/tuananhnguyen2004)
 - Member: Nguyễn Thị Mỹ Như - 23521127 - [Github](https://github.com/ntmynhu)
 - Member: Bùi Bách Nguyên - 23521036 - [Github](https://github.com/BuiBachNguyen)
