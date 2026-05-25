@@ -371,4 +371,10 @@ public class WorldMapRecycler : MonoBehaviour
     {
         SceneManager.LoadScene("Level " + PlayerProgress.CurrentLevel);
     }
+
+    public void ClearDataAndReload()
+    {
+        PlayerProgress.SetCurrentLevel(1);
+        SceneController.Instance.TransitionToScene("LevelSelection");
+    }    
 }
