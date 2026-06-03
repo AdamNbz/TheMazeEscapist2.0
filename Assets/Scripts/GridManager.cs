@@ -82,7 +82,7 @@ public class GridManager : MonoBehaviour
 
             result.directions.Add(direction);
 
-            if (gridMap[startCellPos].type == TileType.Slime)
+            if (gridMap[startCellPos].type == TileType.Slime) // slime stops movement
                 break;
 
             var prevDirection = -direction;
