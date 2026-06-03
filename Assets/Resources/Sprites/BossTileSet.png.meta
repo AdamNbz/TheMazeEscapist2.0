@@ -250,10 +250,10 @@ TextureImporter:
       name: BossTileSet_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 828
-        width: 276
-        height: 276
+        x: 2
+        y: 830
+        width: 270
+        height: 269
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -272,10 +272,10 @@ TextureImporter:
       name: BossTileSet_1
       rect:
         serializedVersion: 2
-        x: 276
-        y: 828
-        width: 276
-        height: 276
+        x: 279
+        y: 830
+        width: 273
+        height: 269
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -294,10 +294,10 @@ TextureImporter:
       name: BossTileSet_2
       rect:
         serializedVersion: 2
-        x: 552
-        y: 828
-        width: 276
-        height: 276
+        x: 554
+        y: 830
+        width: 271
+        height: 269
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -316,10 +316,10 @@ TextureImporter:
       name: BossTileSet_3
       rect:
         serializedVersion: 2
-        x: 828
-        y: 828
-        width: 276
-        height: 276
+        x: 831
+        y: 830
+        width: 271
+        height: 269
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -338,10 +338,10 @@ TextureImporter:
       name: BossTileSet_4
       rect:
         serializedVersion: 2
-        x: 0
+        x: 3
         y: 552
-        width: 276
-        height: 276
+        width: 268
+        height: 272
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -360,10 +360,10 @@ TextureImporter:
       name: BossTileSet_5
       rect:
         serializedVersion: 2
-        x: 276
-        y: 552
-        width: 276
-        height: 276
+        x: 279
+        y: 547
+        width: 268
+        height: 277
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -382,10 +382,10 @@ TextureImporter:
       name: BossTileSet_6
       rect:
         serializedVersion: 2
-        x: 552
+        x: 557
         y: 552
-        width: 276
-        height: 276
+        width: 267
+        height: 272
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -404,10 +404,10 @@ TextureImporter:
       name: BossTileSet_7
       rect:
         serializedVersion: 2
-        x: 828
+        x: 833
         y: 552
-        width: 276
-        height: 276
+        width: 267
+        height: 272
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -418,182 +418,6 @@ TextureImporter:
       bones: []
       spriteID: 4e96f37cbf4b33460800000000000000
       internalID: 7220313621077649892
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossTileSet_8
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 276
-        width: 276
-        height: 276
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c26b6a79547e16d90800000000000000
-      internalID: -7106144450930887124
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossTileSet_9
-      rect:
-        serializedVersion: 2
-        x: 276
-        y: 276
-        width: 276
-        height: 276
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fa1d1b578b3a34180800000000000000
-      internalID: -9132275606733336145
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossTileSet_10
-      rect:
-        serializedVersion: 2
-        x: 552
-        y: 276
-        width: 276
-        height: 276
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d9f5130a6e85d5d80800000000000000
-      internalID: -8260348393974308963
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossTileSet_11
-      rect:
-        serializedVersion: 2
-        x: 828
-        y: 276
-        width: 276
-        height: 276
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 65414389513a0ba10800000000000000
-      internalID: 1923216354030392406
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossTileSet_12
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 276
-        height: 276
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 20a901ffd72ebcf70800000000000000
-      internalID: 9208702893867178498
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossTileSet_13
-      rect:
-        serializedVersion: 2
-        x: 276
-        y: 0
-        width: 276
-        height: 276
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 41c52e10c431ee730800000000000000
-      internalID: 4030179933713226772
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossTileSet_14
-      rect:
-        serializedVersion: 2
-        x: 552
-        y: 0
-        width: 276
-        height: 276
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ab45f3e3f78bcf780800000000000000
-      internalID: -8647834327813499718
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossTileSet_15
-      rect:
-        serializedVersion: 2
-        x: 828
-        y: 0
-        width: 276
-        height: 276
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 08e64b6a240ed2c60800000000000000
-      internalID: 7795133106917502592
       vertices: []
       indices: 
       edges: []
@@ -612,24 +436,18 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":4.0},"gridSpriteSize":{"x":276.0,"y":276.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":true,"gridCellCount":{"x":4.0,"y":4.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":8.0,"y":8.0},"gridSpritePadding":{"x":2.0,"y":2.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      - key: SpriteEditor.SliceOnImport
+        value: True
     nameFileIdTable:
       BossTileSet_0: 8076368564165246243
       BossTileSet_1: 368865104446253122
-      BossTileSet_10: -8260348393974308963
-      BossTileSet_11: 1923216354030392406
-      BossTileSet_12: 9208702893867178498
-      BossTileSet_13: 4030179933713226772
-      BossTileSet_14: -8647834327813499718
-      BossTileSet_15: 7795133106917502592
       BossTileSet_2: -8801306789061785850
       BossTileSet_3: 5586626387241726366
       BossTileSet_4: -2184022083519110181
       BossTileSet_5: -5172200566868906692
       BossTileSet_6: -7208512932725462964
       BossTileSet_7: 7220313621077649892
-      BossTileSet_8: -7106144450930887124
-      BossTileSet_9: -9132275606733336145
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

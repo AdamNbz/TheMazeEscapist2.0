@@ -82,6 +82,9 @@ public class GridManager : MonoBehaviour
 
             result.directions.Add(direction);
 
+            if (gridMap[startCellPos].type == TileType.Slime)
+                break;
+
             var prevDirection = -direction;
             var fourDirections = new Vector2Int[] { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
             var countPossibleDirections = 0;
