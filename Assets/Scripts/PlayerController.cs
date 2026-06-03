@@ -83,8 +83,11 @@ public class PlayerController : MonoBehaviour
         if (lockMoving) return;
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.Log("Pointer is over UI, ignoring input.");
-            return;
+            if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.gameObject.tag != "EffectUI")
+            {
+                Debug.Log("Pointer is over UI, ignoring input.");
+                return;
+            }
         }
 
         if (value.Get<float>() > 0.5f)
