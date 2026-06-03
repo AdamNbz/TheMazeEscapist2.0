@@ -22,6 +22,7 @@ public class Rock : SpecialTile
     {
         if (collision.CompareTag("Player"))
         {
+            Debug.Log("Rock tile triggered!");
             EnableRock();
         }
     }

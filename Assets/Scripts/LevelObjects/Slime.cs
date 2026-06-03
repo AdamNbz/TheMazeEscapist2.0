@@ -19,6 +19,7 @@ public class Slime : SpecialTile
     {
         if (collision.CompareTag("Player"))
         {
+            Debug.Log("Slime tile triggered!");
             OnSpecialTileInteracted?.Invoke(this);
             AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
         }
