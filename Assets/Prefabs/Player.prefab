@@ -590,6 +590,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   lockMoving: 0
+  moveBufferHandler:
+    bufferTime: 2
 --- !u!114 &6384595562667306134
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ using UnityEngine.EventSystems;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] bool lockMoving = false;
+    [SerializeField] private PlayerMoveBufferHandler moveBufferHandler;
     private Vector2 touchPosition = Vector2.zero;
     private Vector2 releasePosition = Vector2.zero;
     private Vector2 inputPosition = Vector2.zero;
@@ -60,9 +61,13 @@ public class PlayerController : MonoBehaviour
         lockMoving = false;
     }
 
+    void Update()
+    {
+        moveBufferHandler.Update();
+    }
+
     public void OnMove(InputValue value)
     {
-        if (lockMoving) return;
 
         Vector2 input = value.Get<Vector2>();
         Debug.Log($"Move: {input}");
@@ -71,13 +76,11 @@ public class PlayerController : MonoBehaviour
         if (direction == Vector2Int.zero)
             return;
 
-        var path = GridManager.Instance.FindPathFromWorld(transform.position, direction);
-        MoveWithPath(path);
+        HandleInput(direction);
     }
 
     public void OnPrimaryContact(InputValue value)
     {
-        if (lockMoving) return;
         if (EventSystem.current.IsPointerOverGameObject())
         {
             Debug.Log("Pointer is over UI, ignoring input.");
@@ -86,29 +89,23 @@ public class PlayerController : MonoBehaviour
 
         if (value.Get<float>() > 0.5f)
         {
-            Debug.Log("Primary Contact Started");
+            // Start detecting swipe
             touchPosition = inputPosition;
-            Debug.Log($"Touch Position: {touchPosition}");
         }
         else
         {
-            Debug.Log("Primary Contact Canceled");
+            // End of swipe, determine direction
             releasePosition = inputPosition;
-            Debug.Log($"Release Position: {releasePosition}");
 
             var direction = Vector2Int.zero;
             var swipeVector = releasePosition - touchPosition;
 
             if (Mathf.Abs(swipeVector.x) > Mathf.Abs(swipeVector.y))
-            {
                 direction.x = swipeVector.x > 0 ? 1 : -1;
-            }
             else
-            {
                 direction.y = swipeVector.y > 0 ? 1 : -1;
-            }
-            var path = GridManager.Instance.FindPathFromWorld(transform.position, direction);
-            MoveWithPath(path);
+
+            HandleInput(direction);
         }
     }
 
@@ -145,15 +142,7 @@ public class PlayerController : MonoBehaviour
                 }));
             currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
         }
-        moveSequence.OnComplete(() =>
-        {
-            lockMoving = false;
-            if (animator != null)
-            {
-                animator.Play("Idle");
-            }
-            OnTurnMove?.Invoke();
-        });
+        moveSequence.OnComplete(EndMoving);
     }
 
     public async void HandleTeleport(TeleportData data)
@@ -167,8 +156,33 @@ public class PlayerController : MonoBehaviour
         transform.position = data.TargetPosition;
         await transform.DOScale(currentScale, 0.25f).SetEase(Ease.OutBack).ToUniTask();
 
-        lockMoving = false;
         data.LinkedPortal.UnlockPortal();
+        EndMoving();
+    }
+
+    private void EndMoving()
+    {
+        lockMoving = false;
+        if (animator != null)
+            animator.Play("Idle");
+
+        var bufferedMove = moveBufferHandler.GetBufferedMove();
+        if (bufferedMove.HasValue)
+        {
+            var newPath = GridManager.Instance.FindPathFromWorld(transform.position, bufferedMove.Value);
+            MoveWithPath(newPath);
+        }
         OnTurnMove?.Invoke();
+    }
+
+    private void HandleInput(Vector2Int direction)
+    {
+        if (lockMoving)
+            moveBufferHandler.AddMove(direction);
+        else
+        {
+            var path = GridManager.Instance.FindPathFromWorld(transform.position, direction);
+            MoveWithPath(path);
+        }
     }
 }
