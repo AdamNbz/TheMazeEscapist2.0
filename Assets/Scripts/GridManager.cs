@@ -73,14 +73,17 @@ public class GridManager : MonoBehaviour
         {
             stepLength = grid.transform.localScale.x
         };
+        var currentPos = startCellPos;
 
         while (true)
         {
-            startCellPos += (Vector3Int)direction;
-            if (!IsWalkable(startCellPos))
+            currentPos += (Vector3Int)direction;
+            if (!IsWalkable(currentPos))
                 break;
 
             result.directions.Add(direction);
+            if (currentPos == startCellPos)
+                break;
 
             var prevDirection = -direction;
             var fourDirections = new Vector2Int[] { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -90,7 +93,7 @@ public class GridManager : MonoBehaviour
                 if (dir == prevDirection)
                     continue;
 
-                var nextCellPos = startCellPos + (Vector3Int)dir;
+                var nextCellPos = currentPos + (Vector3Int)dir;
                 if (IsWalkable(nextCellPos))
                 {
                     countPossibleDirections++;
