@@ -7,6 +7,9 @@ public class GridManager : MonoBehaviour
     #region Singleton
     private static GridManager _instance;
     public static GridManager Instance { get { return _instance; } }
+
+    [SerializeField] private GameObject raisableWallPrefab;
+
     void Awake()
     {
         if (_instance != null && _instance != this)
@@ -58,7 +61,7 @@ public class GridManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        RaiseWall(new Vector3Int(0, 0, 0));
     }
 
     public Path FindPathFromWorld(Vector3 startWorldPos, Vector2Int direction)
@@ -139,6 +142,39 @@ public class GridManager : MonoBehaviour
         {
             Vector3Int cellPos = wallTilemap.WorldToCell(tile.transform.position);
             gridMap[cellPos].type = TileType.Wall;
+        }
+    }
+
+    public void SetNodeType(Vector3Int cellPos, TileType type)
+    {
+        if (gridMap.ContainsKey(cellPos))
+        {
+            gridMap[cellPos].type = type;
+        }
+    }
+
+    public void RaiseWall(Vector3Int cellPos)
+    {
+        if (gridMap.ContainsKey(cellPos))// && gridMap[cellPos].type != TileType.Wall)
+        {
+            // Instantiate a raisable wall at the given cell position
+            var worldPos = CellToWorld(cellPos);
+            var wallObj = Instantiate(raisableWallPrefab, worldPos + new Vector3(0.5f, 0f, 0f), Quaternion.identity);
+            var wallTile = wallObj.GetComponent<RaisableWall>();
+            if (wallTile != null)
+            {
+                wallTile.Raise();
+                gridMap[cellPos].type = TileType.Wall;
+                gridMap[cellPos].specialTile = wallTile;
+            }
+        }
+    }
+
+    public void LowerWall(Vector3Int cellPos)
+    {
+        if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].type == TileType.Wall)
+        {
+
         }
     }
 }

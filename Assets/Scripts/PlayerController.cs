@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     public static UnityAction OnLoseGame;
     public static UnityAction OnTurnMove;
     public static UnityAction OnStartMoving;
+
+    public static UnityAction OnPlayerHurt;
     [SerializeField] private int maxHealth = 5;
     private int currentHealth;
 

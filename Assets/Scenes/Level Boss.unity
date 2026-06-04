@@ -5389,6 +5389,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -10.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5730920069097325128, guid: 994d421013effea24b9479f10c757ceb, type: 3}
+      propertyPath: raisableWallPrefab
+      value: 
+      objectReference: {fileID: 6104882261780528858, guid: f0e3337183d09554fb95fdbd03a4abf8, type: 3}
     - target: {fileID: 6934076616593473380, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: m_Size.x
       value: 24
