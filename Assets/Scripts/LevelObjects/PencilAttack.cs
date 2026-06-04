@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,15 +13,16 @@ class PencilAttack : MonoBehaviour
     Vector3Int direction;
     Vector3Int initialPosition; // row or column depending on direction
 
+    Tween fadeTween;
+
     private void Start()
     {
         // For testing purposes, trigger the pencil attack after 5 seconds
         //Invoke(nameof(TriggerPencilAttack), 5f);
     }
 
-    public void Initialise(bool canFollow, float aimingDuration, float lockDuration, float speed, Vector3Int direction, Vector3Int initialPosition)
+    public void Initialise(float aimingDuration, float lockDuration, float speed, Vector3Int direction, Vector3Int initialPosition)
     {
-        this.canFollow = canFollow;
         this.aimingDuration = aimingDuration;
         this.lockDuration = lockDuration;
         this.speed = speed;
@@ -55,6 +57,12 @@ class PencilAttack : MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(0, 0, 90);
         }
+
+        // Use tween to fade in the pencil over the aiming duration
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        Color originalColor = sr.color;
+        sr.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0);
+        fadeTween = sr.DOColor(originalColor, aimingDuration).SetLink(gameObject);
     }
 
     private void Update()
@@ -76,6 +84,7 @@ class PencilAttack : MonoBehaviour
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
         if (screenPos.x < -100 || screenPos.x > Screen.width + 100 || screenPos.y < -100 || screenPos.y > Screen.height + 100)
         {
+            if (fadeTween != null && fadeTween.IsActive()) fadeTween.Kill();
             Destroy(gameObject);
             return;
         }
@@ -86,7 +95,7 @@ class PencilAttack : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             Debug.Log("Player hit by pencil attack!");
-            // Here you can add logic to damage the player or trigger a hit effect
+            if (fadeTween != null && fadeTween.IsActive()) fadeTween.Kill();
             Destroy(gameObject);
         }
     }

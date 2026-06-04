@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -54,14 +55,6 @@ public class GridManager : MonoBehaviour
     {
         SpecialTile.OnSpecialTileInstantiated -= HandleSpecialTileInstantiated;
         SpecialTile.OnSpecialTileInteracted -= HandleSpecialTileInteracted;
-    }
-
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        RaiseWall(new Vector3Int(0, 0, 0));
     }
 
     public Path FindPathFromWorld(Vector3 startWorldPos, Vector2Int direction)
@@ -155,7 +148,7 @@ public class GridManager : MonoBehaviour
 
     public void RaiseWall(Vector3Int cellPos)
     {
-        if (gridMap.ContainsKey(cellPos))// && gridMap[cellPos].type != TileType.Wall)
+        if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall)
         {
             // Instantiate a raisable wall at the given cell position
             var worldPos = CellToWorld(cellPos);
@@ -172,9 +165,14 @@ public class GridManager : MonoBehaviour
 
     public void LowerWall(Vector3Int cellPos)
     {
-        if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].type == TileType.Wall)
+        if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].type == TileType.Wall && gridMap[cellPos].specialTile != null)
         {
-
+            var wallTile = gridMap[cellPos].specialTile.GetComponent<RaisableWall>();
+            if (wallTile != null)
+            {
+                wallTile.Lower();
+                // grid map will set to walkable after wall finishes lowering
+            }
         }
     }
 }

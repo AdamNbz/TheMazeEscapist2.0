@@ -28,9 +28,10 @@ public class RaisableWall : SpecialTile
         this.gameObject.SetActive(true);
         // Tween y scale from 1 to 0
         transform.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
-        var tween = transform.DOScaleY(0, 1f).SetEase(Ease.InElastic);
+        var tween = transform.DOScaleY(0, 1f);
         tween.OnComplete(() =>
         {
+            GridManager.Instance.SetNodeType(GridManager.Instance.WorldToCell(transform.position), TileType.Walkable);
             Destroy(this.gameObject);
         });
 
