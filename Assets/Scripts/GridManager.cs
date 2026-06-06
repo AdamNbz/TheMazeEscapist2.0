@@ -75,14 +75,16 @@ public class GridManager : MonoBehaviour
             stepLength = grid.transform.localScale.x
         };
         Vector3Int toCellPos;
+        float stopTime = 0;
 
         while (true)
         {
+            stopTime = 0; // reset stopTime before checking each cell
             toCellPos = startCellPos + (Vector3Int)direction;
-            if (!IsWalkable(startCellPos, toCellPos, direction))
+            if (!IsWalkable(startCellPos, toCellPos, direction, ref stopTime))
                 break;
 
-            result.directions.Add(direction);
+            result.directions.Add(new NodeData(direction, stopTime));
 
             var prevDirection = -direction;
             var fourDirections = new Vector2Int[] { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -93,7 +95,7 @@ public class GridManager : MonoBehaviour
                     continue;
 
                 var nextCellPos = toCellPos + (Vector3Int)dir;
-                if (IsWalkable(toCellPos, nextCellPos, dir))
+                if (IsWalkable(toCellPos, nextCellPos, dir, ref stopTime))
                 {
                     countPossibleDirections++;
                     direction = dir;
@@ -107,7 +109,7 @@ public class GridManager : MonoBehaviour
         return result;
     }
 
-    public bool IsWalkable(Vector3Int fromCellPos, Vector3Int toCellPos, Vector2 direction)
+    public bool IsWalkable(Vector3Int fromCellPos, Vector3Int toCellPos, Vector2 direction, ref float stopTime)
     {
         if(!gridMap.ContainsKey(toCellPos))
             return false;
@@ -150,7 +152,10 @@ public class GridManager : MonoBehaviour
         {
             var oneWayDoor = gridMap[toCellPos].specialTile as OneWayDoor;
             if (oneWayDoor.CanGoThrough(direction))
+            {
+                stopTime = oneWayDoor.StopTime;
                 return true;
+            }
             else
                 return false;
         }
