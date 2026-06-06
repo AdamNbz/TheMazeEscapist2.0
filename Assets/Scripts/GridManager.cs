@@ -136,12 +136,25 @@ public class GridManager : MonoBehaviour
                 return false;
         }
 
+        // Check if the toCellPos and fromCellPos are walkable or wall,
+        // if one of them is walkable and the other is wall, return false
         TileType toTileType = gridMap[toCellPos].type;
         TileType fromTileType = gridMap[fromCellPos].type;
 
         if ((toTileType == TileType.Walkable && fromTileType == TileType.Wall) ||
             (toTileType == TileType.Wall && fromTileType == TileType.Walkable))
             return false;
+
+        // Check if the toCellPos is a one way door
+        if (gridMap[toCellPos].specialTile != null && gridMap[toCellPos].specialTile.Type == TileType.OneWayDoor)
+        {
+            var oneWayDoor = gridMap[toCellPos].specialTile as OneWayDoor;
+            if (oneWayDoor.CanGoThrough(direction))
+                return true;
+            else
+                return false;
+        }
+
         return true;
     }
 

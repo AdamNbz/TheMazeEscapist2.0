@@ -82,6 +82,7 @@ Transform:
   - {fileID: 814831354548511389}
   - {fileID: 5747317694804170815}
   - {fileID: 4554296917497098705}
+  - {fileID: 1482367109653003148}
   m_Father: {fileID: 9119726984822477084}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &9047597445201770537
@@ -557,6 +558,68 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1001 &1079312549261554280
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5869416465247660856}
+    m_Modifications:
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 11.875
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8450262434215746693, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+      propertyPath: m_Name
+      value: OneWayDoor
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+--- !u!4 &1482367109653003148 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1902788451020687844, guid: d6a3a10426921a640b9f2dae75d9e0a5, type: 3}
+  m_PrefabInstance: {fileID: 1079312549261554280}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1254138950345001820
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -705,6 +768,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5869416465247660856}
     m_Modifications:
+    - target: {fileID: 963718656211634852, guid: cff13ba4a58da974e93a234e3c5d980b, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963718656211634852, guid: cff13ba4a58da974e93a234e3c5d980b, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2873384516460552039, guid: cff13ba4a58da974e93a234e3c5d980b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.875
@@ -977,7 +1048,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
   m_PrefabInstance: {fileID: 7997803444834147624}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6316716180839533062
+--- !u!114 &1206018913521782458
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
