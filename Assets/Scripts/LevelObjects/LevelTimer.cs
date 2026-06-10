@@ -1,7 +1,9 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class LevelTimer : MonoBehaviour
 {
@@ -13,10 +15,14 @@ public class LevelTimer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerText;
     public static UnityAction OnTimeOut;
 
+    [SerializeField] private List<Sprite> stars;
+    [SerializeField] private Image img;
+
     private void Start()
     {
         timeRemaining = timeLimit;
         StartTimer();
+        img.sprite = stars[0];
     }
 
     void OnEnable()
@@ -49,7 +55,11 @@ public class LevelTimer : MonoBehaviour
     private void UpdateTimerDisplay()
     {
         timerText.text = string.Format(timerDisplayFormat, timeRemaining);
-        if (timeRemaining <= 0) timerText.text = "TIME OUT!";
+        if (timeRemaining <= 0)
+        {
+            timerText.text = "TIME OUT!";
+            //img.sprite = stars[1];
+        }
     }
 
     public void StartTimer()
@@ -68,6 +78,30 @@ public class LevelTimer : MonoBehaviour
         UpdateTimerDisplay();
     }
 
+    public void DoAnimation()
+    {
+        img.rectTransform
+            .DOPunchScale(Vector3.one * 0.5f, 0.4f, 8, 0.8f)
+            .OnComplete(() =>
+            {
+                img.sprite = stars[1];
+            });
+
+        timerText.rectTransform.DOShakeAnchorPos(
+            1f,
+            new Vector2(25f, 0),
+            25,
+            0,
+            false,
+            true
+        );
+
+        //DOVirtual.DelayedCall(1f, () =>
+        //{
+        //    PlayerController.OnLoseGame?.Invoke();
+        //});
+    }
+    /* old
     public void DoAnimation()
     {
         timerText.color = Color.red;
@@ -102,4 +136,5 @@ public class LevelTimer : MonoBehaviour
             PlayerController.OnLoseGame?.Invoke();
         });
     }
+    */
 }

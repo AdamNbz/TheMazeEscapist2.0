@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
     private void LockInput()
     {
+        return;
         lockMoving = true;
         moveSequence?.Kill();
     }

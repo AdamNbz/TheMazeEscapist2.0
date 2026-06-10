@@ -49,6 +49,8 @@ public class WorldMapRecycler : MonoBehaviour
         CreateInitialSections();
 
         ScrollToCurrentLevelSmooth();
+
+        PlayerPrefs.SetString("Level1", "true|true|true");
     }
     public void PlusLevel()
     {

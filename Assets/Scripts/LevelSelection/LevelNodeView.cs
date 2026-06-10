@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,13 @@ public class LevelNodeView : MonoBehaviour
     private int levelId;
 
     private Tween bounceTween;
+
+    [SerializeField]
+    private List<Image> stars;
+    [SerializeField]
+    private List<Sprite> starSprites;
+
+
     public void Setup(
         int id,
         bool unlocked)
@@ -35,9 +43,18 @@ public class LevelNodeView : MonoBehaviour
 
         button.onClick.AddListener(OnClick);
 
+        SetUpStarStatus();
+
         SetupCurrentLevelAnimation();
     }
-
+    void SetUpStarStatus()
+    {
+        List<bool> stars = PlayerProgress.GetStarAtLevel(levelId);
+        for(int i = 0; i < this.stars.Count; i++)
+        {
+            this.stars[i].sprite = stars[i]? starSprites[0]: starSprites[1];
+        }    
+    }    
     void SetupCurrentLevelAnimation()
     {
         transform.localScale = Vector3.one;

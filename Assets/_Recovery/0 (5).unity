@@ -1466,18 +1466,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 5274218877384614325, guid: 04a15f270069a67479f7130fd35196e0, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5274218877384614325, guid: 04a15f270069a67479f7130fd35196e0, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5274218877384614325, guid: 04a15f270069a67479f7130fd35196e0, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6257073306140119184, guid: 04a15f270069a67479f7130fd35196e0, type: 3}
       propertyPath: m_Name
       value: ClearData
@@ -1497,18 +1485,6 @@ PrefabInstance:
     - target: {fileID: 6752882790654313341, guid: 04a15f270069a67479f7130fd35196e0, type: 3}
       propertyPath: m_Name
       value: LevelSelection
-      objectReference: {fileID: 0}
-    - target: {fileID: 7039702842802321443, guid: 04a15f270069a67479f7130fd35196e0, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7039702842802321443, guid: 04a15f270069a67479f7130fd35196e0, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7039702842802321443, guid: 04a15f270069a67479f7130fd35196e0, type: 3}
-      propertyPath: m_Color.r
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7572150103999611125, guid: 04a15f270069a67479f7130fd35196e0, type: 3}
       propertyPath: m_Type

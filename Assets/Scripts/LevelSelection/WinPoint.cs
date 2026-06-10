@@ -12,7 +12,7 @@ public class WinPoint : SpecialTile
 
     private Dictionary<string, bool> conditionStatus = new();
     private int conditionsNotMetCount = 0;
-
+    bool s1 = true, s2 = true, s3 = true;
     public override TileType Type => TileType.WinPoint;
 
     void Awake()
@@ -33,7 +33,19 @@ public class WinPoint : SpecialTile
         }
 
         OnUnlockedConditionMet += UnlockWinPoint;
+        OnLevelComplete += CompletedLevel;
+        TurnTimer.OnTimeOut -= SetSecStarStatus;
+        LevelTimer.OnTimeOut -= SetThirdStarStatus;
     }
+
+    void SetSecStarStatus()
+    {
+        s2 = false;
+    }    
+    void SetThirdStarStatus()
+    {
+        s3 = false;
+    }    
 
     void OnDestroy()
     {
@@ -76,6 +88,12 @@ public class WinPoint : SpecialTile
             AudioManager.Instance.PlaySfx("victory", Vector2.zero);
         }
     }
+    private void CompletedLevel()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        int currentLevel = int.Parse(currentScene.Replace("Level ", ""));
+        PlayerProgress.SetStarAtLevel(currentLevel, s1, s2, s3);
+    }    
     private void CheckLevel()
     {
         string currentScene = SceneManager.GetActiveScene().name;
