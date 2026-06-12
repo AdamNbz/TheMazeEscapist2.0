@@ -48,17 +48,18 @@ public class BossController : MonoBehaviour
         List<BossCommand> phase1Commands = new List<BossCommand>
         {
             new FollowAttack(this),
+            new OneGapAttack(this),
         };
         List<BossCommand> phase2Commands = new List<BossCommand>
         {
-            // Add phase 2 commands here
+            new OneSquareAttack(this),
         };
         List<BossCommand> phase3Commands = new List<BossCommand>
         {
-            // Add phase 3 commands here
+            new ChasingAttack(this),
         };
         var phase1 = new BossPhase(this, animator, phase1Commands);
-        var phase2 = new BossPhase(this, animator, phase2Commands);
+        var phase2 = new BossPhase(this, animator, phase2Commands, 4, new RaiseRandomWalls(this));
         var phase3 = new BossPhase(this, animator, phase3Commands);
         var hurtState = new BossHurtState(this, animator);
         var winState = new BossWinState(this, animator);
@@ -108,14 +109,24 @@ public class BossController : MonoBehaviour
     public void TriggerRaisingWall(Vector3Int cellPosition)
     {
         //Debug.Log("Boss triggered raising wall!");
-        var warningTile = Instantiate(WarningTilePrefab, GridManager.Instance.CellToWorld(cellPosition) + new Vector3(0.5f, 0.5f, 0), Quaternion.identity);
-        warningTile.GetComponent<WarningTile>().Init(3f);
+        GridManager.Instance.RaiseWall(cellPosition);
     }
 
     public void TriggerLoweringWall(Vector3Int cellPosition)
     {
         //Debug.Log("Boss triggered lowering wall!");
         GridManager.Instance.LowerWall(cellPosition);
+    }
+
+    public void TriggerLowerAllWalls()
+    {
+        for (int i = originCell.x; i < originCell.x + size; i++)
+        {
+            for (int j = originCell.y; j > originCell.y - size; j--)
+            {
+                GridManager.Instance.LowerWall(new Vector3Int(i, j, 0));
+            }
+        }
     }
 
     public void TriggerCreateTile(Vector3Int cellPosition, GameObject tilePrefab)
