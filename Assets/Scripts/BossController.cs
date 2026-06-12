@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 
 public class BossController : MonoBehaviour
@@ -13,8 +14,15 @@ public class BossController : MonoBehaviour
 
     public float fadeDuration = 1f;
     [SerializeField] private Image InkEffectImage;
-    [SerializeField] private GameObject PencilAttackPrefab;
-    [SerializeField] private GameObject WarningTilePrefab;
+    [SerializeField] public GameObject HealPotionPrefab;
+    [SerializeField] public GameObject InkPrefab;
+    [SerializeField] public GameObject SwordPrefab;
+    [SerializeField] public GameObject PencilAttackPrefab;
+    [SerializeField] public GameObject WarningTilePrefab;
+    [SerializeField] public GameObject SlimePrefab;
+
+    public GameObject playerObject;
+
     public readonly Vector3Int originCell = new Vector3Int(-6, -1, 0);
     public readonly int size = 12;
     private Tween inkEffectTween;
@@ -39,7 +47,7 @@ public class BossController : MonoBehaviour
         // Modify attack commands here
         List<BossCommand> phase1Commands = new List<BossCommand>
         {
-            new DemoAttack(this)
+            new FollowAttack(this),
         };
         List<BossCommand> phase2Commands = new List<BossCommand>
         {
@@ -56,7 +64,12 @@ public class BossController : MonoBehaviour
         var winState = new BossWinState(this, animator);
         var loseState = new BossLoseState(this, animator);
 
+        At(phase1, phase2, new FuncPredicate(() => phase1.IsPhaseEnded()));
+        At(phase2, phase3, new FuncPredicate(() => phase2.IsPhaseEnded()));
+
         stateMachine.SetState(phase1);
+
+        playerObject = GameObject.Find("Player");
     }
 
     void Start()
@@ -104,6 +117,16 @@ public class BossController : MonoBehaviour
     {
         //Debug.Log("Boss triggered lowering wall!");
         GridManager.Instance.LowerWall(cellPosition);
+    }
+
+    public void TriggerCreateTile(Vector3Int cellPosition, GameObject tilePrefab)
+    {
+        GridManager.Instance.CreateSpecialTile(cellPosition, tilePrefab);
+    }
+
+    public void TriggerRemoveTile(Vector3Int cellPosition)
+    {
+        GridManager.Instance.RemoveSpecialTile(cellPosition);
     }
 
     void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);

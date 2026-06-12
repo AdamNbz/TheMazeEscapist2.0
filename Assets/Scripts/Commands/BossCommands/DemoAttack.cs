@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class DemoAttack : BossCommand
 {
     public DemoAttack(BossController boss) : base(boss) { }
 
-    public override async void Execute()
+    public override async Task Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -17,14 +18,14 @@ public class DemoAttack : BossCommand
                 boss.TriggerRaisingWall(new Vector3Int((int)boss.originCell.x + i, (int)boss.originCell.y - j, 0));
             }
         }
-        await Task.Delay(8000);
+        await UniTask.Delay(8000);
 
         // Test pencil attack on cell 0 0
         boss.TriggerPencilAttack(2f, 1f, 5f, new Vector3Int(1, 0, 0), boss.originCell);
         boss.TriggerPencilAttack(2f, 1f, 5f, new Vector3Int(0, 1, 0), boss.originCell);
 
         //wait 8 seconds then lower wall
-        await Task.Delay(3000);
+        await UniTask.Delay(3000);
 
         for (int i = 1; i < boss.size - 1; i++)
         {
@@ -34,7 +35,7 @@ public class DemoAttack : BossCommand
             }
         }
 
-        await Task.Delay(2000);
+        await UniTask.Delay(2000);
 
         isExecuting = false;
         isCompleted = true;

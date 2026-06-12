@@ -152,6 +152,14 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public void SetNodeTile(Vector3Int cellPos, SpecialTile tile)
+    {
+        if (gridMap.ContainsKey(cellPos))
+        {
+            gridMap[cellPos].specialTile = tile;
+        }
+    }
+
     public void RaiseWall(Vector3Int cellPos)
     {
         if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall)
@@ -179,6 +187,28 @@ public class GridManager : MonoBehaviour
                 wallTile.Lower();
                 // grid map will set to walkable after wall finishes lowering
             }
+        }
+    }
+
+    public void CreateSpecialTile(Vector3Int cellPos, GameObject tilePrefab)
+    {
+        var worldPos = CellToWorld(cellPos);
+        var tileObj = Instantiate(tilePrefab, worldPos + new Vector3(0.5f, 0.5f, 0f), Quaternion.identity);
+        var specialTile = tileObj.GetComponent<SpecialTile>();
+        if (specialTile != null)
+        {
+            gridMap[cellPos].type = specialTile.Type;
+            gridMap[cellPos].specialTile = specialTile;
+        }
+    }
+
+    public void RemoveSpecialTile(Vector3Int cellPos)
+    {
+        if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].specialTile != null)
+        {
+            Destroy(gridMap[cellPos].specialTile.gameObject);
+            gridMap[cellPos].type = TileType.Walkable;
+            gridMap[cellPos].specialTile = null;
         }
     }
 }

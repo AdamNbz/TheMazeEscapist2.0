@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 public class BossCommand : ICommand
 {
     protected readonly BossController boss;
@@ -8,7 +10,7 @@ public class BossCommand : ICommand
         this.boss = boss;
     }
 
-    public virtual void Execute()
+    public virtual async Task Execute()
     {
         // noop
     }

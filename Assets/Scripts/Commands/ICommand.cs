@@ -1,4 +1,6 @@
+using System.Threading.Tasks;
+
 public interface ICommand
 {
-    public virtual async void Execute() { }
+    public virtual async Task Execute() { }
 }
