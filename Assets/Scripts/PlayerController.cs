@@ -85,7 +85,8 @@ public class PlayerController : MonoBehaviour
     public void OnPrimaryContact(InputValue value)
     {
         if (lockMoving) return;
-        if (EventSystem.current.IsPointerOverGameObject())
+        //if (EventSystem.current.IsPointerOverGameObject())
+        if (true)
         {
             if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.gameObject.tag != "EffectUI")
             {
@@ -96,15 +97,15 @@ public class PlayerController : MonoBehaviour
 
         if (value.Get<float>() > 0.5f)
         {
-            Debug.Log("Primary Contact Started");
+            //Debug.Log("Primary Contact Started");
             touchPosition = inputPosition;
-            Debug.Log($"Touch Position: {touchPosition}");
+            //Debug.Log($"Touch Position: {touchPosition}");
         }
         else
         {
-            Debug.Log("Primary Contact Canceled");
+            //Debug.Log("Primary Contact Canceled");
             releasePosition = inputPosition;
-            Debug.Log($"Release Position: {releasePosition}");
+            //Debug.Log($"Release Position: {releasePosition}");
 
             var direction = Vector2Int.zero;
             var swipeVector = releasePosition - touchPosition;

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class StateMachine
 {
     StateNode current;
-    Dictionary<Type, StateNode> nodes = new();
+    Dictionary<IState, StateNode> nodes = new();
     HashSet<ITransition> anyTransitions = new();
 
     public void Update()
@@ -29,14 +30,16 @@ public class StateMachine
 
     void ChangeState(IState state)
     {
+        Debug.Log($"Transitioning to state: {state.GetType().Name}");
+
         if (state == current.State) return;
 
         var previousState = current.State;
-        var nextState = nodes[state.GetType()].State;
+        var nextState = nodes[state].State;
 
         previousState?.OnExit();
         nextState?.OnEnter();
-        current = nodes[state.GetType()];
+        current = nodes[state];
     }
 
     ITransition GetTransition()
@@ -64,12 +67,12 @@ public class StateMachine
 
     StateNode GetOrAddNode(IState state)
     {
-        var node = nodes.GetValueOrDefault(state.GetType());
+        var node = nodes.GetValueOrDefault(state);
 
         if (node == null)
         {
             node = new StateNode(state);
-            nodes.Add(state.GetType(), node);
+            nodes.Add(state, node);
         }
 
         return node;

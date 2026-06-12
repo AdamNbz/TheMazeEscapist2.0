@@ -14,16 +14,24 @@ public class FollowAttack : BossCommand
     };
     public override async Task Execute()
     {
+        Debug.Log("Executing Follow Attack Command");
         isExecuting = true;
         isCompleted = false;
 
         //Get player's position
         var attackCount = Random.Range(5, 8);
         var playerObject = boss.playerObject;
+        // Spawn warning tiles around the player
+        var playerInitCell = GridManager.Instance.WorldToCell(playerObject.transform.position);
 
+        foreach (var dir in directions)
+        {
+            var warningTileCell = playerInitCell + dir;
+            boss.TriggerCreateTile(warningTileCell, boss.WarningTilePrefab);
+        }
         for (int i = 0; i < attackCount; i++)
         {
-            var playerCell = GridManager.Instance.WorldToCell(boss.playerObject.transform.position);
+            var playerCell = GridManager.Instance.WorldToCell(playerObject.transform.position);
             boss.TriggerPencilAttack(2f, 1f, 15f, directions[i % directions.Count], playerCell);
             await UniTask.Delay(3000);
         }

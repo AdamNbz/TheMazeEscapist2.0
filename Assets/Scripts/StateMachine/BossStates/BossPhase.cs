@@ -20,6 +20,7 @@ public class BossPhase : BossBaseState
 
     public override void OnEnter()
     {
+        Debug.Log("Entering Boss Phase");
         currentCommand = commands[Random.Range(0, commands.Count)];
         currentCommand.Execute();
         Sword.OnSwordEffectTriggered += Hurt;
@@ -38,6 +39,7 @@ public class BossPhase : BossBaseState
     public override void OnExit()
     {
         Sword.OnSwordEffectTriggered -= Hurt;
+        Debug.Log("Exiting Boss Phase");
     }
 
     public void Hurt()

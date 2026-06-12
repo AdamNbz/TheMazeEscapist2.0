@@ -66,10 +66,9 @@ public class BossController : MonoBehaviour
 
         At(phase1, phase2, new FuncPredicate(() => phase1.IsPhaseEnded()));
         At(phase2, phase3, new FuncPredicate(() => phase2.IsPhaseEnded()));
+        playerObject = GameObject.Find("Player");
 
         stateMachine.SetState(phase1);
-
-        playerObject = GameObject.Find("Player");
     }
 
     void Start()
