@@ -1,33 +1,37 @@
 ﻿using UnityEngine;
 
-namespace Platformer {
-    public abstract class BossBaseState : IState {
-        protected readonly BossController boss;
-        protected readonly Animator animator;
-        
-        protected static readonly int IdleHash = Animator.StringToHash("IdleNormal");
-        
-        protected const float crossFadeDuration = 0.1f;
+public abstract class BossBaseState : IState
+{
+    protected readonly BossController boss;
+    protected readonly Animator animator;
 
-        protected BossBaseState(BossController boss, Animator animator) {
-            this.boss = boss;
-            this.animator = animator;
-        }
-        
-        public virtual void OnEnter() {
-            // noop
-        }
+    protected static readonly int IdleHash = Animator.StringToHash("IdleNormal");
 
-        public virtual void Update() {
-            // noop
-        }
+    protected const float crossFadeDuration = 0.1f;
 
-        public virtual void FixedUpdate() {
-            // noop
-        }
+    protected BossBaseState(BossController boss, Animator animator)
+    {
+        this.boss = boss;
+        this.animator = animator;
+    }
 
-        public virtual void OnExit() {
-            // noop
-        }
+    public virtual void OnEnter()
+    {
+        // noop
+    }
+
+    public virtual void Update()
+    {
+        // noop
+    }
+
+    public virtual void FixedUpdate()
+    {
+        // noop
+    }
+
+    public virtual void OnExit()
+    {
+        // noop
     }
 }

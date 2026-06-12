@@ -1,5 +1,4 @@
-﻿namespace Platformer {
-    public interface IPredicate {
-        bool Evaluate();
-    }
+﻿public interface IPredicate
+{
+    bool Evaluate();
 }

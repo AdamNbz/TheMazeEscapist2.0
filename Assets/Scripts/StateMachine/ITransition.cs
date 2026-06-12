@@ -1,6 +1,5 @@
-﻿namespace Platformer {
-    public interface ITransition {
-        IState To { get; }
-        IPredicate Condition { get; }
-    }
+﻿public interface ITransition
+{
+    IState To { get; }
+    IPredicate Condition { get; }
 }

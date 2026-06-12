@@ -96,7 +96,9 @@ class PencilAttack : MonoBehaviour
         {
             Debug.Log("Player hit by pencil attack!");
             if (fadeTween != null && fadeTween.IsActive()) fadeTween.Kill();
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            var pencilCollider = GetComponent<Collider2D>();
+            pencilCollider.enabled = false;
         }
     }
 

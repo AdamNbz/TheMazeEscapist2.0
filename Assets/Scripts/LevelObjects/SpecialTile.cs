@@ -30,5 +30,5 @@ public enum TileType
     WinPoint,
     Rock,
     Slime,
-    Ink
+    Item,
 }

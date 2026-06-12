@@ -1,13 +1,11 @@
-using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Ink : SpecialTile
+public class HealPotion : SpecialTile
 {
-    [SerializeField] private string soundEffectName = "trash_can_collected";
-    public static UnityAction OnInkEffectTriggered;
+    [SerializeField] private string soundEffectName = "health_potion_collected";
+    public static UnityAction OnHealEffectTriggered;
     public override TileType Type => TileType.Item;
 
     void Start()
@@ -19,8 +17,8 @@ public class Ink : SpecialTile
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Ink tile triggered!");
-            OnInkEffectTriggered?.Invoke();
+            Debug.Log("Heal Potion tile triggered!");
+            OnHealEffectTriggered?.Invoke();
             OnSpecialTileInteracted?.Invoke(this);
             AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
             Destroy(gameObject);

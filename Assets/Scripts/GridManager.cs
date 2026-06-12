@@ -136,6 +136,12 @@ public class GridManager : MonoBehaviour
             Vector3Int cellPos = wallTilemap.WorldToCell(tile.transform.position);
             gridMap[cellPos].type = TileType.Wall;
         }
+        else if (tile.Type == TileType.Item)
+        {
+            Vector3Int cellPos = wallTilemap.WorldToCell(tile.transform.position);
+            gridMap[cellPos].type = TileType.Walkable;
+            gridMap[cellPos].specialTile = null;
+        }
     }
 
     public void SetNodeType(Vector3Int cellPos, TileType type)

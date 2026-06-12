@@ -3,16 +3,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 
 public class BossController : MonoBehaviour
 {
+    StateMachine stateMachine;
+    private Animator animator;
+
     public float fadeDuration = 1f;
     [SerializeField] private Image InkEffectImage;
     [SerializeField] private GameObject PencilAttackPrefab;
     [SerializeField] private GameObject WarningTilePrefab;
-    [SerializeField] private Vector3Int originCell = new Vector3Int(-6, -1, 0);
-    [SerializeField] private int size = 12;
+    public readonly Vector3Int originCell = new Vector3Int(-6, -1, 0);
+    public readonly int size = 12;
     private Tween inkEffectTween;
 
     void OnEnable()
@@ -25,38 +29,51 @@ public class BossController : MonoBehaviour
         Ink.OnInkEffectTriggered -= TriggerInkEffect;
     }
 
+    void Awake()
+    {
+        stateMachine = new StateMachine();
+        // Initialize states and transitions here if needed
+
+        animator = GetComponent<Animator>();
+
+        // Modify attack commands here
+        List<BossCommand> phase1Commands = new List<BossCommand>
+        {
+            new DemoAttack(this)
+        };
+        List<BossCommand> phase2Commands = new List<BossCommand>
+        {
+            // Add phase 2 commands here
+        };
+        List<BossCommand> phase3Commands = new List<BossCommand>
+        {
+            // Add phase 3 commands here
+        };
+        var phase1 = new BossPhase(this, animator, phase1Commands);
+        var phase2 = new BossPhase(this, animator, phase2Commands);
+        var phase3 = new BossPhase(this, animator, phase3Commands);
+        var hurtState = new BossHurtState(this, animator);
+        var winState = new BossWinState(this, animator);
+        var loseState = new BossLoseState(this, animator);
+
+        stateMachine.SetState(phase1);
+    }
+
     void Start()
     {
         InkEffectImage.gameObject.SetActive(false);
-        DemoSequence();
     }
 
-    async void DemoSequence()
+    void Update()
     {
-        for (int i = 1; i < size - 1; i++)
-        {
-            for (int j = 1; j < size - 1; j++)
-            {
-                TriggerRaisingWall(new Vector3Int((int)originCell.x + i, (int)originCell.y - j, 0));
-            }
-        }
-        await Task.Delay(8000);
-
-        // Test pencil attack on cell 0 0
-        TriggerPencilAttack(2f, 1f, 5f, new Vector3Int(1, 0, 0), originCell);
-        TriggerPencilAttack(2f, 1f, 5f, new Vector3Int(0, 1, 0), originCell);
-
-        //wait 8 seconds then lower wall
-        await Task.Delay(3000);
-
-        for (int i = 1; i < size - 1; i++)
-        {
-            for (int j = 1; j < size - 1; j++)
-            {
-                TriggerLoweringWall(new Vector3Int((int)originCell.x + i, (int)originCell.y - j, 0));
-            }
-        }
+        stateMachine.Update();
     }
+
+    void FixedUpdate()
+    {
+        stateMachine.FixedUpdate();
+    }
+
 
     public void TriggerInkEffect()
     {
@@ -78,14 +95,17 @@ public class BossController : MonoBehaviour
 
     public void TriggerRaisingWall(Vector3Int cellPosition)
     {
-        Debug.Log("Boss triggered raising wall!");
+        //Debug.Log("Boss triggered raising wall!");
         var warningTile = Instantiate(WarningTilePrefab, GridManager.Instance.CellToWorld(cellPosition) + new Vector3(0.5f, 0.5f, 0), Quaternion.identity);
         warningTile.GetComponent<WarningTile>().Init(3f);
     }
 
     public void TriggerLoweringWall(Vector3Int cellPosition)
     {
-        Debug.Log("Boss triggered lowering wall!");
+        //Debug.Log("Boss triggered lowering wall!");
         GridManager.Instance.LowerWall(cellPosition);
     }
+
+    void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
+    void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
 }

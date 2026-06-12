@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
         LevelTimer.OnTimeOut += LockInput;
         Portal.OnPlayerTeleport += HandleTeleport;
         OnLoseGame += HandleLoseGame;
+        HealPotion.OnHealEffectTriggered += Heal;
     }
 
     void OnDisable()
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
         LevelTimer.OnTimeOut -= LockInput;
         Portal.OnPlayerTeleport -= HandleTeleport;
         OnLoseGame -= HandleLoseGame;
+        HealPotion.OnHealEffectTriggered -= Heal;
     }
 
     private void Start()
@@ -180,10 +182,10 @@ public class PlayerController : MonoBehaviour
         OnTurnMove?.Invoke();
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage()
     {
-        currentHealth -= damage;
-        Debug.Log($"Player took {damage} damage. Current health: {currentHealth}");
+        currentHealth -= 1;
+        Debug.Log($"Player took 1 damage. Current health: {currentHealth}");
 
         if (currentHealth <= 0)
         {
@@ -191,9 +193,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Heal(int amount)
+    public void Heal()
     {
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-        Debug.Log($"Player healed {amount}. Current health: {currentHealth}");
+        currentHealth = Mathf.Min(currentHealth + 1, maxHealth);
+        Debug.Log($"Player healed 1. Current health: {currentHealth}");
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy"))
+        {
+            //var enemy = collision.GetComponent<EnemyController>();
+
+            TakeDamage();
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Enemy"))
+        {
+            //var enemy = collision.collider.GetComponent<EnemyController>();
+
+            TakeDamage();
+        }
     }
 }
