@@ -22,18 +22,14 @@ public class PlayerController : MonoBehaviour
 
     void OnEnable()
     {
-        WinPoint.OnLevelComplete += LockInput;
-        TurnTimer.OnTimeOut += LockInput;
-        LevelTimer.OnTimeOut += LockInput;
+        WinPoint.OnLevelComplete += TouchGoal;
         Portal.OnPlayerTeleport += HandleTeleport;
         OnLoseGame += HandleLoseGame;
     }
 
     void OnDisable()
     {
-        WinPoint.OnLevelComplete -= LockInput;
-        TurnTimer.OnTimeOut -= LockInput;
-        LevelTimer.OnTimeOut -= LockInput;
+        WinPoint.OnLevelComplete -= TouchGoal;
         Portal.OnPlayerTeleport -= HandleTeleport;
         OnLoseGame -= HandleLoseGame;
     }
@@ -42,10 +38,8 @@ public class PlayerController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
     }
-
-    private void LockInput()
+    private void TouchGoal()
     {
-        return;
         lockMoving = true;
         moveSequence?.Kill();
     }

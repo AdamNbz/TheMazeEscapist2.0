@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 public class LevelNodeView : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class LevelNodeView : MonoBehaviour
     private List<Image> stars;
     [SerializeField]
     private List<Sprite> starSprites;
+
 
 
     public void Setup(
@@ -75,9 +77,9 @@ public class LevelNodeView : MonoBehaviour
         bounceTween?.Kill();
     }
 
-
+    public static UnityAction<int> clickLevelNode;
     void OnClick()
     {
-        SceneController.Instance.TransitionToScene($"Level {levelId}");
+        clickLevelNode?.Invoke(levelId);
     }
 }

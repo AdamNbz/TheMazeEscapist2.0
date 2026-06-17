@@ -1,6 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class LevelNodeData
@@ -43,8 +45,22 @@ public static class PlayerProgress
 
     public static void SetStarAtLevel(int level, bool s1, bool s2, bool s3)
     {
-        PlayerPrefs.SetString($"Level{level}", $"{s1}|{s2}|{s3}");
-        PlayerPrefs.Save();
+        List<bool> newStars = new List<bool>() { s1, s2, s3 };
+        List<bool> oldStars = GetStarAtLevel(level);
+
+        int oldCount = CountStars(oldStars);
+        int newCount = CountStars(newStars);
+        if (newCount >= oldCount)
+        {
+            string data = string.Join("|", newStars);
+            PlayerPrefs.SetString($"Level{level}", data);
+            PlayerPrefs.Save();
+        }
+    }
+
+    private static int CountStars(List<bool> stars)
+    {
+        return stars.Count(x => x);
     }
     public static List<bool> GetStarAtLevel(int level)
     {
@@ -62,12 +78,18 @@ public static class PlayerProgress
         return result;
     }
     public static int GetNumberOfStarsAt(int level)
-    { 
+    {
         int nos = 0;
-        foreach(var item in GetStarAtLevel(level))
+        foreach (var item in GetStarAtLevel(level))
         {
             nos += item ? 1 : 0;
-        }    
+        }
         return nos;
+    }
+    public static int GetCurrentLevelIndex()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        int currentLevel = int.Parse(currentScene.Replace("Level ", ""));
+        return currentLevel;
     }
 }

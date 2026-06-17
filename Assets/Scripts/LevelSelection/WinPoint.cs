@@ -34,8 +34,8 @@ public class WinPoint : SpecialTile
 
         OnUnlockedConditionMet += UnlockWinPoint;
         OnLevelComplete += CompletedLevel;
-        TurnTimer.OnTimeOut -= SetSecStarStatus;
-        LevelTimer.OnTimeOut -= SetThirdStarStatus;
+        TurnTimer.OnTimeOut += SetSecStarStatus;
+        LevelTimer.OnTimeOut += SetThirdStarStatus;
     }
 
     void SetSecStarStatus()

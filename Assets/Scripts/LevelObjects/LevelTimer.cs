@@ -20,6 +20,8 @@ public class LevelTimer : MonoBehaviour
 
     private void Start()
     {
+        int curLevel = PlayerProgress.GetCurrentLevelIndex();
+        timeLimit = WorldMapRecycler.Instance.GetRefById(curLevel).limitTime;
         timeRemaining = timeLimit;
         StartTimer();
         img.sprite = stars[0];
@@ -45,7 +47,7 @@ public class LevelTimer : MonoBehaviour
                 timeRemaining = 0;
                 timerRunning = false;
                 OnTimeOut?.Invoke();
-                AudioManager.Instance.PlaySfx("lose", Vector3.zero);
+                //AudioManager.Instance.PlaySfx("lose", Vector3.zero);
                 DoAnimation();
             }
             UpdateTimerDisplay();

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -20,6 +21,8 @@ public class TurnTimer : MonoBehaviour
 
     void Start()
     {
+        int curLevel = PlayerProgress.GetCurrentLevelIndex();
+        turnLimit = WorldMapRecycler.Instance.GetRefById(curLevel).limitMove;
         turnText.text = string.Format(turnDisplayFormat, turnLimit - currentTurn);
         img.sprite = stars[0];
     }
@@ -42,7 +45,7 @@ public class TurnTimer : MonoBehaviour
             turnText.text = "NO MORE TURNS !!!";
             //img.sprite = stars[1];
             OnTimeOut?.Invoke();
-            AudioManager.Instance.PlaySfx("lose", Vector3.zero);
+            //AudioManager.Instance.PlaySfx("lose", Vector3.zero);
             DoAnimation();
         }
     }
