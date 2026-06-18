@@ -46,6 +46,7 @@ public class SlideShow : MonoBehaviour
 
     private void Open()
     {
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         container.DOFade(1, 0.25f);
 
         container.blocksRaycasts = true;
@@ -59,6 +60,7 @@ public class SlideShow : MonoBehaviour
 
     private void Close()
     {
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         container.DOFade(0, 0.25f)
             .OnComplete(() =>
             {
@@ -82,6 +84,7 @@ public class SlideShow : MonoBehaviour
             ? slides.Length - 1
             : currentIndex - 1;
 
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         ChangeSlide(newIndex, -1);
     }
 
@@ -92,7 +95,7 @@ public class SlideShow : MonoBehaviour
         int newIndex = currentIndex >= slides.Length - 1
             ? 0
             : currentIndex + 1;
-
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         ChangeSlide(newIndex, 1);
     }
 

@@ -80,6 +80,7 @@ public class LevelNodeView : MonoBehaviour
     public static UnityAction<int> clickLevelNode;
     void OnClick()
     {
+        AudioManager.Instance.PlaySfx("click_button", transform.position);
         clickLevelNode?.Invoke(levelId);
     }
 }

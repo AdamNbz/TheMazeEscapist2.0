@@ -44,14 +44,17 @@ public class DetailPanel : MonoBehaviour
     {
         selectedLevelId = levelId;
         GetRefDetail(levelId);
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         detailLevel.SetActive(true);
     }
     public void CloseDetail()
     {
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         detailLevel.SetActive(false);
     }
     public void PlayLevel(int levelId)
     {
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         SceneController.Instance.TransitionToScene($"Level {levelId}");
     }
     public void GetRefDetail(int levelId)

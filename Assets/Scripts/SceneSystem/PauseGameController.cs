@@ -37,7 +37,7 @@ public class PauseGameController : MonoBehaviour
 
         isPaused = true;
         Time.timeScale = 0f;
-
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         pausePanel.gameObject.SetActive(true);
 
         Sequence seq = DOTween.Sequence();
@@ -57,7 +57,7 @@ public class PauseGameController : MonoBehaviour
     public void Continue()
     {
         if (!isPaused) return;
-
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         Sequence seq = DOTween.Sequence();
         seq.SetUpdate(true);
 
@@ -82,14 +82,15 @@ public class PauseGameController : MonoBehaviour
     public void BackToSelectLevel()
     {
         Time.timeScale = 1f;
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         SceneController.Instance.TransitionToScene("LevelSelection");
     }
 
     public void RestartLevel()
     {
         Time.timeScale = 1f;
-
         string currentSceneName = SceneManager.GetActiveScene().name;
+        AudioManager.Instance.PlaySfx("click_to_start", transform.position);
         SceneController.Instance.TransitionToScene(currentSceneName);
     }
 }
