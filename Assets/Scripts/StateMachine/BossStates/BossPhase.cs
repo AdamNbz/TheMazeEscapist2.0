@@ -43,23 +43,7 @@ public class BossPhase : BossBaseState
 
     public void Hurt()
     {
-        health--;
-        if (health <= 0)
-        {
-            Debug.Log("Boss phase defeated! Transitioning to next phase...");
-        }
-        else
-        {
-            Debug.Log("Boss hurt! Remaining health: " + health);
-        }
-        // Spawn a random sword
-        var randomCell = new Vector3Int(Random.Range((int)boss.originCell.x, (int)boss.originCell.x + boss.size), Random.Range((int)boss.originCell.y - boss.size, (int)boss.originCell.y), 0);
 
-        while (!GridManager.Instance.IsWalkable(randomCell))
-        {
-            randomCell = new Vector3Int(Random.Range((int)boss.originCell.x, (int)boss.originCell.x + boss.size), Random.Range((int)boss.originCell.y - boss.size, (int)boss.originCell.y), 0);
-        }
-        boss.TriggerCreateTile(randomCell, boss.SwordPrefab);
     }
 
     public bool IsPhaseEnded()

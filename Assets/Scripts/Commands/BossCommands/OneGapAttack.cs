@@ -24,11 +24,11 @@ public class OneGapAttack : BossCommand
 
         for (int i = 0; i < attackCount; i++)
         {
-            var gapColumnIndex = Mathf.Floor(Random.Range(0, boss.size));
-            for (int j = 0; j < boss.size; j++)
+            var gapColumnIndex = Mathf.Floor(Random.Range(0, BossController.size));
+            for (int j = 0; j < BossController.size; j++)
             {
                 if (j != gapColumnIndex)
-                    boss.TriggerPencilAttack(2f, 1f, 15f, Vector3Int.down, Vector3Int.FloorToInt(new Vector3(boss.originCell.x + j, boss.originCell.y, 0)));
+                    boss.TriggerPencilAttack(2f, 1f, 15f, Vector3Int.down, Vector3Int.FloorToInt(new Vector3(BossController.originCell.x + j, BossController.originCell.y, 0)));
             }
             await UniTask.Delay(5000);
         }

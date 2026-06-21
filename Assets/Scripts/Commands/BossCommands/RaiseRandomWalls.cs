@@ -17,9 +17,9 @@ public class RaiseRandomWalls : BossCommand
         isExecuting = true;
         isCompleted = false;
 
-        for (int i = 0; i < boss.size * boss.size / 4; i++)
+        for (int i = 0; i < BossController.size * BossController.size / 4; i++)
         {
-            var randomCell = new Vector3Int(Random.Range((int)boss.originCell.x, (int)boss.originCell.x + boss.size), Random.Range((int)boss.originCell.y - boss.size, (int)boss.originCell.y), 0);
+            var randomCell = new Vector3Int(Random.Range((int)BossController.originCell.x, (int)BossController.originCell.x + BossController.size), Random.Range((int)BossController.originCell.y - BossController.size, (int)BossController.originCell.y), 0);
             boss.TriggerRaisingWall(randomCell);
         }
         await UniTask.Delay(8000);

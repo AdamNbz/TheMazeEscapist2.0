@@ -20,7 +20,7 @@ public class OneSquareAttack : BossCommand
         //Get player's position
         var attackCount = Random.Range(2, 4);
         var playerObject = boss.playerObject;
-        var originCell = boss.originCell;
+        var originCell = BossController.originCell;
         // Spawn warning tiles around the player
 
         for (int k = 0; k < attackCount; k++)
@@ -28,13 +28,13 @@ public class OneSquareAttack : BossCommand
             // Generate a random square area (position and size)
             var squareSize = 4;
 
-            var squarePosition = Vector3Int.FloorToInt(new Vector3(Random.Range(originCell.x, originCell.x + boss.size - squareSize + 1), Random.Range(originCell.y - boss.size, originCell.y + squareSize - 1), 0));
-            for (int i = originCell.x; i < originCell.x + boss.size; i++)
+            var squarePosition = Vector3Int.FloorToInt(new Vector3(Random.Range(originCell.x, originCell.x + BossController.size - squareSize + 1), Random.Range(originCell.y - BossController.size, originCell.y + squareSize - 1), 0));
+            for (int i = originCell.x; i < originCell.x + BossController.size; i++)
             {
                 if (i < squarePosition.x || i >= squarePosition.x + squareSize)
                     boss.TriggerPencilAttack(2f, 3f, 30f, Vector3Int.down, new Vector3Int(i, originCell.y, 0));
             }
-            for (int j = originCell.y; j > originCell.y - boss.size; j--)
+            for (int j = originCell.y; j > originCell.y - BossController.size; j--)
             {
                 if (j > squarePosition.y || j <= squarePosition.y - squareSize)
                     boss.TriggerPencilAttack(2f, 3f, 30f, Vector3Int.right, new Vector3Int(originCell.x, j, 0));

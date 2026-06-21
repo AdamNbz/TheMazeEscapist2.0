@@ -24,8 +24,8 @@ public class BossController : MonoBehaviour
 
     public GameObject playerObject;
 
-    public readonly Vector3Int originCell = new Vector3Int(-6, -1, 0);
-    public readonly int size = 12;
+    public static readonly Vector3Int originCell = new Vector3Int(-4, -4, 0);
+    public static readonly int size = 7;
     private Tween inkEffectTween;
 
     void OnEnable()
@@ -100,13 +100,13 @@ public class BossController : MonoBehaviour
         inkEffectTween.OnComplete(() => InkEffectImage.gameObject.SetActive(false));
     }
 
-    public void TriggerPencilAttack(float aimingDuration, float lockDuration, float speed, Vector3Int direction, Vector3Int initialPosition)
+    public void TriggerPencilAttack(float aimingDuration, float lockDuration, float speed, Vector3Int direction, Vector3Int initialCellPosition)
     {
         Debug.Log("Boss triggered pencil attack!");
         GameObject pencil = Instantiate(PencilAttackPrefab);
         pencil.transform.SetParent(grid.transform, false);
         PencilAttack pencilAttack = pencil.GetComponent<PencilAttack>();
-        pencilAttack.Initialise(aimingDuration, lockDuration, speed, direction, initialPosition);
+        pencilAttack.Initialise(aimingDuration, lockDuration, speed, direction, initialCellPosition);
     }
 
     public void TriggerRaisingWall(Vector3Int cellPosition)

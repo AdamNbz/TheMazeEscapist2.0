@@ -20,7 +20,7 @@ public class ChasingAttack : BossCommand
         //Get player's position
         var attackCount = Random.Range(10, 15);
         var playerObject = boss.playerObject;
-        var originCell = boss.originCell;
+        var originCell = BossController.originCell;
         // Spawn warning tiles around the player
 
         for (int k = 0; k < attackCount; k++)
