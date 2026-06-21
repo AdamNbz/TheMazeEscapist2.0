@@ -40,6 +40,7 @@ public class GridManager : MonoBehaviour
 
     Dictionary<Vector3Int, Node> gridMap = new(); //true for walkable, false for wall
 
+    public Grid GetMainGrid() => grid;
     public Dictionary<Vector3Int, Node> GetGrid()
     {
         return gridMap;
@@ -118,6 +119,11 @@ public class GridManager : MonoBehaviour
         return grid.CellToWorld(cellPos);
     }
 
+    public Vector3 GetCellCenteredWorldPosition(Vector3Int cellPos)
+    {
+        return grid.GetCellCenterWorld(cellPos);
+    }
+
     private void HandleSpecialTileInstantiated(SpecialTile tile)
     {
         gridMap[WorldToCell(tile.transform.position)].type = tile.Type;
@@ -192,8 +198,8 @@ public class GridManager : MonoBehaviour
 
     public void CreateSpecialTile(Vector3Int cellPos, GameObject tilePrefab)
     {
-        var worldPos = CellToWorld(cellPos);
-        var tileObj = Instantiate(tilePrefab, worldPos + new Vector3(0.5f, 0.5f, 0f), Quaternion.identity);
+        var worldPos = GetCellCenteredWorldPosition(cellPos);
+        var tileObj = Instantiate(tilePrefab, worldPos, Quaternion.identity, grid.transform);
         var specialTile = tileObj.GetComponent<SpecialTile>();
         if (specialTile != null)
         {

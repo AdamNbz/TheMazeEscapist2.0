@@ -20,6 +20,7 @@ public class BossController : MonoBehaviour
     [SerializeField] public GameObject PencilAttackPrefab;
     [SerializeField] public GameObject WarningTilePrefab;
     [SerializeField] public GameObject SlimePrefab;
+    private GameObject grid;
 
     public GameObject playerObject;
 
@@ -68,6 +69,7 @@ public class BossController : MonoBehaviour
         At(phase1, phase2, new FuncPredicate(() => phase1.IsPhaseEnded()));
         At(phase2, phase3, new FuncPredicate(() => phase2.IsPhaseEnded()));
         playerObject = GameObject.Find("Player");
+        grid = GameObject.Find("Grid");
 
         stateMachine.SetState(phase1);
     }
@@ -102,6 +104,7 @@ public class BossController : MonoBehaviour
     {
         Debug.Log("Boss triggered pencil attack!");
         GameObject pencil = Instantiate(PencilAttackPrefab);
+        pencil.transform.SetParent(grid.transform, false);
         PencilAttack pencilAttack = pencil.GetComponent<PencilAttack>();
         pencilAttack.Initialise(aimingDuration, lockDuration, speed, direction, initialPosition);
     }

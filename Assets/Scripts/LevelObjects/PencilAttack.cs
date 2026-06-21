@@ -38,11 +38,11 @@ class PencilAttack : MonoBehaviour
 
         if (isHorizontal)
         {
-            transform.position = new Vector3(isTopLeft ? -10 : 10, GridManager.Instance.CellToWorld(initialPosition).y + 0.5f, 0);
+            transform.position = new Vector3(isTopLeft ? -10 : 10, GridManager.Instance.GetCellCenteredWorldPosition(initialPosition).y, 0);
         }
         else
         {
-            transform.position = new Vector3(GridManager.Instance.CellToWorld(initialPosition).x + 0.5f, isTopLeft ? -10 : 10, 0);
+            transform.position = new Vector3(GridManager.Instance.GetCellCenteredWorldPosition(initialPosition).x, isTopLeft ? -10 : 10, 0);
         }
 
         if (isHorizontal && direction.x < 0)
