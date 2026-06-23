@@ -48,8 +48,8 @@ public class BossController : MonoBehaviour
         // Modify attack commands here
         List<BossCommand> phase1Commands = new List<BossCommand>
         {
-            new FollowAttack(this),
-            new OneGapAttack(this),
+            new RandomFourDirectionAttack(this),
+            new ThreeByThreeAttack(this),
         };
         List<BossCommand> phase2Commands = new List<BossCommand>
         {
@@ -132,14 +132,32 @@ public class BossController : MonoBehaviour
         }
     }
 
-    public void TriggerCreateTile(Vector3Int cellPosition, GameObject tilePrefab)
+    public GameObject TriggerCreateTile(Vector3Int cellPosition, GameObject tilePrefab)
     {
-        GridManager.Instance.CreateSpecialTile(cellPosition, tilePrefab);
+        return GridManager.Instance.CreateSpecialTile(cellPosition, tilePrefab);
     }
 
     public void TriggerRemoveTile(Vector3Int cellPosition)
     {
         GridManager.Instance.RemoveSpecialTile(cellPosition);
+    }
+
+    public void TriggerInvoke(string methodName, float delay)
+    {
+        Invoke(methodName, delay);
+    }
+
+    public void TriggerCreateRandomItem(GameObject itemPrefab)
+    {
+        // Get random walkable cell position within the grid bounds
+        Vector3Int cellPosition;
+        do
+        {
+            int randomX = Random.Range(originCell.x, originCell.x + size);
+            int randomY = Random.Range(originCell.y - size + 1, originCell.y + 1);
+            cellPosition = new Vector3Int(randomX, randomY, 0);
+        } while (!GridManager.Instance.IsWalkable(cellPosition) || GridManager.Instance.IsItem(cellPosition));
+        TriggerCreateTile(cellPosition, itemPrefab);
     }
 
     void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);

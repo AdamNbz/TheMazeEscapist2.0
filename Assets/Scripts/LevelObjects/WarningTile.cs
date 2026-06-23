@@ -19,8 +19,6 @@ public class WarningTile : SpecialTile
         spriteRenderer = GetComponent<SpriteRenderer>();
         damageCollider = GetComponent<Collider2D>();
         damageCollider.enabled = false;
-
-        Init(3f);
     }
 
     public async void Init(float warningDuration)

@@ -9,6 +9,12 @@ public class BossPhase : BossBaseState
     BossCommand exitCommand;
     BossCommand currentCommand;
 
+    float weaponCooldown = 15f;
+    float healCooldown = 30f;
+
+    float weaponTimer = 0f;
+    float healTimer = 0f;
+
     public BossPhase(BossController boss, Animator animator, List<BossCommand> attackCommands, int phaseHealth = 3, BossCommand enterCommand = null, BossCommand exitCommand = null) : base(boss, animator)
     {
         this.attackCommands = attackCommands;
@@ -22,6 +28,7 @@ public class BossPhase : BossBaseState
         currentCommand = enterCommand;
         Sword.OnSwordEffectTriggered += Hurt;
         currentCommand?.Execute();
+
     }
 
     public override void Update()
@@ -32,6 +39,20 @@ public class BossPhase : BossBaseState
             currentCommand = attackCommands[Random.Range(0, attackCommands.Count)];
             currentCommand.Execute();
         }
+
+        weaponTimer += Time.deltaTime;
+        if (weaponTimer >= weaponCooldown)
+        {
+            weaponTimer = 0f;
+            boss.TriggerCreateRandomItem(boss.SwordPrefab);
+        }
+
+        healTimer += Time.deltaTime;
+        if (healTimer >= healCooldown)
+        {
+            healTimer = 0f;
+            boss.TriggerCreateRandomItem(boss.HealPotionPrefab);
+        }
     }
 
     public override void OnExit()
@@ -41,9 +62,14 @@ public class BossPhase : BossBaseState
         boss.TriggerLowerAllWalls();
     }
 
+    void OnTimerFinished()
+    {
+        Debug.Log("Done!");
+    }
+
     public void Hurt()
     {
-
+        health = Mathf.Max(0, health - 1);
     }
 
     public bool IsPhaseEnded()

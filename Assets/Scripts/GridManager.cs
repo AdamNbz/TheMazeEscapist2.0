@@ -109,6 +109,11 @@ public class GridManager : MonoBehaviour
         return gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall;
     }
 
+    public bool IsItem(Vector3Int cellPos)
+    {
+        return gridMap.ContainsKey(cellPos) && gridMap[cellPos].type == TileType.Item;
+    }
+
     public Vector3Int WorldToCell(Vector3 worldPos)
     {
         return grid.WorldToCell(worldPos);
@@ -196,7 +201,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void CreateSpecialTile(Vector3Int cellPos, GameObject tilePrefab)
+    public GameObject CreateSpecialTile(Vector3Int cellPos, GameObject tilePrefab)
     {
         var worldPos = GetCellCenteredWorldPosition(cellPos);
         var tileObj = Instantiate(tilePrefab, worldPos, Quaternion.identity, grid.transform);
@@ -206,6 +211,7 @@ public class GridManager : MonoBehaviour
             gridMap[cellPos].type = specialTile.Type;
             gridMap[cellPos].specialTile = specialTile;
         }
+        return tileObj;
     }
 
     public void RemoveSpecialTile(Vector3Int cellPos)
