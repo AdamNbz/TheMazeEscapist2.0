@@ -176,8 +176,8 @@ public class GridManager : MonoBehaviour
         if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall)
         {
             // Instantiate a raisable wall at the given cell position
-            var worldPos = CellToWorld(cellPos);
-            var wallObj = Instantiate(raisableWallPrefab, worldPos + new Vector3(0.5f, 0f, 0f), Quaternion.identity);
+            var worldPos = GetCellCenteredWorldPosition(cellPos);
+            var wallObj = Instantiate(raisableWallPrefab, worldPos - new Vector3(0, grid.cellSize.y, 0), Quaternion.identity, grid.transform);
             var wallTile = wallObj.GetComponent<RaisableWall>();
             if (wallTile != null)
             {
