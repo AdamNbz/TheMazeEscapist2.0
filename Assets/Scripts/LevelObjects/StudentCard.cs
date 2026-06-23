@@ -5,6 +5,43 @@ public class StudentCard : SpecialTile
 {
     [SerializeField] private WinpointUnlockCondition winpointUnlockCondition;
 
+    private BoxCollider2D boxCollider;
+    private SpriteRenderer spriteRenderer;
+
+    void Awake()
+    {
+        boxCollider = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    void OnEnable()
+    {
+        EyeofTheStorm.OnTouchPlayer += ReleaseCard;
+    }
+
+    void OnDisable()
+    {
+        EyeofTheStorm.OnTouchPlayer -= ReleaseCard;
+    }
+
+    private void ReleaseCard()
+    {
+        ShowCard();
+        WinPoint.OnLockedConditionMet?.Invoke(winpointUnlockCondition.conditionName);
+    }
+
+    private void HideCard()
+    {
+        boxCollider.enabled = false;
+        spriteRenderer.enabled = false;
+    }
+
+    private void ShowCard()
+    {
+        boxCollider.enabled = true;
+        spriteRenderer.enabled = true;
+    }
+
     public override TileType Type => TileType.StudentCard;
 
     void Start()
@@ -18,7 +55,8 @@ public class StudentCard : SpecialTile
         {
             WinPoint.OnUnlockedConditionMet?.Invoke(winpointUnlockCondition.conditionName);
             AudioManager.Instance.PlaySfx("student_card_collected", transform.position);
-            gameObject.SetActive(false);
+            // gameObject.SetActive(false);
+            HideCard();
             OnSpecialTileInteracted?.Invoke(this);
         }
     }

@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 27910804}
   - component: {fileID: 27910805}
   - component: {fileID: 27910806}
+  - component: {fileID: 27910807}
   m_Layer: 0
   m_Name: EyeofTheStorm
   m_TagString: Untagged
@@ -225,7 +226,52 @@ MonoBehaviour:
   speed: 5
   player: {fileID: 6102986581605240654}
   gridAnchor: {x: 0.5, y: 0.5, z: 0}
-  pathCount: 0
+--- !u!61 &27910807
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27910803}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.5, y: 0.5}
+  m_EdgeRadius: 0
 --- !u!224 &190410936 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2529281032487734760, guid: 0b939689de373404db469b385cb9621e, type: 3}
@@ -700,6 +746,14 @@ PrefabInstance:
     - target: {fileID: 3151883273973155138, guid: 3b59dfa6ad5a81ac1b2191f50ea2b4c8, type: 3}
       propertyPath: m_Name
       value: TrashCan
+      objectReference: {fileID: 0}
+    - target: {fileID: 5340569781759027677, guid: 3b59dfa6ad5a81ac1b2191f50ea2b4c8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513437360104478207, guid: 3b59dfa6ad5a81ac1b2191f50ea2b4c8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

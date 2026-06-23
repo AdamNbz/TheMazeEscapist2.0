@@ -34,11 +34,13 @@ public class RecycleBin : SpecialTile
     void OnEnable()
     {
         SpecialTile.OnSpecialTileInteracted += HandlePlayerCollectTrash;
+        EyeofTheStorm.OnTouchPlayer += ReleaseAllTrash;
     }
 
     void OnDisable()
     {
         SpecialTile.OnSpecialTileInteracted -= HandlePlayerCollectTrash;
+        EyeofTheStorm.OnTouchPlayer -= ReleaseAllTrash;
     }
 
     private void HandlePlayerCollectTrash(SpecialTile data)
@@ -48,6 +50,15 @@ public class RecycleBin : SpecialTile
             collectedTrash.Add((Trash)data);
             Debug.Log($"Trash collected: {collectedTrash.Count}");
         }
+    }
+
+    private void ReleaseAllTrash()
+    {
+        foreach (var trash in collectedTrash)
+        {
+            trash.ReturnTrash();
+        }
+        collectedTrash.Clear();
     }
 
     async UniTaskVoid OnTriggerEnter2D(Collider2D collision)

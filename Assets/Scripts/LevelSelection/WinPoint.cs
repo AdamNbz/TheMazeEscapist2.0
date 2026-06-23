@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class WinPoint : SpecialTile
     public static UnityAction OnLevelComplete;
     [SerializeField] private List<WinpointUnlockCondition> unlockConditions = new();
     public static UnityAction<string> OnUnlockedConditionMet;
+    public static UnityAction<string> OnLockedConditionMet;
 
     private Dictionary<string, bool> conditionStatus = new();
     private int conditionsNotMetCount = 0;
@@ -33,9 +35,19 @@ public class WinPoint : SpecialTile
         }
 
         OnUnlockedConditionMet += UnlockWinPoint;
+        OnLockedConditionMet += LockWinPoint;
         OnLevelComplete += CompletedLevel;
         TurnTimer.OnTimeOut += SetSecStarStatus;
         LevelTimer.OnTimeOut += SetThirdStarStatus;
+    }
+
+    private void LockWinPoint(string conditionName)
+    {
+        if (!conditionStatus.ContainsKey(conditionName) || !conditionStatus[conditionName])
+            return;
+
+        conditionStatus[conditionName] = false;
+        conditionsNotMetCount++;
     }
 
     void SetSecStarStatus()
@@ -50,6 +62,7 @@ public class WinPoint : SpecialTile
     void OnDestroy()
     {
         OnUnlockedConditionMet -= UnlockWinPoint;
+        OnLockedConditionMet -= LockWinPoint;
     }
 
     void Start()

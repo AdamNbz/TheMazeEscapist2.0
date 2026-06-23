@@ -10,11 +10,13 @@ public class EyeofTheStorm : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private Vector3 gridAnchor = new(0.5f, 0.5f, 0);
 
-    [SerializeField] private int pathCount;
     private Queue<Node> currentPath = new();
+    public static event Action OnTouchPlayer;
 
     private PathFindingLogic pathfindingLogic;
     private bool isMoving = false;
+
+    private bool isWandering = true;
 
     private void Start()
     {
@@ -24,21 +26,22 @@ public class EyeofTheStorm : MonoBehaviour
     void OnEnable()
     {
         PlayerController.OnTurnMove += UpdateNewPath;
+        SpecialTile.OnSpecialTileInteracted += HandleTrashCollected;
     }
 
     void OnDisable()
     {
         PlayerController.OnTurnMove -= UpdateNewPath;
+        SpecialTile.OnSpecialTileInteracted -= HandleTrashCollected;
     }
 
     private void UpdateNewPath()
     {
         currentPath.Clear();
-        var path = pathfindingLogic.FindPathFromWorldPos(transform.position, player.position);
-        Debug.Log($"Eye of the Storm: New path found with {path.Count} nodes.");
+        var path = pathfindingLogic.FindPathFromWorldPos(transform.position, isWandering ?
+        GridManager.Instance.GetRandomWalkableCellPosition() : player.position);
         foreach (var node in path)
         {
-            Debug.Log($"Eye of the Storm: Adding node {node.position} to current path.");
             currentPath.Enqueue(node);
         }
     }
@@ -72,6 +75,24 @@ public class EyeofTheStorm : MonoBehaviour
         else if (!isMoving && currentPath.Count == 0)
         {
             UpdateNewPath();
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            OnTouchPlayer?.Invoke();
+            // gameObject.SetActive(false);
+            isWandering = true;
+        }
+    }
+
+    void HandleTrashCollected(SpecialTile data)
+    {
+        if (data.Type == TileType.Trash)
+        {
+            isWandering = false;
         }
     }
 }
