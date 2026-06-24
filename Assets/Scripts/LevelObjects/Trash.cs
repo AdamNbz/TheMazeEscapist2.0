@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Trash : SpecialTile
+public class Trash : SpecialTile, ICollectible
 {
     [SerializeField] private string soundEffectName = "trash_can_collected";
     private bool isCollected = false;
@@ -31,12 +31,6 @@ public class Trash : SpecialTile
         spriteRenderer.enabled = true;
     }
 
-    public void ReturnTrash()
-    {
-        isCollected = false;
-        ShowTrash();
-    }
-
     public override TileType Type => TileType.Trash;
 
     void Start()
@@ -49,11 +43,7 @@ public class Trash : SpecialTile
         if (isCollected) return;
         if (collision.CompareTag("Player"))
         {
-            isCollected = true;
             OnSpecialTileInteracted?.Invoke(this);
-            // gameObject.SetActive(false);
-            HideTrash();
-            AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
         }
     }
 
@@ -67,5 +57,34 @@ public class Trash : SpecialTile
         await transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack);
         // HideTrash();
         gameObject.SetActive(false);
+    }
+
+    public void Collect()
+    {
+        isCollected = true;
+        HideTrash();
+        AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
+    }
+
+    public void Release(Vector3? fromPosition = null)
+    {
+        if (fromPosition.HasValue)
+        {
+            var originalPosition = transform.position;
+            transform.position = fromPosition.Value;
+            spriteRenderer.enabled = true;
+            transform.DOMove(originalPosition, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
+            {
+                transform.position = originalPosition;
+                boxCollider.enabled = true;
+                isCollected = false;
+            });
+        }
+        else
+        {
+            boxCollider.enabled = true;
+            spriteRenderer.enabled = true;
+            isCollected = false;
+        }
     }
 }

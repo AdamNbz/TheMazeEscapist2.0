@@ -48,16 +48,11 @@ public class RecycleBin : SpecialTile
         if (data.Type == TileType.Trash)
         {
             collectedTrash.Add((Trash)data);
-            Debug.Log($"Trash collected: {collectedTrash.Count}");
         }
     }
 
     private void ReleaseAllTrash()
     {
-        foreach (var trash in collectedTrash)
-        {
-            trash.ReturnTrash();
-        }
         collectedTrash.Clear();
     }
 

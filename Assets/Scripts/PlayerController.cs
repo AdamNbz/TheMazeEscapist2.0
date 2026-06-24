@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
     public static UnityAction OnPlayerHurt;
     [SerializeField] private int maxHealth = 5;
+
+    private readonly List<ICollectible> collectedItems = new();
     private int currentHealth;
 
     void OnEnable()
@@ -29,6 +32,8 @@ public class PlayerController : MonoBehaviour
         WinPoint.OnLevelComplete += TouchGoal;
         Portal.OnPlayerTeleport += HandleTeleport;
         OnLoseGame += HandleLoseGame;
+        EyeofTheStorm.OnTouchPlayer += HandleTouchStorm;
+        SpecialTile.OnSpecialTileInteracted += HandleSpecialTileInteraction;
     }
 
     void OnDisable()
@@ -36,6 +41,8 @@ public class PlayerController : MonoBehaviour
         WinPoint.OnLevelComplete -= TouchGoal;
         Portal.OnPlayerTeleport -= HandleTeleport;
         OnLoseGame -= HandleLoseGame;
+        EyeofTheStorm.OnTouchPlayer -= HandleTouchStorm;
+        SpecialTile.OnSpecialTileInteracted -= HandleSpecialTileInteraction;
     }
 
     private void Start()
@@ -183,6 +190,39 @@ public class PlayerController : MonoBehaviour
         if (currentHealth <= 0)
         {
             OnLoseGame?.Invoke();
+        }
+    }
+
+    public void HandleCollectItem(ICollectible item)
+    {
+        if (!collectedItems.Contains(item))
+        {
+            collectedItems.Add(item);
+            item.Collect();
+        }
+    }
+
+    private void HandleTouchStorm()
+    {
+        moveSequence.Pause();
+        transform.DOShakeRotation(1f, new Vector3(0, 0, 30)).OnComplete(() =>
+        {
+            transform.rotation = Quaternion.identity;
+            foreach (var item in collectedItems)
+            {
+                item.Release(transform.position);
+            }
+            collectedItems.Clear();
+            moveSequence.Play();
+        });
+
+    }
+
+    private void HandleSpecialTileInteraction(SpecialTile tile)
+    {
+        if (tile is ICollectible collectible)
+        {
+            HandleCollectItem(collectible);
         }
     }
 

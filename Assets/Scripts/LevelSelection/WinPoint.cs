@@ -48,6 +48,13 @@ public class WinPoint : SpecialTile
 
         conditionStatus[conditionName] = false;
         conditionsNotMetCount++;
+        if (conditionsNotMetCount == 1)
+        {
+            transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.OutBack).OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+            });
+        }
     }
 
     void SetSecStarStatus()

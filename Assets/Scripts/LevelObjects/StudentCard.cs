@@ -1,7 +1,8 @@
+using DG.Tweening;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class StudentCard : SpecialTile
+public class StudentCard : SpecialTile, ICollectible
 {
     [SerializeField] private WinpointUnlockCondition winpointUnlockCondition;
 
@@ -26,7 +27,6 @@ public class StudentCard : SpecialTile
 
     private void ReleaseCard()
     {
-        ShowCard();
         WinPoint.OnLockedConditionMet?.Invoke(winpointUnlockCondition.conditionName);
     }
 
@@ -34,12 +34,6 @@ public class StudentCard : SpecialTile
     {
         boxCollider.enabled = false;
         spriteRenderer.enabled = false;
-    }
-
-    private void ShowCard()
-    {
-        boxCollider.enabled = true;
-        spriteRenderer.enabled = true;
     }
 
     public override TileType Type => TileType.StudentCard;
@@ -53,11 +47,34 @@ public class StudentCard : SpecialTile
     {
         if (collision.CompareTag("Player"))
         {
-            WinPoint.OnUnlockedConditionMet?.Invoke(winpointUnlockCondition.conditionName);
-            AudioManager.Instance.PlaySfx("student_card_collected", transform.position);
-            // gameObject.SetActive(false);
-            HideCard();
             OnSpecialTileInteracted?.Invoke(this);
+        }
+    }
+
+    public void Collect()
+    {
+        WinPoint.OnUnlockedConditionMet?.Invoke(winpointUnlockCondition.conditionName);
+        AudioManager.Instance.PlaySfx("student_card_collected", transform.position);
+        HideCard();
+    }
+
+    public void Release(Vector3? fromPosition = null)
+    {
+        if (fromPosition.HasValue)
+        {
+            var originalPosition = transform.position;
+            transform.position = fromPosition.Value;
+            spriteRenderer.enabled = true;
+            transform.DOMove(originalPosition, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
+            {
+                transform.position = originalPosition;
+                boxCollider.enabled = true;
+            });
+        }
+        else
+        {
+            boxCollider.enabled = true;
+            spriteRenderer.enabled = true;
         }
     }
 }

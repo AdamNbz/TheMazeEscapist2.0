@@ -90,7 +90,7 @@ public class EyeofTheStorm : MonoBehaviour
 
     void HandleTrashCollected(SpecialTile data)
     {
-        if (data.Type == TileType.Trash)
+        if (data.Type == TileType.Trash || data.Type == TileType.StudentCard)
         {
             isWandering = false;
         }
