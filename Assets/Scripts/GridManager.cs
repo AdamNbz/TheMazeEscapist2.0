@@ -177,6 +177,21 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
+    public bool HasNode(Vector3Int cellPos)
+    {
+        return gridMap.ContainsKey(cellPos);
+    }
+
+    public bool TrySetNodeType(Vector3Int cellPos, TileType type, SpecialTile specialTile = null)
+    {
+        if (!gridMap.TryGetValue(cellPos, out var node))
+            return false;
+
+        node.type = type;
+        node.specialTile = specialTile;
+        return true;
+    }
+
     public Vector3Int WorldToCell(Vector3 worldPos)
     {
         return grid.WorldToCell(worldPos);
