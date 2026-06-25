@@ -29,6 +29,8 @@ public enum TileType
     StudentCard,
     WinPoint,
     Rock,
+    Ladder,
+    OneWayDoor,
     Slime,
     Ink
 }

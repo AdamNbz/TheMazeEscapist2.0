@@ -132,13 +132,20 @@ public class PlayerController : MonoBehaviour
         }
 
         OnStartMoving?.Invoke();
-        foreach (var dir in path.directions)
+        foreach (var nodeData in path.directions)
         {
             var localScale = transform.localScale;
+            var dir = nodeData.direction;
             if (dir.x != 0)
             {
                 localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
                 transform.localScale = localScale;
+            }
+
+            // Add stop time if required
+            if(nodeData.stopTime > 0)
+            {
+                moveSequence.AppendInterval(nodeData.stopTime);
             }
 
             moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
@@ -146,6 +153,7 @@ public class PlayerController : MonoBehaviour
                 {
                     AudioManager.Instance.PlaySfx("player_move", transform.position);
                 }));
+
             currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
         }
         moveSequence.OnComplete(() =>

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 public class GridManager : MonoBehaviour
@@ -69,14 +70,17 @@ public class GridManager : MonoBehaviour
         {
             stepLength = grid.transform.localScale.x
         };
+        Vector3Int toCellPos;
+        float stopTime = 0;
 
         while (true)
         {
-            startCellPos += (Vector3Int)direction;
-            if (!IsWalkable(startCellPos))
+            stopTime = 0; // reset stopTime before checking each cell
+            toCellPos = startCellPos + (Vector3Int)direction;
+            if (!IsWalkable(startCellPos, toCellPos, direction, ref stopTime))
                 break;
 
-            result.directions.Add(direction);
+            result.directions.Add(new NodeData(direction, stopTime));
 
             if (gridMap[startCellPos].type == TileType.Slime) // slime stops movement
                 break;
@@ -89,8 +93,8 @@ public class GridManager : MonoBehaviour
                 if (dir == prevDirection)
                     continue;
 
-                var nextCellPos = startCellPos + (Vector3Int)dir;
-                if (IsWalkable(nextCellPos))
+                var nextCellPos = toCellPos + (Vector3Int)dir;
+                if (IsWalkable(toCellPos, nextCellPos, dir, ref stopTime))
                 {
                     countPossibleDirections++;
                     direction = dir;
@@ -99,13 +103,63 @@ public class GridManager : MonoBehaviour
 
             if (countPossibleDirections != 1)
                 break;
+            startCellPos = toCellPos;
         }
         return result;
     }
 
-    public bool IsWalkable(Vector3Int cellPos)
+    public bool IsWalkable(Vector3Int fromCellPos, Vector3Int toCellPos, Vector2 direction, ref float stopTime)
     {
-        return gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall;
+        if (!gridMap.ContainsKey(toCellPos))
+            return false;
+
+        if (!gridMap.ContainsKey(fromCellPos))
+            return false;
+
+        // Check if the toCellPos is a ladder
+        if (gridMap[toCellPos].specialTile != null && gridMap[toCellPos].specialTile.Type == TileType.Ladder)
+        {
+            var ladder = gridMap[toCellPos].specialTile as Ladder;
+            Debug.Log("Ladder: " + ladder.CanGoIn(direction).ToString() + " direction: " + direction.ToString());
+            if (ladder.CanGoIn(direction))
+                return true;
+            else
+                return false;
+        }
+
+        // Check if the fromCellPos is a ladder
+        if (gridMap[fromCellPos].specialTile != null && gridMap[fromCellPos].specialTile.Type == TileType.Ladder)
+        {
+            var ladder = gridMap[fromCellPos].specialTile as Ladder;
+            if (ladder.CanGoIn(direction))
+                return true;
+            else
+                return false;
+        }
+
+        // Check if the toCellPos and fromCellPos are walkable or wall,
+        // if one of them is walkable and the other is wall, return false
+        TileType toTileType = gridMap[toCellPos].type;
+        TileType fromTileType = gridMap[fromCellPos].type;
+
+        if ((toTileType == TileType.Walkable && fromTileType == TileType.Wall) ||
+            (toTileType == TileType.Wall && fromTileType == TileType.Walkable))
+            return false;
+
+        // Check if the toCellPos is a one way door
+        if (gridMap[toCellPos].specialTile != null && gridMap[toCellPos].specialTile.Type == TileType.OneWayDoor)
+        {
+            var oneWayDoor = gridMap[toCellPos].specialTile as OneWayDoor;
+            if (oneWayDoor.CanGoThrough(direction))
+            {
+                stopTime = oneWayDoor.StopTime;
+                return true;
+            }
+            else
+                return false;
+        }
+
+        return true;
     }
 
     public Vector3Int WorldToCell(Vector3 worldPos)
@@ -120,7 +174,7 @@ public class GridManager : MonoBehaviour
 
     private void HandleSpecialTileInstantiated(SpecialTile tile)
     {
-        gridMap[WorldToCell(tile.transform.position)].type = tile.Type;
+        //gridMap[WorldToCell(tile.transform.position)].type = tile.Type;
         gridMap[WorldToCell(tile.transform.position)].specialTile = tile;
     }
 
@@ -138,6 +192,35 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    // Hàm này dùng để debug loại tile và special tile khi click chu?t, có thể bỏ qua nếu không cần
+    //private void Update()
+    //{
+    //    // 1. Ki?m tra click chu?t theo New Input System (t??ng ???ng GetMouseButtonDown)
+    //    if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+    //    {
+    //        // 2. L?y v? trí chu?t trên màn hình theo New Input System (t??ng ???ng Input.mousePosition)
+    //        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
+
+    //        // 3. Chuy?n ??i sang t?a ?? th? gi?i thông qua Camera
+    //        // T?o m?t Vector3 t?m th?i v?i Z phù h?p ?? Camera.ScreenToWorldPoint tính toán ?úng
+    //        Vector3 screenPosWithZ = new Vector3(mouseScreenPos.x, mouseScreenPos.y, Mathf.Abs(Camera.main.transform.position.z));
+    //        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(screenPosWithZ);
+
+    //        // 4. D?ch t?a ?? th? gi?i sang t?a ?? ô l??i (Cell Position)
+    //        Vector3Int cellPos = WorldToCell(mouseWorldPos);
+
+    //        // 5. Ki?m tra d? li?u trong gridMap c?a b?n
+    //        if (gridMap != null && gridMap.TryGetValue(cellPos, out var cell))
+    //        {
+    //            string specialType = cell.specialTile != null ? cell.specialTile.Type.ToString() : "None";
+    //            Debug.Log($"[CLICK] Ô vuông: {cell.position} | Lo?i ??t: {cell.type} | ??c bi?t: {specialType}");
+    //        }
+    //        else
+    //        {
+    //            Debug.LogWarning($"B?n v?a click vào ô {cellPos}, nh?ng ô này không n?m trong d? li?u gridMap!");
+    //        }
+    //    }
+    //}
     public void SetNodeType(Vector3Int cellPos, TileType type)
     {
         if (gridMap.ContainsKey(cellPos))
