@@ -20,20 +20,20 @@ public class PlayerController : MonoBehaviour
     public static UnityAction OnTurnMove;
     public static UnityAction OnStartMoving;
 
+    public static UnityAction OnPlayerHurt;
+    [SerializeField] private int maxHealth = 5;
+    private int currentHealth;
+
     void OnEnable()
     {
-        WinPoint.OnLevelComplete += LockInput;
-        TurnTimer.OnTimeOut += LockInput;
-        LevelTimer.OnTimeOut += LockInput;
+        WinPoint.OnLevelComplete += TouchGoal;
         Portal.OnPlayerTeleport += HandleTeleport;
         OnLoseGame += HandleLoseGame;
     }
 
     void OnDisable()
     {
-        WinPoint.OnLevelComplete -= LockInput;
-        TurnTimer.OnTimeOut -= LockInput;
-        LevelTimer.OnTimeOut -= LockInput;
+        WinPoint.OnLevelComplete -= TouchGoal;
         Portal.OnPlayerTeleport -= HandleTeleport;
         OnLoseGame -= HandleLoseGame;
     }
@@ -41,9 +41,9 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        currentHealth = maxHealth;
     }
-
-    private void LockInput()
+    private void TouchGoal()
     {
         lockMoving = true;
         moveSequence?.Kill();
@@ -80,8 +80,11 @@ public class PlayerController : MonoBehaviour
         if (lockMoving) return;
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.Log("Pointer is over UI, ignoring input.");
-            return;
+            if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.gameObject.tag != "EffectUI")
+            {
+                Debug.Log("Pointer is over UI, ignoring input.");
+                return;
+            }
         }
 
         if (value.Get<float>() > 0.5f)
@@ -178,5 +181,22 @@ public class PlayerController : MonoBehaviour
         lockMoving = false;
         data.LinkedPortal.UnlockPortal();
         OnTurnMove?.Invoke();
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        Debug.Log($"Player took {damage} damage. Current health: {currentHealth}");
+
+        if (currentHealth <= 0)
+        {
+            OnLoseGame?.Invoke();
+        }
+    }
+
+    public void Heal(int amount)
+    {
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        Debug.Log($"Player healed {amount}. Current health: {currentHealth}");
     }
 }

@@ -30,5 +30,7 @@ public enum TileType
     WinPoint,
     Rock,
     Ladder,
-    OneWayDoor
+    OneWayDoor,
+    Slime,
+    Ink
 }
