@@ -1,12 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 
-[RequireComponent(typeof(Collider2D))]
 public class RotatableTerrainTapArea : MonoBehaviour
 {
     [SerializeField] private RotatableTerrainBlock targetBlock;
     [SerializeField] private Camera targetCamera;
+    [SerializeField] private Tilemap tapTilemap;
     [SerializeField] private GameObject highlightRoot;
     [SerializeField] private SpriteRenderer[] highlightRenderers;
     [SerializeField] private Color highlightColor = new(1f, 0.82f, 0.18f, 0.35f);
@@ -22,16 +24,21 @@ public class RotatableTerrainTapArea : MonoBehaviour
     private bool pointerStartedInside;
     private bool lockedPlayers;
     private Vector2 pointerStartPosition;
+    private static readonly List<RotatableTerrainTapArea> activeTapAreas = new();
 
     private void Reset()
     {
-        GetComponent<Collider2D>().isTrigger = true;
+        tapTilemap = GetComponent<Tilemap>();
+
+        if (TryGetComponent(out Collider2D collider2D))
+            collider2D.isTrigger = true;
     }
 
     private void Awake()
     {
-        tapCollider = GetComponent<Collider2D>();
-        tapCollider.isTrigger = true;
+        TryGetComponent(out tapCollider);
+        if (tapCollider != null)
+            tapCollider.isTrigger = true;
 
         if (targetBlock == null)
             targetBlock = GetComponentInParent<RotatableTerrainBlock>();
@@ -39,18 +46,26 @@ public class RotatableTerrainTapArea : MonoBehaviour
         if (targetCamera == null)
             targetCamera = Camera.main;
 
+        if (tapTilemap == null)
+            tapTilemap = GetComponent<Tilemap>();
+
         AutoCollectHighlightRenderersIfNeeded();
         SetHighlightVisible(true);
     }
 
     private void OnEnable()
     {
+        if (!activeTapAreas.Contains(this))
+            activeTapAreas.Add(this);
+
         if (targetBlock != null)
             targetBlock.RotationFinished += HandleRotationFinished;
     }
 
     private void OnDisable()
     {
+        activeTapAreas.Remove(this);
+
         if (targetBlock != null)
             targetBlock.RotationFinished -= HandleRotationFinished;
 
@@ -159,7 +174,22 @@ public class RotatableTerrainTapArea : MonoBehaviour
 
         var distanceToArea = Mathf.Abs(cameraToUse.transform.position.z - transform.position.z);
         var worldPosition = cameraToUse.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, distanceToArea));
-        return tapCollider.OverlapPoint(worldPosition);
+
+        if (tapTilemap != null)
+            return tapTilemap.HasTile(tapTilemap.WorldToCell(worldPosition));
+
+        return tapCollider != null && tapCollider.OverlapPoint(worldPosition);
+    }
+
+    public static bool ContainsAnyScreenPosition(Vector2 screenPosition)
+    {
+        foreach (var tapArea in activeTapAreas)
+        {
+            if (tapArea != null && tapArea.isActiveAndEnabled && tapArea.ContainsScreenPosition(screenPosition))
+                return true;
+        }
+
+        return false;
     }
 
     private bool IsPointerOverUi(int pointerId)

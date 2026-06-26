@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 touchPosition = Vector2.zero;
     private Vector2 releasePosition = Vector2.zero;
     private Vector2 inputPosition = Vector2.zero;
+    private bool ignorePrimaryContactUntilRelease = false;
 
     private Sequence moveSequence;
     private Animator animator;
@@ -94,6 +95,15 @@ public class PlayerController : MonoBehaviour
 
     public void OnPrimaryContact(InputValue value)
     {
+        var isPressed = value.Get<float>() > 0.5f;
+        inputPosition = GetPrimaryScreenPosition();
+
+        if (!isPressed && ignorePrimaryContactUntilRelease)
+        {
+            ignorePrimaryContactUntilRelease = false;
+            return;
+        }
+
         if (IsMovementLocked) return;
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
@@ -104,7 +114,13 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (value.Get<float>() > 0.5f)
+        if (isPressed && RotatableTerrainTapArea.ContainsAnyScreenPosition(inputPosition))
+        {
+            ignorePrimaryContactUntilRelease = true;
+            return;
+        }
+
+        if (isPressed)
         {
             Debug.Log("Primary Contact Started");
             touchPosition = inputPosition;
@@ -137,6 +153,19 @@ public class PlayerController : MonoBehaviour
     public void OnPrimaryPosition(InputValue value)
     {
         inputPosition = value.Get<Vector2>();
+    }
+
+    private Vector2 GetPrimaryScreenPosition()
+    {
+        var touchscreen = Touchscreen.current;
+        if (touchscreen != null)
+        {
+            var touch = touchscreen.primaryTouch;
+            if (touch.press.isPressed || touch.press.wasPressedThisFrame || touch.press.wasReleasedThisFrame)
+                return touch.position.ReadValue();
+        }
+
+        return Mouse.current != null ? Mouse.current.position.ReadValue() : inputPosition;
     }
 
     public void MoveWithPath(Path path)
