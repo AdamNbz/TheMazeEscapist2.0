@@ -404,7 +404,7 @@ MonoBehaviour:
   SwordPrefab: {fileID: 8880345319988921455, guid: d05a6d741c1e6b14f86c7cf465d006c1, type: 3}
   PencilAttackPrefab: {fileID: 8344408959186323411, guid: 62c78dd1138a8744584425e1656c9a74, type: 3}
   WarningTilePrefab: {fileID: 9116726656630743319, guid: 5eda55c705d41ac48a1e50a8df784a1c, type: 3}
-  SlimePrefab: {fileID: 0}
+  SlimePrefab: {fileID: 6169523420412003319, guid: 48fd8210c8bea694a8357789a54692f5, type: 3}
   playerObject: {fileID: 0}
 --- !u!61 &804677232
 BoxCollider2D:
@@ -29786,11 +29786,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9080038777866752906, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.1276596
+      value: 1.3458796
       objectReference: {fileID: 0}
     - target: {fileID: 9080038777866752906, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.1276596
+      value: 1.3458796
       objectReference: {fileID: 0}
     - target: {fileID: 9080038777866752906, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: m_LocalScale.z

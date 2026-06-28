@@ -14,6 +14,11 @@ public class WarningTile : SpecialTile
     private float warningDuration = 1f;
     const float flasingDuration = 1f;
 
+    void Awake()
+    {
+        isEffect = true;
+    }
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -23,12 +28,10 @@ public class WarningTile : SpecialTile
 
     public async void Init(float warningDuration)
     {
-        Debug.Log("Warning tile initialized at " + transform.position);
         this.warningDuration = warningDuration;
         await UniTask.Delay((int)(warningDuration * 1000));
         spriteRenderer.sprite = flashSprite;
         await UniTask.Delay((int)(flasingDuration * 1000));
-        //GridManager.Instance.RaiseWall(GridManager.Instance.WorldToCell(transform.position));
         //Check collsion with the player in short amount of time (200ms), if player inside then take damage
         damageCollider.enabled = true;
         spriteRenderer.color = Color.black;

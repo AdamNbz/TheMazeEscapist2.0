@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Sword : SpecialTile
+public class Sword : Item
 {
     [SerializeField] private string soundEffectName = "health_potion_collected";
     public static UnityAction OnSwordEffectTriggered;
@@ -10,7 +10,7 @@ public class Sword : SpecialTile
 
     void Start()
     {
-        OnInstantiated();
+        OnItemInstantiated?.Invoke(this);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

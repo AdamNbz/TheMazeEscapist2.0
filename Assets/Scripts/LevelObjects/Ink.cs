@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Ink : SpecialTile
+public class Ink : Item
 {
     [SerializeField] private string soundEffectName = "trash_can_collected";
     public static UnityAction OnInkEffectTriggered;
@@ -12,7 +12,7 @@ public class Ink : SpecialTile
 
     void Start()
     {
-        OnInstantiated();
+        OnItemInstantiated?.Invoke(this);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

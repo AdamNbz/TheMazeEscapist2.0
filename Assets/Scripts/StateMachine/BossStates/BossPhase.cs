@@ -9,7 +9,7 @@ public class BossPhase : BossBaseState
     BossCommand exitCommand;
     BossCommand currentCommand;
 
-    float weaponCooldown = 15f;
+    float weaponCooldown = 5f;
     float healCooldown = 30f;
 
     float weaponTimer = 0f;
@@ -25,6 +25,7 @@ public class BossPhase : BossBaseState
 
     public override void OnEnter()
     {
+        Debug.Log("Entering Boss Phase");
         currentCommand = enterCommand;
         Sword.OnSwordEffectTriggered += Hurt;
         currentCommand?.Execute();
