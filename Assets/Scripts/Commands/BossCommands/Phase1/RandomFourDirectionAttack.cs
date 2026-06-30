@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 public class RandomFourDirectionAttack : BossCommand
 {
     public RandomFourDirectionAttack(BossController boss) : base(boss) { }
-    public override async Task Execute()
+    public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -21,11 +22,11 @@ public class RandomFourDirectionAttack : BossCommand
             var randomDirection = directions[Random.Range(0, directions.Count)];
             var playerCell = GridManager.Instance.WorldToCell(playerObject.transform.position);
 
-            boss.TriggerPencilAttack(0.5f, 1.0f, 10f, randomDirection, playerCell);
+            boss.TriggerPencilAttack(0.5f, 1.0f, 15f, randomDirection, playerCell);
 
-            await UniTask.Delay(2000);
+            yield return new WaitForSeconds(2f);
         }
-        await UniTask.Delay(5000);
+        yield return new WaitForSeconds(5f);
 
         isExecuting = false;
         isCompleted = true;

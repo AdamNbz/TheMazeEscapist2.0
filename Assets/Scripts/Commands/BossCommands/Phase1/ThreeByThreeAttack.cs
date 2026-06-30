@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -17,7 +18,7 @@ public class ThreeByThreeAttack : BossCommand
         new Vector3Int(-1, 1, 0),
         new Vector3Int(0, 0, 0)
     };
-    public override async Task Execute()
+    public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -45,9 +46,9 @@ public class ThreeByThreeAttack : BossCommand
                 }
             }
 
-            await UniTask.Delay(4000);
+            yield return new WaitForSeconds(4f);
         }
-        await UniTask.Delay(5000);
+        yield return new WaitForSeconds(5f);
 
         isExecuting = false;
         isCompleted = true;

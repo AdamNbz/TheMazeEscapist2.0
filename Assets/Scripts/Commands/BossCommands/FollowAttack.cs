@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -12,7 +13,7 @@ public class FollowAttack : BossCommand
         new Vector3Int(-1, 0, 0),
         new Vector3Int(0, 1, 0)
     };
-    public override async Task Execute()
+    public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -32,10 +33,10 @@ public class FollowAttack : BossCommand
         {
             var playerCell = GridManager.Instance.WorldToCell(playerObject.transform.position);
             boss.TriggerPencilAttack(2f, 1f, 15f, directions[i % directions.Count], playerCell);
-            await UniTask.Delay(3000);
+            yield return new WaitForSeconds(3f);
         }
 
-        await UniTask.Delay(2000);
+        yield return new WaitForSeconds(2f);
 
         isExecuting = false;
         isCompleted = true;

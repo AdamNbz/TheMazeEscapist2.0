@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -12,7 +13,7 @@ public class OneGapAttack : BossCommand
         new Vector3Int(-1, 0, 0),
         new Vector3Int(0, 1, 0)
     };
-    public override async Task Execute()
+    public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -30,10 +31,10 @@ public class OneGapAttack : BossCommand
                 if (j != gapColumnIndex)
                     boss.TriggerPencilAttack(2f, 1f, 15f, Vector3Int.down, Vector3Int.FloorToInt(new Vector3(BossController.originCell.x + j, BossController.originCell.y, 0)));
             }
-            await UniTask.Delay(5000);
+            yield return new WaitForSeconds(5f);
         }
 
-        await UniTask.Delay(10000);
+        yield return new WaitForSeconds(10f);
 
         isExecuting = false;
         isCompleted = true;

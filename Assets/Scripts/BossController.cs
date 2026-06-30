@@ -57,13 +57,18 @@ public class BossController : MonoBehaviour
             new ShortCheckerAttack(this),
             new Phase2PencilAttack(this),
         };
+        List<BossCommand> phase2CombinedCommands = new List<BossCommand>
+        {
+            new SnakeChaseAttackWithPencil(this),
+        };
+
         List<BossCommand> phase3Commands = new List<BossCommand>
         {
-            new ChasingAttack(this),
+            new FastDownPencilAttack(this),
         };
         var phase1 = new BossPhase(this, animator, phase1Commands);
-        var phase2 = new BossPhase(this, animator, phase2Commands, 100, new RaisePhase2Walls(this));
-        var phase3 = new BossPhase(this, animator, phase3Commands);
+        var phase2 = new BossPhase(this, animator, phase2Commands, 8, new RaisePhase2Walls(this), null, new Vector3Int(-4, -7, 0), phase2CombinedCommands);
+        var phase3 = new BossPhase(this, animator, phase3Commands, 5, new RaisePhase3Walls(this));
         var hurtState = new BossHurtState(this, animator);
         var winState = new BossWinState(this, animator);
         var loseState = new BossLoseState(this, animator);

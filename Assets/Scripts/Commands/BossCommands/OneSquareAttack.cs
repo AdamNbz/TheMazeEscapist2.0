@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -12,7 +13,7 @@ public class OneSquareAttack : BossCommand
         new Vector3Int(-1, 0, 0),
         new Vector3Int(0, 1, 0)
     };
-    public override async Task Execute()
+    public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -39,10 +40,10 @@ public class OneSquareAttack : BossCommand
                 if (j > squarePosition.y || j <= squarePosition.y - squareSize)
                     boss.TriggerPencilAttack(2f, 3f, 30f, Vector3Int.right, new Vector3Int(originCell.x, j, 0));
             }
-            await UniTask.Delay(6000);
+            yield return new WaitForSeconds(6f);
         }
 
-        await UniTask.Delay(8000);
+        yield return new WaitForSeconds(8f);
 
         isExecuting = false;
         isCompleted = true;

@@ -1,12 +1,13 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Collections;
 
 public class ShortCheckerAttack : BossCommand
 {
     public ShortCheckerAttack(BossController boss) : base(boss) { }
     bool isOdd = true;
-    public override async Task Execute()
+    public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -33,7 +34,7 @@ public class ShortCheckerAttack : BossCommand
                 }
             }
             isOdd = !isOdd;
-            await UniTask.Delay(2000);
+            yield return new WaitForSeconds(2f);
         }
 
         isExecuting = false;

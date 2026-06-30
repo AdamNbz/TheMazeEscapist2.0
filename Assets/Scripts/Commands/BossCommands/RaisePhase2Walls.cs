@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -11,7 +12,7 @@ public class RaisePhase2Walls : BossCommand
     {
         1, 3, 5,
     };
-    public override async Task Execute()
+    public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -32,7 +33,7 @@ public class RaisePhase2Walls : BossCommand
                 }
             }
         }
-        await UniTask.Delay(2000);
+        yield return new WaitForSeconds(2f);
 
         isExecuting = false;
         isCompleted = true;

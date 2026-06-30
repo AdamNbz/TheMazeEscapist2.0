@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class BossCommand : ICommand
+public class BossCommand
 {
     protected List<Vector3Int> directions = new List<Vector3Int>() {
         new Vector3Int(1, 0, 0),
@@ -18,9 +19,10 @@ public class BossCommand : ICommand
         this.boss = boss;
     }
 
-    public virtual async Task Execute()
+    public virtual IEnumerator Execute()
     {
         // noop
+        yield break;
     }
 
     public virtual void Stop()

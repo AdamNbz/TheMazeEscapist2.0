@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using System.Collections;
 
 public class Phase2PencilAttack : BossCommand
 {
@@ -28,7 +29,7 @@ public class Phase2PencilAttack : BossCommand
         return uniqueNumbers;
     }
 
-    public override async Task Execute()
+    public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -59,7 +60,7 @@ public class Phase2PencilAttack : BossCommand
                     boss.TriggerPencilAttack(1f, 0.5f, 30, direction, cellPos);
                 }
             }
-            await UniTask.Delay(1500);
+            yield return new WaitForSeconds(1.5f);
         }
 
         isExecuting = false;

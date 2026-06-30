@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -8,7 +9,7 @@ public class SnakeChaseAttack : BossCommand
     public SnakeChaseAttack(BossController boss) : base(boss) { }
     Vector3Int currentCell;
     Vector3Int currentDirection = Vector3Int.zero;
-    public override async Task Execute()
+    public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
@@ -23,7 +24,7 @@ public class SnakeChaseAttack : BossCommand
         var warningTile = tileObject.GetComponent<WarningTile>();
         warningTile.Init(0.75f);
 
-        await UniTask.Delay(700);
+        yield return new WaitForSeconds(0.7f);
 
         for (int k = 0; k < attackCount; k++)
         {
@@ -48,9 +49,9 @@ public class SnakeChaseAttack : BossCommand
             tileObject = boss.TriggerCreateTile(currentCell, boss.WarningTilePrefab);
             warningTile = tileObject.GetComponent<WarningTile>();
             warningTile.Init(0.75f);
-            await UniTask.Delay(500);
+            yield return new WaitForSeconds(0.5f);
         }
-        await UniTask.Delay(5000);
+        yield return new WaitForSeconds(5f);
 
         isExecuting = false;
         isCompleted = true;

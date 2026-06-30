@@ -4,10 +4,15 @@ using UnityEngine;
 public class BossPhase : BossBaseState
 {
     int health = 3;
+    int maxHealth = 3;
     List<BossCommand> attackCommands = new List<BossCommand>();
+    List<BossCommand> combinedCommands = new List<BossCommand>();
+    Vector3Int? endAttackPosition = null;
     BossCommand enterCommand;
     BossCommand exitCommand;
     BossCommand currentCommand;
+
+    Coroutine currentCommandCoroutine;
 
     float weaponCooldown = 5f;
     float healCooldown = 30f;
@@ -15,12 +20,15 @@ public class BossPhase : BossBaseState
     float weaponTimer = 0f;
     float healTimer = 0f;
 
-    public BossPhase(BossController boss, Animator animator, List<BossCommand> attackCommands, int phaseHealth = 3, BossCommand enterCommand = null, BossCommand exitCommand = null) : base(boss, animator)
+    public BossPhase(BossController boss, Animator animator, List<BossCommand> attackCommands, int phaseHealth = 3, BossCommand enterCommand = null, BossCommand exitCommand = null, Vector3Int? endAttackPosition = null, List<BossCommand> combinedCommands = null) : base(boss, animator)
     {
         this.attackCommands = attackCommands;
         this.health = phaseHealth;
+        this.maxHealth = this.health;
         this.enterCommand = enterCommand;
         this.exitCommand = exitCommand;
+        this.endAttackPosition = endAttackPosition;
+        this.combinedCommands = combinedCommands ?? new List<BossCommand>();
     }
 
     public override void OnEnter()
@@ -28,8 +36,8 @@ public class BossPhase : BossBaseState
         Debug.Log("Entering Boss Phase");
         currentCommand = enterCommand;
         Sword.OnSwordEffectTriggered += Hurt;
-        currentCommand?.Execute();
-
+        if (currentCommand != null)
+            boss.StartCoroutine(currentCommand.Execute());
     }
 
     public override void Update()
@@ -37,15 +45,20 @@ public class BossPhase : BossBaseState
         if (currentCommand == null || currentCommand.IsCompleted())
         {
             // Choose a new random command to execute
-            currentCommand = attackCommands[Random.Range(0, attackCommands.Count)];
-            currentCommand.Execute();
+            currentCommand = (health >= (maxHealth / 2) || combinedCommands.Count == 0) ? attackCommands[Random.Range(0, attackCommands.Count)] : combinedCommands[Random.Range(0, combinedCommands.Count)];
+            currentCommandCoroutine = boss.StartCoroutine(currentCommand?.Execute());
         }
 
         weaponTimer += Time.deltaTime;
         if (weaponTimer >= weaponCooldown)
         {
             weaponTimer = 0f;
-            boss.TriggerCreateRandomItem(boss.SwordPrefab);
+            if (health > 1 || endAttackPosition == null)
+                boss.TriggerCreateRandomItem(boss.SwordPrefab);
+            else if (endAttackPosition != null)
+            {
+                boss.TriggerCreateTile(endAttackPosition.Value, boss.SwordPrefab);
+            }
         }
 
         healTimer += Time.deltaTime;
@@ -59,8 +72,9 @@ public class BossPhase : BossBaseState
     public override void OnExit()
     {
         Sword.OnSwordEffectTriggered -= Hurt;
-        exitCommand?.Execute();
-        boss.TriggerLowerAllWalls();
+        boss.StopCoroutine(currentCommandCoroutine);
+        if (exitCommand != null)
+            boss.StartCoroutine(exitCommand.Execute());
     }
 
     void OnTimerFinished()
