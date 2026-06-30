@@ -31,7 +31,6 @@ public class RaisableWall : SpecialTile
         var tween = transform.DOScaleY(0, 1f);
         tween.OnComplete(() =>
         {
-            GridManager.Instance.SetNodeType(GridManager.Instance.WorldToCell(transform.position), TileType.Walkable);
             Destroy(this.gameObject);
         });
 

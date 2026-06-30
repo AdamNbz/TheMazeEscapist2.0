@@ -19,7 +19,7 @@ public class Sword : Item
         {
             Debug.Log("Sword tile triggered!");
             OnSwordEffectTriggered?.Invoke();
-            OnSpecialTileInteracted?.Invoke(this);
+            OnItemInteracted?.Invoke(this);
             AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
             Destroy(gameObject);
         }

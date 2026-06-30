@@ -66,15 +66,23 @@ public class BossController : MonoBehaviour
         {
             new FastDownPencilAttack(this),
         };
+
+        List<BossCommand> phase4Commands = new List<BossCommand>
+        {
+            new ThreeByThreeAttack(this),
+        };
+
         var phase1 = new BossPhase(this, animator, phase1Commands);
-        var phase2 = new BossPhase(this, animator, phase2Commands, 8, new RaisePhase2Walls(this), null, new Vector3Int(-4, -7, 0), phase2CombinedCommands);
+        var phase2 = new BossPhase(this, animator, phase2Commands, 3, new RaisePhase2Walls(this), null, new Vector3Int(-4, -7, 0), phase2CombinedCommands);
         var phase3 = new BossPhase(this, animator, phase3Commands, 5, new RaisePhase3Walls(this));
+        var phase4 = new BossPhase(this, animator, phase3Commands, 5);
         var hurtState = new BossHurtState(this, animator);
         var winState = new BossWinState(this, animator);
         var loseState = new BossLoseState(this, animator);
 
         At(phase1, phase2, new FuncPredicate(() => phase1.IsPhaseEnded()));
         At(phase2, phase3, new FuncPredicate(() => phase2.IsPhaseEnded()));
+        At(phase3, phase4, new FuncPredicate(() => phase3.IsPhaseEnded()));
         playerObject = GameObject.Find("Player");
         grid = GameObject.Find("Grid");
 
@@ -109,7 +117,7 @@ public class BossController : MonoBehaviour
 
     public void TriggerPencilAttack(float aimingDuration, float lockDuration, float speed, Vector3Int direction, Vector3Int initialCellPosition)
     {
-        Debug.Log("Boss triggered pencil attack!");
+        //Debug.Log("Boss triggered pencil attack!");
         GameObject pencil = Instantiate(PencilAttackPrefab);
         pencil.transform.SetParent(grid.transform, false);
         PencilAttack pencilAttack = pencil.GetComponent<PencilAttack>();
@@ -157,20 +165,29 @@ public class BossController : MonoBehaviour
     public void TriggerCreateRandomItem(GameObject itemPrefab)
     {
         // Get random walkable cell position within the grid bounds
-        Vector3Int cellPosition = RandomWalkableCell();
-        TriggerCreateTile(cellPosition, itemPrefab);
+        Vector3Int? cellPosition = RandomWalkableCell();
+        if (cellPosition.HasValue)
+        {
+            TriggerCreateTile(cellPosition.Value, itemPrefab);
+        }
     }
 
-    public Vector3Int RandomWalkableCell()
+    public Vector3Int? RandomWalkableCell()
     {
-        Vector3Int cellPosition;
-        do
+        // Gather all walkable cells within the grid bounds
+        List<Vector3Int> walkableCells = new List<Vector3Int>();
+        for (int i = originCell.x; i < originCell.x + size; i++)
         {
-            int randomX = Random.Range(originCell.x, originCell.x + size);
-            int randomY = Random.Range(originCell.y - size + 1, originCell.y + 1);
-            cellPosition = new Vector3Int(randomX, randomY, 0);
-        } while (!GridManager.Instance.IsWalkable(cellPosition) || GridManager.Instance.IsItem(cellPosition));
-        return cellPosition;
+            for (int j = originCell.y; j > originCell.y - size; j--)
+            {
+                Vector3Int cellPos = new Vector3Int(i, j, 0);
+                if (GridManager.Instance.IsWalkable(cellPos) && !GridManager.Instance.IsItem(cellPos))
+                {
+                    walkableCells.Add(cellPos);
+                }
+            }
+        }
+        return walkableCells.Count > 0 ? (Vector3Int?)walkableCells[Random.Range(0, walkableCells.Count)] : null;
     }
 
     void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);

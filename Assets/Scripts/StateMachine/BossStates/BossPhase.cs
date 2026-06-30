@@ -85,6 +85,7 @@ public class BossPhase : BossBaseState
     public void Hurt()
     {
         health = Mathf.Max(0, health - 1);
+        Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}");
     }
 
     public bool IsPhaseEnded()

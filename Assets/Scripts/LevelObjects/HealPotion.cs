@@ -17,7 +17,7 @@ public class HealPotion : Item
         {
             Debug.Log("Heal Potion tile triggered!");
             OnHealEffectTriggered?.Invoke();
-            OnSpecialTileInteracted?.Invoke(this);
+            OnItemInteracted?.Invoke(this);
             AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
             Destroy(gameObject);
         }

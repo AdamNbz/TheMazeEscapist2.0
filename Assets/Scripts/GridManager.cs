@@ -209,6 +209,7 @@ public class GridManager : MonoBehaviour
             var wallTile = gridMap[cellPos].specialTile.GetComponent<RaisableWall>();
             if (wallTile != null)
             {
+                gridMap[cellPos].type = TileType.Walkable;
                 wallTile.Lower();
                 // grid map will set to walkable after wall finishes lowering
             }

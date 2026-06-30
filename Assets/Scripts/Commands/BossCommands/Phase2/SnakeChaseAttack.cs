@@ -19,7 +19,7 @@ public class SnakeChaseAttack : BossCommand
         var playerObject = boss.playerObject;
         var originCell = BossController.originCell;
 
-        currentCell = boss.RandomWalkableCell();
+        currentCell = (Vector3Int)boss.RandomWalkableCell();
         var tileObject = boss.TriggerCreateTile(currentCell, boss.WarningTilePrefab);
         var warningTile = tileObject.GetComponent<WarningTile>();
         warningTile.Init(0.75f);
