@@ -75,14 +75,12 @@ public class BossController : MonoBehaviour
         var phase1 = new BossPhase(this, animator, phase1Commands);
         var phase2 = new BossPhase(this, animator, phase2Commands, 3, new RaisePhase2Walls(this), null, new Vector3Int(-4, -7, 0), phase2CombinedCommands);
         var phase3 = new BossPhase(this, animator, phase3Commands, 5, new RaisePhase3Walls(this));
-        var phase4 = new BossPhase(this, animator, phase3Commands, 5);
         var hurtState = new BossHurtState(this, animator);
         var winState = new BossWinState(this, animator);
         var loseState = new BossLoseState(this, animator);
 
         At(phase1, phase2, new FuncPredicate(() => phase1.IsPhaseEnded()));
         At(phase2, phase3, new FuncPredicate(() => phase2.IsPhaseEnded()));
-        At(phase3, phase4, new FuncPredicate(() => phase3.IsPhaseEnded()));
         playerObject = GameObject.Find("Player");
         grid = GameObject.Find("Grid");
 
