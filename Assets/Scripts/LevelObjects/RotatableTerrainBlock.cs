@@ -13,6 +13,8 @@ public class RotatableTerrainBlock : MonoBehaviour
     [SerializeField] private bool updateGridBeforeAnimation = true;
     [SerializeField] private bool registerInitialWallsOnStart = true;
     [SerializeField] private bool useTilemapBoundsCenterAsPivot = true;
+    [SerializeField] private bool requirePlayerOnPivotWhenInsideTerrain = true;
+    [SerializeField] private PlayerController playerRequiredForRotation;
 
     private readonly HashSet<Vector3Int> currentBlockingCells = new();
     private bool hasCachedTilemapPivot;
@@ -71,8 +73,75 @@ public class RotatableTerrainBlock : MonoBehaviour
             return false;
         }
 
+        if (!CanRotateWithPlayer(normalizedTurns))
+            return false;
+
         StartCoroutine(RotateRoutine(normalizedTurns));
         return true;
+    }
+
+    private bool CanRotateWithPlayer(int clockwiseQuarterTurns)
+    {
+        if (!TryGetPlayerCell(out var playerCell))
+            return true;
+
+        if (requirePlayerOnPivotWhenInsideTerrain && IsCellInsideCurrentTerrainBounds(playerCell) && playerCell != GetPivotGridCell())
+            return false;
+
+        return !GetRotatedBlockingCells(clockwiseQuarterTurns).Contains(playerCell);
+    }
+
+    private bool IsCellInsideCurrentTerrainBounds(Vector3Int cellPos)
+    {
+        if (currentBlockingCells.Count == 0)
+            return false;
+
+        var minX = int.MaxValue;
+        var maxX = int.MinValue;
+        var minY = int.MaxValue;
+        var maxY = int.MinValue;
+        var minZ = int.MaxValue;
+        var maxZ = int.MinValue;
+
+        foreach (var blockingCell in currentBlockingCells)
+        {
+            minX = Mathf.Min(minX, blockingCell.x);
+            maxX = Mathf.Max(maxX, blockingCell.x);
+            minY = Mathf.Min(minY, blockingCell.y);
+            maxY = Mathf.Max(maxY, blockingCell.y);
+            minZ = Mathf.Min(minZ, blockingCell.z);
+            maxZ = Mathf.Max(maxZ, blockingCell.z);
+        }
+
+        return cellPos.x >= minX && cellPos.x <= maxX
+            && cellPos.y >= minY && cellPos.y <= maxY
+            && cellPos.z >= minZ && cellPos.z <= maxZ;
+    }
+
+    private bool TryGetPlayerCell(out Vector3Int playerCell)
+    {
+        playerCell = default;
+
+        if (GridManager.Instance == null)
+            return false;
+
+        if (playerRequiredForRotation == null)
+            playerRequiredForRotation = FindFirstObjectByType<PlayerController>();
+
+        if (playerRequiredForRotation == null)
+            return false;
+
+        playerCell = GridManager.Instance.WorldToCell(playerRequiredForRotation.transform.position);
+        return true;
+    }
+
+    private Vector3Int GetPivotGridCell()
+    {
+        var pivotCell = GetPivotCell();
+        return new Vector3Int(
+            Mathf.RoundToInt(pivotCell.x),
+            Mathf.RoundToInt(pivotCell.y),
+            Mathf.RoundToInt(pivotCell.z));
     }
 
     private IEnumerator RotateRoutine(int clockwiseQuarterTurns)
