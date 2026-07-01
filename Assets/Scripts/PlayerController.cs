@@ -9,9 +9,12 @@ using UnityEngine.EventSystems;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] bool lockMoving = false;
+    [SerializeField] private float minSwipeDistance = 60f;
+    private int externalMovementLocks = 0;
     private Vector2 touchPosition = Vector2.zero;
     private Vector2 releasePosition = Vector2.zero;
     private Vector2 inputPosition = Vector2.zero;
+    private bool ignorePrimaryContactUntilRelease = false;
 
     private Sequence moveSequence;
     private Animator animator;
@@ -23,6 +26,8 @@ public class PlayerController : MonoBehaviour
     public static UnityAction OnPlayerHurt;
     [SerializeField] private int maxHealth = 5;
     private int currentHealth;
+
+    private bool IsMovementLocked => lockMoving || externalMovementLocks > 0;
 
     void OnEnable()
     {
@@ -62,9 +67,22 @@ public class PlayerController : MonoBehaviour
         lockMoving = false;
     }
 
+    public void SetExternalMovementLock(bool isLocked)
+    {
+        externalMovementLocks += isLocked ? 1 : -1;
+        externalMovementLocks = Mathf.Max(0, externalMovementLocks);
+    }
+
+    public static void SetAllExternalMovementLocks(bool isLocked)
+    {
+        var players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        foreach (var player in players)
+            player.SetExternalMovementLock(isLocked);
+    }
+
     public void OnMove(InputValue value)
     {
-        if (lockMoving) return;
+        if (IsMovementLocked) return;
 
         Vector2 input = value.Get<Vector2>();
         Debug.Log($"Move: {input}");
@@ -90,7 +108,13 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (value.Get<float>() > 0.5f)
+        if (isPressed && RotatableTerrainTapArea.ContainsAnyScreenPosition(inputPosition))
+        {
+            ignorePrimaryContactUntilRelease = true;
+            return;
+        }
+
+        if (isPressed)
         {
             //Debug.Log("Primary Contact Started");
             touchPosition = inputPosition;
@@ -104,6 +128,8 @@ public class PlayerController : MonoBehaviour
 
             var direction = Vector2Int.zero;
             var swipeVector = releasePosition - touchPosition;
+            if (swipeVector.sqrMagnitude < minSwipeDistance * minSwipeDistance)
+                return;
 
             if (Mathf.Abs(swipeVector.x) > Mathf.Abs(swipeVector.y))
             {
@@ -121,6 +147,19 @@ public class PlayerController : MonoBehaviour
     public void OnPrimaryPosition(InputValue value)
     {
         inputPosition = value.Get<Vector2>();
+    }
+
+    private Vector2 GetPrimaryScreenPosition()
+    {
+        var touchscreen = Touchscreen.current;
+        if (touchscreen != null)
+        {
+            var touch = touchscreen.primaryTouch;
+            if (touch.press.isPressed || touch.press.wasPressedThisFrame || touch.press.wasReleasedThisFrame)
+                return touch.position.ReadValue();
+        }
+
+        return Mouse.current != null ? Mouse.current.position.ReadValue() : inputPosition;
     }
 
     public void MoveWithPath(Path path)

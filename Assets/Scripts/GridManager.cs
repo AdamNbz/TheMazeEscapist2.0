@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 public class GridManager : MonoBehaviour
@@ -254,10 +252,7 @@ public class GridManager : MonoBehaviour
     //}
     public void SetNodeType(Vector3Int cellPos, TileType type)
     {
-        if (gridMap.ContainsKey(cellPos))
-        {
-            gridMap[cellPos].type = type;
-        }
+        TrySetNodeType(cellPos, type);
     }
 
     public void SetNodeTile(Vector3Int cellPos, SpecialTile tile)
