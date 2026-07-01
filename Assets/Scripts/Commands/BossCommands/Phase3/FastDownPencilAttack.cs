@@ -40,10 +40,10 @@ public class FastDownPencilAttack : BossCommand
             var emptyCell = GetRandomUniqueNumbers(3, 0, size);
             for (int i = 0; i < size; i++)
                 if (!emptyCell.Contains(i))
-                    boss.TriggerPencilAttack(0.5f, 1.0f, 30f, Vector3Int.down, originCell + new Vector3Int(i, size / 2, 0));
-            yield return new WaitForSeconds(2f);
+                    boss.TriggerPencilAttack(0.5f, 0.5f, 50f, Vector3Int.down, originCell + new Vector3Int(i, size / 2, 0));
+            yield return new WaitForSeconds(1f);
         }
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
 
         isExecuting = false;
         isCompleted = true;

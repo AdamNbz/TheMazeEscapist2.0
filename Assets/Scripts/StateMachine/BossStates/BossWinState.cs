@@ -7,7 +7,7 @@ public class BossWinState : BossBaseState
 
     public override void OnEnter()
     {
-        // noop
+        WinPoint.OnLevelComplete?.Invoke();
     }
 
     public override void Update()
