@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Ink : SpecialTile
+public class Ink : Item
 {
     [SerializeField] private string soundEffectName = "trash_can_collected";
     public static UnityAction OnInkEffectTriggered;
-    public override TileType Type => TileType.Ink;
+    public override TileType Type => TileType.Item;
 
     void Start()
     {
-        OnInstantiated();
+        OnItemInstantiated?.Invoke(this);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -23,7 +23,7 @@ public class Ink : SpecialTile
             OnInkEffectTriggered?.Invoke();
             OnSpecialTileInteracted?.Invoke(this);
             AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 }

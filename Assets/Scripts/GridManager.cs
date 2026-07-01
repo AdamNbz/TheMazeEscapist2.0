@@ -38,7 +38,9 @@ public class GridManager : MonoBehaviour
     [SerializeField] Grid grid;
 
     Dictionary<Vector3Int, Node> gridMap = new(); //true for walkable, false for wall
+    Dictionary<Vector3Int, bool> hasItems = new();
 
+    public Grid GetMainGrid() => grid;
     public Dictionary<Vector3Int, Node> GetGrid()
     {
         return gridMap;
@@ -48,12 +50,16 @@ public class GridManager : MonoBehaviour
     {
         SpecialTile.OnSpecialTileInstantiated += HandleSpecialTileInstantiated;
         SpecialTile.OnSpecialTileInteracted += HandleSpecialTileInteracted;
+        Item.OnItemInstantiated += HandleItemInstantiated;
+        Item.OnItemInteracted += HandleItemInteracted;
     }
 
     void OnDisable()
     {
         SpecialTile.OnSpecialTileInstantiated -= HandleSpecialTileInstantiated;
         SpecialTile.OnSpecialTileInteracted -= HandleSpecialTileInteracted;
+        Item.OnItemInstantiated -= HandleItemInstantiated;
+        Item.OnItemInteracted -= HandleItemInteracted;
     }
 
     public Path FindPathFromWorld(Vector3 startWorldPos, Vector2Int direction)
@@ -160,19 +166,9 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
-    public bool HasNode(Vector3Int cellPos)
+    public bool IsItem(Vector3Int cellPos)
     {
-        return gridMap.ContainsKey(cellPos);
-    }
-
-    public bool TrySetNodeType(Vector3Int cellPos, TileType type, SpecialTile specialTile = null)
-    {
-        if (!gridMap.TryGetValue(cellPos, out var node))
-            return false;
-
-        node.type = type;
-        node.specialTile = specialTile;
-        return true;
+        return gridMap.ContainsKey(cellPos) && hasItems.ContainsKey(cellPos);
     }
 
     public Vector3Int WorldToCell(Vector3 worldPos)
@@ -185,7 +181,7 @@ public class GridManager : MonoBehaviour
         return grid.CellToWorld(cellPos);
     }
 
-    public Vector3 GetCellCenterWorld(Vector3Int cellPos)
+    public Vector3 GetCellCenteredWorldPosition(Vector3Int cellPos)
     {
         return grid.GetCellCenterWorld(cellPos);
     }
@@ -194,6 +190,21 @@ public class GridManager : MonoBehaviour
     {
         //gridMap[WorldToCell(tile.transform.position)].type = tile.Type;
         gridMap[WorldToCell(tile.transform.position)].specialTile = tile;
+    }
+
+    private void HandleItemInstantiated(Item item)
+    {
+        Vector3Int cellPos = WorldToCell(item.transform.position);
+        hasItems[cellPos] = true;
+    }
+
+    private void HandleItemInteracted(Item item)
+    {
+        Vector3Int cellPos = WorldToCell(item.transform.position);
+        if (hasItems.ContainsKey(cellPos))
+        {
+            hasItems.Remove(cellPos);
+        }
     }
 
     public bool IsNodeInteractable(Vector3Int cellPos)
@@ -244,13 +255,21 @@ public class GridManager : MonoBehaviour
         TrySetNodeType(cellPos, type);
     }
 
+    public void SetNodeTile(Vector3Int cellPos, SpecialTile tile)
+    {
+        if (gridMap.ContainsKey(cellPos))
+        {
+            gridMap[cellPos].specialTile = tile;
+        }
+    }
+
     public void RaiseWall(Vector3Int cellPos)
     {
         if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall)
         {
             // Instantiate a raisable wall at the given cell position
-            var worldPos = CellToWorld(cellPos);
-            var wallObj = Instantiate(raisableWallPrefab, worldPos + new Vector3(0.5f, 0f, 0f), Quaternion.identity);
+            var worldPos = GetCellCenteredWorldPosition(cellPos);
+            var wallObj = Instantiate(raisableWallPrefab, worldPos - new Vector3(0, grid.cellSize.y, 0), Quaternion.identity, grid.transform);
             var wallTile = wallObj.GetComponent<RaisableWall>();
             if (wallTile != null)
             {
@@ -268,9 +287,34 @@ public class GridManager : MonoBehaviour
             var wallTile = gridMap[cellPos].specialTile.GetComponent<RaisableWall>();
             if (wallTile != null)
             {
+                gridMap[cellPos].type = TileType.Walkable;
                 wallTile.Lower();
                 // grid map will set to walkable after wall finishes lowering
             }
+        }
+    }
+
+    public GameObject CreateSpecialTile(Vector3Int cellPos, GameObject tilePrefab)
+    {
+        var worldPos = GetCellCenteredWorldPosition(cellPos);
+        var tileObj = Instantiate(tilePrefab, worldPos, Quaternion.identity, grid.transform);
+        var specialTile = tileObj.GetComponent<SpecialTile>();
+        var warningTile = tileObj.GetComponent<WarningTile>();
+        if (specialTile != null && !specialTile.isEffect)
+        {
+            gridMap[cellPos].type = specialTile.Type;
+            gridMap[cellPos].specialTile = specialTile;
+        }
+        return tileObj;
+    }
+
+    public void RemoveSpecialTile(Vector3Int cellPos)
+    {
+        if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].specialTile != null)
+        {
+            Destroy(gridMap[cellPos].specialTile.gameObject);
+            gridMap[cellPos].type = TileType.Walkable;
+            gridMap[cellPos].specialTile = null;
         }
     }
 }

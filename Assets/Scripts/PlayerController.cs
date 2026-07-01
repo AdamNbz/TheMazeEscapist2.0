@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
         WinPoint.OnLevelComplete += TouchGoal;
         Portal.OnPlayerTeleport += HandleTeleport;
         OnLoseGame += HandleLoseGame;
+        HealPotion.OnHealEffectTriggered += Heal;
     }
 
     void OnDisable()
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour
         WinPoint.OnLevelComplete -= TouchGoal;
         Portal.OnPlayerTeleport -= HandleTeleport;
         OnLoseGame -= HandleLoseGame;
+        HealPotion.OnHealEffectTriggered -= Heal;
     }
 
     private void Start()
@@ -95,17 +97,9 @@ public class PlayerController : MonoBehaviour
 
     public void OnPrimaryContact(InputValue value)
     {
-        var isPressed = value.Get<float>() > 0.5f;
-        inputPosition = GetPrimaryScreenPosition();
-
-        if (!isPressed && ignorePrimaryContactUntilRelease)
-        {
-            ignorePrimaryContactUntilRelease = false;
-            return;
-        }
-
-        if (IsMovementLocked) return;
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        if (lockMoving) return;
+        //if (EventSystem.current.IsPointerOverGameObject())
+        if (true)
         {
             if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.gameObject.tag != "EffectUI")
             {
@@ -122,15 +116,15 @@ public class PlayerController : MonoBehaviour
 
         if (isPressed)
         {
-            Debug.Log("Primary Contact Started");
+            //Debug.Log("Primary Contact Started");
             touchPosition = inputPosition;
-            Debug.Log($"Touch Position: {touchPosition}");
+            //Debug.Log($"Touch Position: {touchPosition}");
         }
         else
         {
-            Debug.Log("Primary Contact Canceled");
+            //Debug.Log("Primary Contact Canceled");
             releasePosition = inputPosition;
-            Debug.Log($"Release Position: {releasePosition}");
+            //Debug.Log($"Release Position: {releasePosition}");
 
             var direction = Vector2Int.zero;
             var swipeVector = releasePosition - touchPosition;
@@ -231,10 +225,10 @@ public class PlayerController : MonoBehaviour
         OnTurnMove?.Invoke();
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage()
     {
-        currentHealth -= damage;
-        Debug.Log($"Player took {damage} damage. Current health: {currentHealth}");
+        currentHealth -= 1;
+        Debug.Log($"Player took 1 damage. Current health: {currentHealth}");
 
         if (currentHealth <= 0)
         {
@@ -242,9 +236,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Heal(int amount)
+    public void Heal()
     {
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-        Debug.Log($"Player healed {amount}. Current health: {currentHealth}");
+        currentHealth = Mathf.Min(currentHealth + 1, maxHealth);
+        Debug.Log($"Player healed 1. Current health: {currentHealth}");
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy"))
+        {
+            //var enemy = collision.GetComponent<EnemyController>();
+
+            TakeDamage();
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Enemy"))
+        {
+            //var enemy = collision.collider.GetComponent<EnemyController>();
+
+            TakeDamage();
+        }
     }
 }

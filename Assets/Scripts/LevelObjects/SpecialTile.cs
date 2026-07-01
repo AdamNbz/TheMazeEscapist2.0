@@ -6,6 +6,7 @@ public abstract class SpecialTile : MonoBehaviour
     public static UnityAction<SpecialTile> OnSpecialTileInstantiated;
     public static UnityAction<SpecialTile> OnSpecialTileInteracted;
     public abstract TileType Type { get; }
+    public bool isEffect = false;
     protected virtual void OnInstantiated()
     {
         OnSpecialTileInstantiated?.Invoke(this);
@@ -32,5 +33,5 @@ public enum TileType
     Ladder,
     OneWayDoor,
     Slime,
-    Ink
+    Item,
 }
