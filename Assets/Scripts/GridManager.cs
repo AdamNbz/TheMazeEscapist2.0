@@ -166,9 +166,29 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
+    public bool IsWalkable(Vector3Int cellPos)
+    {
+        return gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall;
+    }
+
     public bool IsItem(Vector3Int cellPos)
     {
         return gridMap.ContainsKey(cellPos) && hasItems.ContainsKey(cellPos);
+    }
+
+    public bool HasNode(Vector3Int cellPos)
+    {
+        return gridMap.ContainsKey(cellPos);
+    }
+
+    public bool TrySetNodeType(Vector3Int cellPos, TileType type, SpecialTile specialTile = null)
+    {
+        if (!gridMap.TryGetValue(cellPos, out var node))
+            return false;
+
+        node.type = type;
+        node.specialTile = specialTile;
+        return true;
     }
 
     public Vector3Int WorldToCell(Vector3 worldPos)
@@ -182,6 +202,11 @@ public class GridManager : MonoBehaviour
     }
 
     public Vector3 GetCellCenteredWorldPosition(Vector3Int cellPos)
+    {
+        return grid.GetCellCenterWorld(cellPos);
+    }
+
+    public Vector3 GetCellCenterWorld(Vector3Int cellPos)
     {
         return grid.GetCellCenterWorld(cellPos);
     }

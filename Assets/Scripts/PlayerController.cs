@@ -97,9 +97,18 @@ public class PlayerController : MonoBehaviour
 
     public void OnPrimaryContact(InputValue value)
     {
-        if (lockMoving) return;
+        var isPressed = value.Get<float>() > 0.5f;
+        inputPosition = GetPrimaryScreenPosition();
+
+        if (!isPressed && ignorePrimaryContactUntilRelease)
+        {
+            ignorePrimaryContactUntilRelease = false;
+            return;
+        }
+
+        if (IsMovementLocked) return;
         //if (EventSystem.current.IsPointerOverGameObject())
-        if (true)
+        if (EventSystem.current != null)
         {
             if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.gameObject.tag != "EffectUI")
             {
