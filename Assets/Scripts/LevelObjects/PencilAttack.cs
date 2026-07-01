@@ -11,7 +11,7 @@ class PencilAttack : MonoBehaviour
     float lockDuration = 1f;
     float speed = 5f;
     Vector3Int direction;
-    Vector3Int initialPosition; // row or column depending on direction
+    Vector3Int initialCellPosition; // row or column depending on direction
 
     Tween fadeTween;
 
@@ -21,29 +21,37 @@ class PencilAttack : MonoBehaviour
         //Invoke(nameof(TriggerPencilAttack), 5f);
     }
 
-    public void Initialise(float aimingDuration, float lockDuration, float speed, Vector3Int direction, Vector3Int initialPosition)
+    public void Initialise(float aimingDuration, float lockDuration, float speed, Vector3Int direction, Vector3Int initialCellPosition)
     {
         this.aimingDuration = aimingDuration;
         this.lockDuration = lockDuration;
         this.speed = speed;
         this.direction = direction;
-        this.initialPosition = initialPosition;
+        this.initialCellPosition = initialCellPosition;
         SetUpTransform();
     }
 
     private void SetUpTransform()
     {
         bool isHorizontal = Mathf.Abs(direction.x) > Mathf.Abs(direction.y);
-        bool isTopLeft = (isHorizontal && direction.x > 0) || (!isHorizontal && direction.y > 0);
+        bool isTopLeft = (isHorizontal && direction.x > 0) || (!isHorizontal && direction.y < 0);
 
+        Vector3Int spawnCell = initialCellPosition;
         if (isHorizontal)
         {
-            transform.position = new Vector3(isTopLeft ? -10 : 10, GridManager.Instance.CellToWorld(initialPosition).y + 0.5f, 0);
+            if (isTopLeft)
+                spawnCell.x = BossController.originCell.x - 2;
+            else
+                spawnCell.x = BossController.originCell.x + BossController.size + 1;
         }
         else
         {
-            transform.position = new Vector3(GridManager.Instance.CellToWorld(initialPosition).x + 0.5f, isTopLeft ? -10 : 10, 0);
+            if (isTopLeft)
+                spawnCell.y = BossController.originCell.y + 2;
+            else
+                spawnCell.y = BossController.originCell.y - BossController.size - 1;
         }
+        transform.position = GridManager.Instance.GetCellCenteredWorldPosition(spawnCell);
 
         if (isHorizontal && direction.x < 0)
         {
@@ -96,7 +104,9 @@ class PencilAttack : MonoBehaviour
         {
             Debug.Log("Player hit by pencil attack!");
             if (fadeTween != null && fadeTween.IsActive()) fadeTween.Kill();
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            var pencilCollider = GetComponent<Collider2D>();
+            pencilCollider.enabled = false;
         }
     }
 
