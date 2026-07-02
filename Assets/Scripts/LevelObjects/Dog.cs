@@ -11,13 +11,18 @@ public class Dog : MonoBehaviour
     [SerializeField] float patrolSpeed = .5f;
     [SerializeField] Vector3 gridAnchor = new(0.5f, 0.5f, 0);
     [SerializeField] DogState currentState = DogState.Idle;
+    [SerializeField] private float patrolInterval = 2f;
     private bool isMoving = false;
     private Vector3 lastMoveDirection = Vector3.zero;
     private Sequence moveSequence;
     private Vector2Int? playerDirection = null;
+    private Animator animator;
+    private float patrolTimer = 0f;
 
     void Start()
     {
+        animator = GetComponent<Animator>();
+        SwitchState(DogState.Idle);
     }
 
     void Update()
@@ -54,7 +59,7 @@ public class Dog : MonoBehaviour
         if (!isMoving)
         {
             Debug.Log("[Dog] Lost sight of player, returning to patrol.");
-            currentState = DogState.Patrol;
+            SwitchState(DogState.Patrol);
         }
     }
 
@@ -62,14 +67,23 @@ public class Dog : MonoBehaviour
     {
         if (!isMoving)
         {
-            var moveDirection = -lastMoveDirection;
-            var path = GridManager.Instance.FindPathFromWorld(transform.position, new Vector2Int((int)moveDirection.x, (int)moveDirection.y));
-            MoveAlongPath(path);
+            if (patrolTimer > 0)
+            {
+                patrolTimer -= Time.deltaTime;
+                if (patrolTimer <= 0)
+                {
+                    var moveDirection = -lastMoveDirection;
+                    var path = GridManager.Instance.FindPathFromWorld(transform.position, new Vector2Int((int)moveDirection.x, (int)moveDirection.y));
+                    animator.Play("DogPatrol");
+                    MoveAlongPath(path);
+                    patrolTimer = patrolInterval;
+                }
+            }
         }
         if (FindPlayer() != null)
         {
             Debug.Log("[Dog] Player detected, switching to chase state.");
-            currentState = DogState.Chase;
+            SwitchState(DogState.Chase);
             CancelMovement();
             SnapToGrid();
         }
@@ -119,13 +133,15 @@ public class Dog : MonoBehaviour
         var currentSpeed = currentState == DogState.Patrol ? patrolSpeed : speed;
         foreach (var dir in path.directions)
         {
-            var localScale = transform.localScale;
-            if (dir.x != 0)
+            moveSequence.AppendCallback(() =>
             {
-                localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
-                transform.localScale = localScale;
-            }
-
+                var localScale = transform.localScale;
+                if (dir.x != 0)
+                {
+                    localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                    transform.localScale = localScale;
+                }
+            });
             moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f / currentSpeed)
                 .SetEase(Ease.Linear));
 
@@ -135,6 +151,7 @@ public class Dog : MonoBehaviour
         moveSequence.OnComplete(() =>
         {
             isMoving = false;
+            animator.Play("DogIdle");
         });
     }
 
@@ -147,6 +164,21 @@ public class Dog : MonoBehaviour
         }
     }
 
+    private void SwitchState(DogState newState)
+    {
+        if (currentState != newState)
+        {
+            Debug.Log($"[Dog] Switching state from {currentState} to {newState}");
+            currentState = newState;
+            animator.Play(GetStateName(newState));
+
+            if (newState == DogState.Patrol)
+            {
+                patrolTimer = patrolInterval;
+            }
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -154,10 +186,22 @@ public class Dog : MonoBehaviour
             if (currentState == DogState.Chase)
             {
                 // Lose game
-                Debug.Log("Player caught by dog! Game Over.");
+                // Debug.Log("Player caught by dog! Game Over.");
+                PlayerController.OnLoseGame?.Invoke();
             }
-            currentState = DogState.Chase;
+            SwitchState(DogState.Chase);
         }
+    }
+
+    private string GetStateName(DogState state)
+    {
+        return state switch
+        {
+            DogState.Idle => "DogIdle",
+            DogState.Chase => "DogChasing",
+            DogState.Patrol => "DogPatrol",
+            _ => "Unknown"
+        };
     }
 }
 

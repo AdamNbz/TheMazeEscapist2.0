@@ -141,12 +141,15 @@ public class PlayerController : MonoBehaviour
         OnStartMoving?.Invoke();
         foreach (var dir in path.directions)
         {
-            var localScale = transform.localScale;
-            if (dir.x != 0)
+            moveSequence.AppendCallback(() =>
             {
-                localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
-                transform.localScale = localScale;
-            }
+                var localScale = transform.localScale;
+                if (dir.x != 0)
+                {
+                    localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                    transform.localScale = localScale;
+                }
+            });
 
             moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
                 .SetEase(Ease.Linear).OnComplete(() =>
