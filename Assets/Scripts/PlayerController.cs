@@ -10,9 +10,12 @@ using System.Collections.Generic;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] bool lockMoving = false;
+    [SerializeField] private float minSwipeDistance = 60f;
+    private int externalMovementLocks = 0;
     private Vector2 touchPosition = Vector2.zero;
     private Vector2 releasePosition = Vector2.zero;
     private Vector2 inputPosition = Vector2.zero;
+    private bool ignorePrimaryContactUntilRelease = false;
 
     private Sequence moveSequence;
     private Animator animator;
@@ -27,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private readonly List<ICollectible> collectedItems = new();
     private int currentHealth;
 
+    private bool IsMovementLocked => lockMoving || externalMovementLocks > 0;
+
     void OnEnable()
     {
         WinPoint.OnLevelComplete += TouchGoal;
@@ -34,6 +39,7 @@ public class PlayerController : MonoBehaviour
         OnLoseGame += HandleLoseGame;
         EyeofTheStorm.OnTouchPlayer += HandleTouchStorm;
         SpecialTile.OnSpecialTileInteracted += HandleSpecialTileInteraction;
+        HealPotion.OnHealEffectTriggered += Heal;
     }
 
     void OnDisable()
@@ -43,6 +49,7 @@ public class PlayerController : MonoBehaviour
         OnLoseGame -= HandleLoseGame;
         EyeofTheStorm.OnTouchPlayer -= HandleTouchStorm;
         SpecialTile.OnSpecialTileInteracted -= HandleSpecialTileInteraction;
+        HealPotion.OnHealEffectTriggered -= Heal;
     }
 
     private void Start()
@@ -67,9 +74,22 @@ public class PlayerController : MonoBehaviour
         lockMoving = false;
     }
 
+    public void SetExternalMovementLock(bool isLocked)
+    {
+        externalMovementLocks += isLocked ? 1 : -1;
+        externalMovementLocks = Mathf.Max(0, externalMovementLocks);
+    }
+
+    public static void SetAllExternalMovementLocks(bool isLocked)
+    {
+        var players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        foreach (var player in players)
+            player.SetExternalMovementLock(isLocked);
+    }
+
     public void OnMove(InputValue value)
     {
-        if (lockMoving) return;
+        if (IsMovementLocked) return;
 
         var input = value.Get<Vector2>();
         Debug.Log($"Move: {input}");
@@ -84,8 +104,18 @@ public class PlayerController : MonoBehaviour
 
     public void OnPrimaryContact(InputValue value)
     {
-        if (lockMoving) return;
-        if (EventSystem.current.IsPointerOverGameObject())
+        var isPressed = value.Get<float>() > 0.5f;
+        inputPosition = GetPrimaryScreenPosition();
+
+        if (!isPressed && ignorePrimaryContactUntilRelease)
+        {
+            ignorePrimaryContactUntilRelease = false;
+            return;
+        }
+
+        if (IsMovementLocked) return;
+        //if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current != null)
         {
             if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.gameObject.tag != "EffectUI")
             {
@@ -94,20 +124,28 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (value.Get<float>() > 0.5f)
+        if (isPressed && RotatableTerrainTapArea.ContainsAnyScreenPosition(inputPosition))
         {
-            Debug.Log("Primary Contact Started");
+            ignorePrimaryContactUntilRelease = true;
+            return;
+        }
+
+        if (isPressed)
+        {
+            //Debug.Log("Primary Contact Started");
             touchPosition = inputPosition;
-            Debug.Log($"Touch Position: {touchPosition}");
+            //Debug.Log($"Touch Position: {touchPosition}");
         }
         else
         {
-            Debug.Log("Primary Contact Canceled");
+            //Debug.Log("Primary Contact Canceled");
             releasePosition = inputPosition;
-            Debug.Log($"Release Position: {releasePosition}");
+            //Debug.Log($"Release Position: {releasePosition}");
 
             var direction = Vector2Int.zero;
             var swipeVector = releasePosition - touchPosition;
+            if (swipeVector.sqrMagnitude < minSwipeDistance * minSwipeDistance)
+                return;
 
             if (Mathf.Abs(swipeVector.x) > Mathf.Abs(swipeVector.y))
             {
@@ -127,6 +165,19 @@ public class PlayerController : MonoBehaviour
         inputPosition = value.Get<Vector2>();
     }
 
+    private Vector2 GetPrimaryScreenPosition()
+    {
+        var touchscreen = Touchscreen.current;
+        if (touchscreen != null)
+        {
+            var touch = touchscreen.primaryTouch;
+            if (touch.press.isPressed || touch.press.wasPressedThisFrame || touch.press.wasReleasedThisFrame)
+                return touch.position.ReadValue();
+        }
+
+        return Mouse.current != null ? Mouse.current.position.ReadValue() : inputPosition;
+    }
+
     public void MoveWithPath(Path path)
     {
         lockMoving = true;
@@ -139,7 +190,7 @@ public class PlayerController : MonoBehaviour
         }
 
         OnStartMoving?.Invoke();
-        foreach (var dir in path.directions)
+        foreach (var nodeData in path.directions)
         {
             moveSequence.AppendCallback(() =>
             {
@@ -151,11 +202,18 @@ public class PlayerController : MonoBehaviour
                 }
             });
 
+            // Add stop time if required
+            if(nodeData.stopTime > 0)
+            {
+                moveSequence.AppendInterval(nodeData.stopTime);
+            }
+
             moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
                 .SetEase(Ease.Linear).OnComplete(() =>
                 {
                     AudioManager.Instance.PlaySfx("player_move", transform.position);
                 }));
+
             currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
         }
         moveSequence.OnComplete(() =>
@@ -185,10 +243,10 @@ public class PlayerController : MonoBehaviour
         OnTurnMove?.Invoke();
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage()
     {
-        currentHealth -= damage;
-        Debug.Log($"Player took {damage} damage. Current health: {currentHealth}");
+        currentHealth -= 1;
+        Debug.Log($"Player took 1 damage. Current health: {currentHealth}");
 
         if (currentHealth <= 0)
         {
@@ -229,9 +287,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Heal(int amount)
+    public void Heal()
     {
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-        Debug.Log($"Player healed {amount}. Current health: {currentHealth}");
+        currentHealth = Mathf.Min(currentHealth + 1, maxHealth);
+        Debug.Log($"Player healed 1. Current health: {currentHealth}");
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy"))
+        {
+            //var enemy = collision.GetComponent<EnemyController>();
+
+            TakeDamage();
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Enemy"))
+        {
+            //var enemy = collision.collider.GetComponent<EnemyController>();
+
+            TakeDamage();
+        }
     }
 }
