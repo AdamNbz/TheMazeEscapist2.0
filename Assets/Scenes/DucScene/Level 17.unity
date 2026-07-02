@@ -1430,9 +1430,17 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1723794412234518734, guid: 994d421013effea24b9479f10c757ceb, type: 3}
+      propertyPath: timeLimit
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 1890344839597962273, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: m_Name
       value: Grid
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051258621510613541, guid: 994d421013effea24b9479f10c757ceb, type: 3}
+      propertyPath: turnLimit
+      value: 38
       objectReference: {fileID: 0}
     - target: {fileID: 4496449540702725685, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       propertyPath: unlockConditions.Array.size
