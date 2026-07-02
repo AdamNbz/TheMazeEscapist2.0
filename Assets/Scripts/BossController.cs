@@ -10,7 +10,7 @@ using UnityEngine.Events;
 public class BossController : MonoBehaviour
 {
     StateMachine stateMachine;
-    private Animator animator;
+    public Animator animator;
 
     public float fadeDuration = 1f;
     [SerializeField] private Image InkEffectImage;
@@ -175,7 +175,7 @@ public class BossController : MonoBehaviour
             for (int j = originCell.y; j > originCell.y - size; j--)
             {
                 Vector3Int cellPos = new Vector3Int(i, j, 0);
-                if (GridManager.Instance.IsWalkable(cellPos) && !GridManager.Instance.IsItem(cellPos))
+                if (GridManager.Instance.IsWalkable(cellPos) && !GridManager.Instance.IsItem(cellPos) && GridManager.Instance.WorldToCell(playerObject.transform.position) != cellPos)
                 {
                     walkableCells.Add(cellPos);
                 }
