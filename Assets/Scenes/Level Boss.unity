@@ -278,9 +278,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8995140420820349065, guid: 6936ffb95569c7e49ba9bb5e8fc67a72, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -8653719598885068355, guid: 6936ffb95569c7e49ba9bb5e8fc67a72, type: 3}
       propertyPath: m_Name
-      value: Robot
+      value: Boss
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 6936ffb95569c7e49ba9bb5e8fc67a72, type: 3}
       propertyPath: m_LocalPosition.x
@@ -329,6 +333,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 6936ffb95569c7e49ba9bb5e8fc67a72, type: 3}
       insertIndex: -1
       addedObject: {fileID: 395032729}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 6936ffb95569c7e49ba9bb5e8fc67a72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 395032731}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: 6936ffb95569c7e49ba9bb5e8fc67a72, type: 3}
 --- !u!1 &395032728 stripped
 GameObject:
@@ -347,6 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7071c9d85ea6e644b4f5066345b4539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossController
+  animator: {fileID: 0}
   fadeDuration: 10
   InkEffectImage: {fileID: 251939640}
   HealPotionPrefab: {fileID: 3094075792240615058, guid: 7b8bdb9eb762e734a8b8d716dd8a0096, type: 3}
@@ -356,6 +364,28 @@ MonoBehaviour:
   WarningTilePrefab: {fileID: 9116726656630743319, guid: 5eda55c705d41ac48a1e50a8df784a1c, type: 3}
   SlimePrefab: {fileID: 6169523420412003319, guid: 48fd8210c8bea694a8357789a54692f5, type: 3}
   playerObject: {fileID: 0}
+--- !u!95 &395032731
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395032728}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 73f7ccb30f6372f44b991a7d9ee18fa9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!224 &841426164 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6666561610019121477, guid: 994d421013effea24b9479f10c757ceb, type: 3}
