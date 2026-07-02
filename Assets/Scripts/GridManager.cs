@@ -86,7 +86,7 @@ public class GridManager : MonoBehaviour
 
             result.directions.Add(new NodeData(direction, stopTime));
 
-            if (gridMap[startCellPos].type == TileType.Slime) // slime stops movement
+            if (gridMap[toCellPos].type == TileType.Slime) // slime stops movement
                 break;
 
             var prevDirection = -direction;
@@ -147,7 +147,8 @@ public class GridManager : MonoBehaviour
         TileType fromTileType = gridMap[fromCellPos].type;
 
         if ((toTileType == TileType.Walkable && fromTileType == TileType.Wall) ||
-            (toTileType == TileType.Wall && fromTileType == TileType.Walkable))
+            (toTileType == TileType.Wall && fromTileType == TileType.Walkable) ||
+            (toTileType == TileType.Wall && fromTileType == TileType.Slime))
             return false;
 
         // Check if the toCellPos is a one way door

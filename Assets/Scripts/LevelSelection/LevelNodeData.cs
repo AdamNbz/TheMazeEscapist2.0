@@ -89,7 +89,12 @@ public static class PlayerProgress
     public static int GetCurrentLevelIndex()
     {
         string currentScene = SceneManager.GetActiveScene().name;
-        int currentLevel = int.Parse(currentScene.Replace("Level ", ""));
-        return currentLevel;
+        string levelId = currentScene.Replace("Level ", "");
+        if (!int.TryParse(levelId, out int levelIndex))
+        {
+            Debug.LogError($"Failed to parse level index from scene name: {currentScene}");
+            return -1; // Return an invalid index or handle the error as needed
+        }
+        return levelIndex;
     }
 }
