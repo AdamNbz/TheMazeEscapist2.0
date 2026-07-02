@@ -1,0 +1,169 @@
+using System;
+using System.Collections.Generic;
+using DG.Tweening;
+using UnityEngine;
+
+public class Dog : MonoBehaviour
+{
+    private List<Vector2> lookDirections = new() { Vector2.right, Vector2.left, Vector2.up, Vector2.down };
+    [SerializeField] LayerMask targetLayerMask;
+    [SerializeField] float speed = 1f;
+    [SerializeField] float patrolSpeed = .5f;
+    [SerializeField] Vector3 gridAnchor = new(0.5f, 0.5f, 0);
+    [SerializeField] DogState currentState = DogState.Idle;
+    private bool isMoving = false;
+    private Vector3 lastMoveDirection = Vector3.zero;
+    private Sequence moveSequence;
+    private Vector2Int? playerDirection = null;
+
+    void Start()
+    {
+    }
+
+    void Update()
+    {
+        UpdateState();
+    }
+
+    private void UpdateState()
+    {
+        switch (currentState)
+        {
+            case DogState.Idle:
+                UpdateIdleState();
+                break;
+            case DogState.Chase:
+                UpdateChaseState();
+                break;
+            case DogState.Patrol:
+                UpdatePatrolState();
+                break;
+        }
+    }
+
+    private void UpdateChaseState()
+    {
+        if (isMoving) return;
+
+        if (playerDirection.HasValue)
+        {
+            var path = GridManager.Instance.FindPathFromWorld(transform.position, playerDirection.Value);
+            MoveAlongPath(path);
+        }
+
+        if (!isMoving)
+        {
+            Debug.Log("[Dog] Lost sight of player, returning to patrol.");
+            currentState = DogState.Patrol;
+        }
+    }
+
+    private void UpdatePatrolState()
+    {
+        if (!isMoving)
+        {
+            var moveDirection = -lastMoveDirection;
+            var path = GridManager.Instance.FindPathFromWorld(transform.position, new Vector2Int((int)moveDirection.x, (int)moveDirection.y));
+            MoveAlongPath(path);
+        }
+        if (FindPlayer() != null)
+        {
+            Debug.Log("[Dog] Player detected, switching to chase state.");
+            currentState = DogState.Chase;
+            CancelMovement();
+            SnapToGrid();
+        }
+    }
+
+    private void SnapToGrid()
+    {
+        // round its position to the nearest grid point based on the gridAnchor
+        Vector3 snappedPosition = new Vector3(
+            Mathf.Round(transform.position.x - gridAnchor.x) + gridAnchor.x,
+            Mathf.Round(transform.position.y - gridAnchor.y) + gridAnchor.y,
+            transform.position.z
+        );
+
+        transform.position = snappedPosition;
+    }
+
+    private Vector2Int? FindPlayer()
+    {
+        foreach (var direction in lookDirections)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, Mathf.Infinity, targetLayerMask);
+            if (hit.collider != null && hit.collider.CompareTag("Player"))
+            {
+                Debug.Log("[Dog] Player found in direction: " + direction);
+                playerDirection = new Vector2Int((int)direction.x, (int)direction.y);
+                return playerDirection;
+            }
+        }
+
+        Debug.Log("[Dog] Player not found in any direction.");
+        playerDirection = null;
+        return null;
+    }
+
+    private void UpdateIdleState()
+    {
+        // Implement idle behavior
+    }
+
+    private void MoveAlongPath(Path path)
+    {
+        if (path.directions.Count == 0) return;
+        isMoving = true;
+        moveSequence = DOTween.Sequence();
+        var currentPos = transform.position;
+        var currentSpeed = currentState == DogState.Patrol ? patrolSpeed : speed;
+        foreach (var dir in path.directions)
+        {
+            var localScale = transform.localScale;
+            if (dir.x != 0)
+            {
+                localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                transform.localScale = localScale;
+            }
+
+            moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f / currentSpeed)
+                .SetEase(Ease.Linear));
+
+            currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
+            lastMoveDirection = new Vector3(dir.x, dir.y, 0);
+        }
+        moveSequence.OnComplete(() =>
+        {
+            isMoving = false;
+        });
+    }
+
+    private void CancelMovement()
+    {
+        if (moveSequence != null && moveSequence.IsActive())
+        {
+            moveSequence.Kill();
+            isMoving = false;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (currentState == DogState.Chase)
+            {
+                // Lose game
+                Debug.Log("Player caught by dog! Game Over.");
+            }
+            currentState = DogState.Chase;
+        }
+    }
+}
+
+public enum DogState
+{
+    Idle,
+    Chase,
+    Patrol
+}
