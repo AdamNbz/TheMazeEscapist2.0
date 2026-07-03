@@ -330,6 +330,26 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    List<Vector3Int> walkableCells = new List<Vector3Int>();
+    public Vector3 GetRandomWalkableCellPosition()
+    {
+        if (walkableCells.Count == 0)
+            foreach (var kvp in gridMap)
+            {
+                if (kvp.Value.type == TileType.Walkable)
+                {
+                    walkableCells.Add(kvp.Key);
+                }
+            }
+
+        if (walkableCells.Count == 0)
+        {
+            Debug.LogWarning("No walkable cells found!");
+            return Vector3.zero;
+        }
+
+        int randomIndex = Random.Range(0, walkableCells.Count);
+        return CellToWorld(walkableCells[randomIndex]);
     public GameObject CreateSpecialTile(Vector3Int cellPos, GameObject tilePrefab)
     {
         var worldPos = GetCellCenteredWorldPosition(cellPos);
