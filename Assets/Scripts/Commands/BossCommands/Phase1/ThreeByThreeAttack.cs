@@ -31,6 +31,7 @@ public class ThreeByThreeAttack : BossCommand
 
         for (int k = 0; k < attackCount; k++)
         {
+            boss.animator.Play("BossAttack");
             var playerCell = GridManager.Instance.WorldToCell(playerObject.transform.position);
 
             for (int i = 0; i < allDirections.Count; i++)

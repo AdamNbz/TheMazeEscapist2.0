@@ -19,6 +19,7 @@ public class RandomFourDirectionAttack : BossCommand
 
         for (int k = 0; k < attackCount; k++)
         {
+            boss.animator.Play("BossAttack");
             var randomDirection = directions[Random.Range(0, directions.Count)];
             var playerCell = GridManager.Instance.WorldToCell(playerObject.transform.position);
 

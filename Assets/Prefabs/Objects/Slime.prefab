@@ -72,7 +72,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.0585938, y: 1.0507812}
+    oldSize: {x: 1.0625, y: 1.0625}
     newSize: {x: 1.078125, y: 1.078125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -92,6 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 560f1e0c36cfedd49a7aa417cfc314fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slime
+  isEffect: 0
   soundEffectName: trash_can_collected
 --- !u!212 &1069502133948041758
 SpriteRenderer:
@@ -137,8 +138,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 695024665
-  m_SortingLayer: 3
+  m_SortingLayerID: 775017771
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -8801306789061785850, guid: b369c712e4469194cb11363d2fcdf580, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

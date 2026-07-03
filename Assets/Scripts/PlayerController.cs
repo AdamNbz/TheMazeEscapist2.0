@@ -212,7 +212,8 @@ public class PlayerController : MonoBehaviour
                 // Check if next square valid
                 var currentCell = GridManager.Instance.WorldToCell(stepStartPos);
                 var nextCell = currentCell + new Vector3Int(dir.x, dir.y, 0);
-                if (!GridManager.Instance.IsWalkable(nextCell))
+
+                if (GridManager.Instance.GetGrid()[currentCell].specialTile.Type == TileType.Slime)
                 {
                     moveSequence.Kill();
                     lockMoving = false;

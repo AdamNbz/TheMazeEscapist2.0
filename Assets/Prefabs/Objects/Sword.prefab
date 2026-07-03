@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c364fb40f4b1044a98c19d8be3a7ce3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sword
+  isEffect: 0
   soundEffectName: health_potion_collected
 --- !u!212 &3749640787900236200
 SpriteRenderer:
@@ -93,8 +94,8 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 775017771
   m_SortingLayer: 2
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 3991653160455038135, guid: b08c02ba6f0ebe8418cd02fdd6461ea9, type: 3}
+  m_SortingOrder: 5
+  m_Sprite: {fileID: -3753825769889500098, guid: 65199bec6e25c2a47836fe0b77d2b365, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -143,7 +144,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.51323175, y: 0.51323175}
+    oldSize: {x: 0.952, y: 0.952}
     newSize: {x: 0.51323175, y: 0.51323175}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
