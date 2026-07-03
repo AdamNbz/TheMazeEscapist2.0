@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
 
     public static UnityAction OnPlayerHurt;
     [SerializeField] private int maxHealth = 5;
+
+    private readonly List<ICollectible> collectedItems = new();
     private int currentHealth;
 
     private bool IsMovementLocked => lockMoving || externalMovementLocks > 0;
@@ -34,6 +37,8 @@ public class PlayerController : MonoBehaviour
         WinPoint.OnLevelComplete += TouchGoal;
         Portal.OnPlayerTeleport += HandleTeleport;
         OnLoseGame += HandleLoseGame;
+        EyeofTheStorm.OnTouchPlayer += HandleTouchStorm;
+        SpecialTile.OnSpecialTileInteracted += HandleSpecialTileInteraction;
         HealPotion.OnHealEffectTriggered += Heal;
     }
 
@@ -42,6 +47,8 @@ public class PlayerController : MonoBehaviour
         WinPoint.OnLevelComplete -= TouchGoal;
         Portal.OnPlayerTeleport -= HandleTeleport;
         OnLoseGame -= HandleLoseGame;
+        EyeofTheStorm.OnTouchPlayer -= HandleTouchStorm;
+        SpecialTile.OnSpecialTileInteracted -= HandleSpecialTileInteraction;
         HealPotion.OnHealEffectTriggered -= Heal;
     }
 
@@ -84,7 +91,7 @@ public class PlayerController : MonoBehaviour
     {
         if (IsMovementLocked) return;
 
-        Vector2 input = value.Get<Vector2>();
+        var input = value.Get<Vector2>();
         Debug.Log($"Move: {input}");
 
         var direction = Vector2Int.RoundToInt(input);
@@ -185,13 +192,15 @@ public class PlayerController : MonoBehaviour
         OnStartMoving?.Invoke();
         foreach (var nodeData in path.directions)
         {
-            var localScale = transform.localScale;
-            var dir = nodeData.direction;
-            if (dir.x != 0)
+            moveSequence.AppendCallback(() =>
             {
-                localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
-                transform.localScale = localScale;
-            }
+                var localScale = transform.localScale;
+                if (dir.x != 0)
+                {
+                    localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                    transform.localScale = localScale;
+                }
+            });
 
             // Add stop time if required
             if(nodeData.stopTime > 0)
@@ -242,6 +251,39 @@ public class PlayerController : MonoBehaviour
         if (currentHealth <= 0)
         {
             OnLoseGame?.Invoke();
+        }
+    }
+
+    public void HandleCollectItem(ICollectible item)
+    {
+        if (!collectedItems.Contains(item))
+        {
+            collectedItems.Add(item);
+            item.Collect();
+        }
+    }
+
+    private void HandleTouchStorm()
+    {
+        moveSequence.Pause();
+        transform.DOShakeRotation(1f, new Vector3(0, 0, 30)).OnComplete(() =>
+        {
+            transform.rotation = Quaternion.identity;
+            foreach (var item in collectedItems)
+            {
+                item.Release(transform.position);
+            }
+            collectedItems.Clear();
+            moveSequence.Play();
+        });
+
+    }
+
+    private void HandleSpecialTileInteraction(SpecialTile tile)
+    {
+        if (tile is ICollectible collectible)
+        {
+            HandleCollectItem(collectible);
         }
     }
 
