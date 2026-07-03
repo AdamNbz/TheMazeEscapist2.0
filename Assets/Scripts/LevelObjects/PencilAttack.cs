@@ -7,7 +7,7 @@ class PencilAttack : MonoBehaviour
     public static UnityAction OnPencilAttackTriggered;
 
     bool canFollow = false;
-    float aimingDuration = 1f;
+    float aimingDuration = 0.25f;
     float lockDuration = 1f;
     float speed = 5f;
     bool isMove = false;
@@ -85,7 +85,7 @@ class PencilAttack : MonoBehaviour
         pencilTween = DOTween.Sequence()
             .Append(sr.DOColor(originalColor, aimingDuration))
             .AppendInterval(lockDuration)
-            .Append(transform.DOMove(targetJuicePos, 0.5f).SetEase(Ease.OutQuad))
+            .Append(transform.DOMove(targetJuicePos, 0.25f).SetEase(Ease.OutQuad))
             .OnComplete(() => isMove = true)
             .SetLink(gameObject);
     }

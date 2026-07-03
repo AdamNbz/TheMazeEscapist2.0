@@ -179,35 +179,42 @@ public class PlayerController : MonoBehaviour
         lockMoving = true;
         moveSequence = DOTween.Sequence();
         var currentPos = transform.position;
-
         if (animator != null)
         {
             animator.Play("Walk");
         }
-
         OnStartMoving?.Invoke();
         foreach (var nodeData in path.directions)
         {
             var localScale = transform.localScale;
             var dir = nodeData.direction;
+            var stepStartPos = currentPos; // snapshot so closures use the right position
             if (dir.x != 0)
             {
                 localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
                 transform.localScale = localScale;
             }
-
             // Add stop time if required
             if (nodeData.stopTime > 0)
             {
                 moveSequence.AppendInterval(nodeData.stopTime);
             }
-
-            moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
+            moveSequence.AppendCallback(() =>
+            {
+                // Check if next square valid
+                var currentCell = GridManager.Instance.WorldToCell(stepStartPos);
+                var nextCell = currentCell + new Vector3Int(dir.x, dir.y, 0);
+                if (!GridManager.Instance.IsWalkable(nextCell))
+                {
+                    moveSequence.Kill();
+                    lockMoving = false;
+                }
+            });
+            moveSequence.Append(transform.DOMove(stepStartPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
                 .SetEase(Ease.Linear).OnComplete(() =>
                 {
                     AudioManager.Instance.PlaySfx("player_move", transform.position);
                 }));
-
             currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
         }
         moveSequence.OnComplete(() =>

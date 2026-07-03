@@ -14,12 +14,12 @@ public class BossPhase : BossBaseState
     BossCommand currentCommand;
 
     Coroutine currentCommandCoroutine;
+    Coroutine spawnSwordCoroutine;
 
     float weaponCooldown = 5f;
     float healCooldown = 30f;
 
-    float weaponTimer = 0f;
-    float healTimer = 0f;
+    bool isBossAttacking = false;
 
     public BossPhase(BossController boss, Animator animator, List<BossCommand> attackCommands, int phaseHealth = 3, BossCommand enterCommand = null, BossCommand exitCommand = null, Vector3Int? endAttackPosition = null, List<BossCommand> combinedCommands = null) : base(boss, animator)
     {
@@ -44,11 +44,18 @@ public class BossPhase : BossBaseState
 
     public override void Update()
     {
-        if (currentCommand == null || currentCommand.IsCompleted())
+        if (!isBossAttacking && (currentCommand == null || currentCommand.IsCompleted()))
         {
-            // Choose a new random command to execute
-            currentCommand = (health >= (maxHealth / 2) || combinedCommands.Count == 0) ? attackCommands[Random.Range(0, attackCommands.Count)] : combinedCommands[Random.Range(0, combinedCommands.Count)];
-            currentCommandCoroutine = boss.StartCoroutine(currentCommand?.Execute());
+            isBossAttacking = true;
+            // Play attack animation
+            boss.animator.Play("BossAttack");
+            boss.StartCoroutine(WaitForBossAnimation(() =>
+            {
+                // After animation completes, execute the next command
+                currentCommand = (health >= (maxHealth / 2) || combinedCommands.Count == 0) ? attackCommands[Random.Range(0, attackCommands.Count)] : combinedCommands[Random.Range(0, combinedCommands.Count)];
+                currentCommandCoroutine = boss.StartCoroutine(currentCommand?.Execute());
+                isBossAttacking = false;
+            }));
         }
     }
 
@@ -58,12 +65,21 @@ public class BossPhase : BossBaseState
         boss.StopCoroutine(currentCommandCoroutine);
         if (exitCommand != null)
             boss.StartCoroutine(exitCommand.Execute());
+        if (spawnSwordCoroutine != null)
+            boss.StopCoroutine(spawnSwordCoroutine);
     }
 
     private IEnumerator SpawnSword(float delay = 5f)
     {
         yield return new WaitForSeconds(delay);
-        boss.TriggerCreateRandomItem(boss.SwordPrefab);
+        if (health == 1 && endAttackPosition.HasValue)
+        {
+            boss.TriggerCreateTile(endAttackPosition.Value, boss.SwordPrefab);
+        }
+        else
+        {
+            boss.TriggerCreateRandomItem(boss.SwordPrefab);
+        }
     }
 
     private IEnumerator SpawnHeal(float delay = 30f)
@@ -78,7 +94,7 @@ public class BossPhase : BossBaseState
         Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}");
         boss.animator.Play("BossHurt");
         boss.spriteBlink.Blink();
-        boss.StartCoroutine(SpawnSword()); // 5 sec for test
+        spawnSwordCoroutine = boss.StartCoroutine(SpawnSword()); // 5 sec for test
     }
 
     public bool IsPhaseEnded()

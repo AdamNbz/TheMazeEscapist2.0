@@ -24,9 +24,9 @@ public class RandomFourDirectionAttack : BossCommand
 
             boss.TriggerPencilAttack(1.0f, 20f, randomDirection, playerCell);
 
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1.5f);
         }
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(4f);
 
         isExecuting = false;
         isCompleted = true;

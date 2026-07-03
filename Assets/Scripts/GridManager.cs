@@ -293,7 +293,17 @@ public class GridManager : MonoBehaviour
     {
         if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall)
         {
+            // if currently slime, remove slime first
+            if (gridMap[cellPos].type == TileType.Slime)
+            {
+                var slimeTile = gridMap[cellPos].specialTile as Slime;
+                if (slimeTile != null)
+                {
+                    Destroy(slimeTile.gameObject);
+                }
+            }
             // Instantiate a raisable wall at the given cell position
+
             var worldPos = GetCellCenteredWorldPosition(cellPos);
             var wallObj = Instantiate(raisableWallPrefab, worldPos, Quaternion.identity, grid.transform);
             var wallTile = wallObj.GetComponent<RaisableWall>();

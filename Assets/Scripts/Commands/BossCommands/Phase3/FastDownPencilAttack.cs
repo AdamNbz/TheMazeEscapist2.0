@@ -41,7 +41,7 @@ public class FastDownPencilAttack : BossCommand
             for (int i = 0; i < size; i++)
                 if (!emptyCell.Contains(i))
                     boss.TriggerPencilAttack(1f, 50f, Vector3Int.down, originCell + new Vector3Int(i, size / 2, 0));
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.5f);
         }
         yield return new WaitForSeconds(3f);
 

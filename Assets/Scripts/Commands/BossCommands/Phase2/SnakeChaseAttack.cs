@@ -49,7 +49,7 @@ public class SnakeChaseAttack : BossCommand
             tileObject = boss.TriggerCreateTile(currentCell, boss.WarningTilePrefab);
             warningTile = tileObject.GetComponent<WarningTile>();
             warningTile.Init(0.75f);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
         }
         yield return new WaitForSeconds(5f);
 

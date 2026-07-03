@@ -60,7 +60,7 @@ public class Phase2PencilAttack : BossCommand
                     boss.TriggerPencilAttack(1.5f, 30, direction, cellPos);
                 }
             }
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2f);
         }
 
         isExecuting = false;
