@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 [DisallowMultipleComponent]
@@ -7,11 +8,8 @@ public class RainbowTilemapColor : MonoBehaviour
 {
     [SerializeField] private Tilemap[] targetTilemaps;
     [SerializeField] private bool searchChildTilemapsIfNeeded = true;
-    [SerializeField] private bool colorEachTile = true;
-    [SerializeField, Min(0f)] private float cycleSpeed = 0.35f;
-    [SerializeField, Range(0f, 1f)] private float saturation = 1f;
-    [SerializeField, Range(0f, 1f)] private float value = 1f;
-    [SerializeField] private Vector2 cellHueOffset = new(0.08f, 0.08f);
+    [SerializeField, FormerlySerializedAs("cycleSpeed"), Min(0f)] private float pulseSpeed = 0.8f;
+    [SerializeField] private Color pulseTargetColor = Color.white;
     [SerializeField] private bool restoreOriginalColorsOnDisable = true;
 
     private readonly List<TilemapState> tilemapStates = new();
@@ -30,7 +28,7 @@ public class RainbowTilemapColor : MonoBehaviour
     private void OnEnable()
     {
         CacheTilemaps();
-        ApplyRainbowColors();
+        ApplyPulseColors();
     }
 
     private void OnDisable()
@@ -41,7 +39,7 @@ public class RainbowTilemapColor : MonoBehaviour
 
     private void Update()
     {
-        ApplyRainbowColors();
+        ApplyPulseColors();
     }
 
     private Tilemap[] FindTargetTilemaps()
@@ -69,45 +67,31 @@ public class RainbowTilemapColor : MonoBehaviour
         }
     }
 
-    private void ApplyRainbowColors()
+    private void ApplyPulseColors()
     {
         if (tilemapStates.Count == 0)
             CacheTilemaps();
 
-        var baseHue = Mathf.Repeat(Time.time * cycleSpeed, 1f);
+        var pulse = Mathf.PingPong(Time.time * pulseSpeed, 1f);
+        pulse = pulse * pulse * (3f - 2f * pulse);
 
         foreach (var state in tilemapStates)
         {
             if (state.Tilemap == null)
                 continue;
 
-            if (colorEachTile)
-            {
-                ApplyCellRainbow(state, baseHue);
-                continue;
-            }
-
-            var color = Color.HSVToRGB(baseHue, saturation, value);
+            var color = GetPulsedColor(state.OriginalTilemapColor, pulse);
             color.a = state.OriginalTilemapColor.a;
             state.Tilemap.color = color;
         }
     }
 
-    private void ApplyCellRainbow(TilemapState state, float baseHue)
+    private Color GetPulsedColor(Color baseColor, float pulse)
     {
-        foreach (var cell in state.Tilemap.cellBounds.allPositionsWithin)
-        {
-            if (!state.Tilemap.HasTile(cell))
-                continue;
+        var targetColor = pulseTargetColor;
+        targetColor.a = baseColor.a;
 
-            var originalCell = state.GetOrAddOriginalCell(cell);
-            var hue = Mathf.Repeat(baseHue + cell.x * cellHueOffset.x + cell.y * cellHueOffset.y, 1f);
-            var color = Color.HSVToRGB(hue, saturation, value);
-            color.a = originalCell.Color.a;
-
-            state.Tilemap.SetTileFlags(cell, originalCell.Flags & ~TileFlags.LockColor);
-            state.Tilemap.SetColor(cell, color);
-        }
+        return Color.Lerp(baseColor, targetColor, pulse);
     }
 
     private void RestoreOriginalColors()
@@ -118,16 +102,6 @@ public class RainbowTilemapColor : MonoBehaviour
                 continue;
 
             state.Tilemap.color = state.OriginalTilemapColor;
-
-            foreach (var originalCell in state.OriginalCells)
-            {
-                if (!state.Tilemap.HasTile(originalCell.Key))
-                    continue;
-
-                state.Tilemap.SetTileFlags(originalCell.Key, originalCell.Value.Flags & ~TileFlags.LockColor);
-                state.Tilemap.SetColor(originalCell.Key, originalCell.Value.Color);
-                state.Tilemap.SetTileFlags(originalCell.Key, originalCell.Value.Flags);
-            }
         }
     }
 
@@ -141,28 +115,5 @@ public class RainbowTilemapColor : MonoBehaviour
 
         public Tilemap Tilemap { get; }
         public Color OriginalTilemapColor { get; }
-        public Dictionary<Vector3Int, CellColorState> OriginalCells { get; } = new();
-
-        public CellColorState GetOrAddOriginalCell(Vector3Int cell)
-        {
-            if (OriginalCells.TryGetValue(cell, out var originalCell))
-                return originalCell;
-
-            originalCell = new CellColorState(Tilemap.GetColor(cell), Tilemap.GetTileFlags(cell));
-            OriginalCells[cell] = originalCell;
-            return originalCell;
-        }
-    }
-
-    private readonly struct CellColorState
-    {
-        public CellColorState(Color color, TileFlags flags)
-        {
-            Color = color;
-            Flags = flags;
-        }
-
-        public Color Color { get; }
-        public TileFlags Flags { get; }
     }
 }

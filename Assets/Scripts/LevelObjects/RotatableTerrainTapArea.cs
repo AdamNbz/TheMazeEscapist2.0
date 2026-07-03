@@ -47,7 +47,7 @@ public class RotatableTerrainTapArea : MonoBehaviour
             targetCamera = Camera.main;
 
         if (tapTilemap == null)
-            tapTilemap = GetComponent<Tilemap>();
+            tapTilemap = GetComponent<Tilemap>() ?? FindChildTilemapByName("Walkable");
 
         AutoCollectHighlightRenderersIfNeeded();
         SetHighlightVisible(true);
@@ -241,6 +241,18 @@ public class RotatableTerrainTapArea : MonoBehaviour
         }
 
         highlightRenderers = GetComponents<SpriteRenderer>();
+    }
+
+    private Tilemap FindChildTilemapByName(string tilemapName)
+    {
+        var childTilemaps = GetComponentsInChildren<Tilemap>(true);
+        foreach (var childTilemap in childTilemaps)
+        {
+            if (childTilemap != null && childTilemap.name == tilemapName)
+                return childTilemap;
+        }
+
+        return null;
     }
 
     private void SetHighlightVisible(bool isVisible)
