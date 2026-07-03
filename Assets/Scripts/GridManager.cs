@@ -350,6 +350,7 @@ public class GridManager : MonoBehaviour
 
         int randomIndex = Random.Range(0, walkableCells.Count);
         return CellToWorld(walkableCells[randomIndex]);
+    }
     public GameObject CreateSpecialTile(Vector3Int cellPos, GameObject tilePrefab)
     {
         var worldPos = GetCellCenteredWorldPosition(cellPos);
