@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sword
   isEffect: 0
-  soundEffectName: health_potion_collected
+  soundEffectName: sword_hit
   swordAttackPrefab: {fileID: 1455320577439100495, guid: 12277c4602d88414091ed3234bd0d13b, type: 3}
   bossOffset: {x: 0, y: 15, z: 0}
 --- !u!212 &3749640787900236200

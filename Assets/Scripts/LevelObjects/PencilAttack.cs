@@ -86,7 +86,11 @@ class PencilAttack : MonoBehaviour
             .Append(sr.DOColor(originalColor, aimingDuration))
             .AppendInterval(lockDuration)
             .Append(transform.DOMove(targetJuicePos, 0.25f).SetEase(Ease.OutQuad))
-            .OnComplete(() => isMove = true)
+            .OnComplete(() =>
+            {
+                isMove = true;
+                AudioManager.Instance.PlaySfx("pencil_attack", transform.position);
+            })
             .SetLink(gameObject);
     }
 

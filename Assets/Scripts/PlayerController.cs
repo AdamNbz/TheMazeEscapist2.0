@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using KingCat.Base;
 using System;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -35,7 +36,9 @@ public class PlayerController : MonoBehaviour
     private bool IsMovementLocked => lockMoving || externalMovementLocks > 0;
     private SpriteBlink spriteBlink;
     [SerializeField] private float blinkDuration = 3f;
-
+    [SerializeField] private List<Sprite> starsSprites; // On and Off
+    [SerializeField] private List<Image> starImages;
+    int currentStarIndex = 2;
     void OnEnable()
     {
         WinPoint.OnLevelComplete += TouchGoal;
@@ -274,7 +277,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage()
     {
         if (spriteBlink.IsBlinking) return; //Invincible 
-
+        LoseStar();
         currentHealth -= 1;
         Debug.Log($"Player took 1 damage. Current health: {currentHealth}");
 
@@ -359,5 +362,17 @@ public class PlayerController : MonoBehaviour
 
             TakeDamage();
         }
+    }
+
+    public void LoseStar()
+    {
+        if (currentStarIndex < 0)
+            return;
+        starImages[currentStarIndex].rectTransform
+            .DOPunchScale(Vector3.one * 0.5f, 0.4f, 8, 0.8f)
+            .OnComplete(() =>
+            {
+                starImages[currentStarIndex--].sprite = starsSprites[1];
+            });
     }
 }

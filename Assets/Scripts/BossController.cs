@@ -37,6 +37,7 @@ public class BossController : MonoBehaviour
     void OnDisable()
     {
         Ink.OnInkEffectTriggered -= TriggerInkEffect;
+        stateMachine.Reset();
     }
 
     void Awake()
@@ -77,7 +78,7 @@ public class BossController : MonoBehaviour
 
         At(phase1, phase2, new FuncPredicate(() => phase1.IsPhaseEnded()));
         At(phase2, phase3, new FuncPredicate(() => phase2.IsPhaseEnded()));
-        At(phase3, winState, new FuncPredicate(() => phase3.IsPhaseEnded()));
+        At(phase3, winState, new FuncPredicate(() => phase3.IsTheEnd()));
         playerObject = GameObject.Find("Player");
         grid = GameObject.Find("Grid");
 
@@ -88,6 +89,7 @@ public class BossController : MonoBehaviour
     {
         InkEffectImage.gameObject.SetActive(false);
         spriteBlink = GetComponent<SpriteBlink>();
+        AudioManager.Instance.PlayBGM("boss_bgm");
     }
 
     void Update()
@@ -188,4 +190,5 @@ public class BossController : MonoBehaviour
 
     void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
     void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
+
 }

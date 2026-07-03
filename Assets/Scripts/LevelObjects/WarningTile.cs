@@ -39,6 +39,7 @@ public class WarningTile : SpecialTile
         float warningSpeed = baseWarningClipLength / Mathf.Max(warningDuration, 0.0001f);
         animator.speed = warningSpeed;
         animator.Play(warningStateName, 0, 0f);
+        AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
         await UniTask.Delay((int)(warningDuration * 1000));
 
         // Reset speed to normal for the fixed-length animations
@@ -53,6 +54,8 @@ public class WarningTile : SpecialTile
 
         animator.Play(explodingStateName, 0, 0f);
         float explodingLength = GetStateLength(explodingStateName);
+        AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
+
         await UniTask.Delay((int)(explodingLength * 1000));
 
         damageCollider.enabled = false;
