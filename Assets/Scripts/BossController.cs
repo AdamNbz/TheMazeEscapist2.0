@@ -68,9 +68,9 @@ public class BossController : MonoBehaviour
             new FastDownPencilAttack(this),
         };
 
-        var phase1 = new BossPhase(this, animator, phase1Commands, 8, null, null, new Vector3Int(-1, -10, 0));
-        var phase2 = new BossPhase(this, animator, phase2Commands, 8, new RaisePhase2Walls(this), null, new Vector3Int(-2, -7, 0), phase2CombinedCommands);
-        var phase3 = new BossPhase(this, animator, phase3Commands, 8, new RaisePhase3Walls(this));
+        var phase1 = new BossPhase(this, animator, phase1Commands, 5, new DoNothing(this), null, new Vector3Int(-1, -10, 0));
+        var phase2 = new BossPhase(this, animator, phase2Commands, 5, new RaisePhase2Walls(this), null, new Vector3Int(-2, -7, 0), phase2CombinedCommands);
+        var phase3 = new BossPhase(this, animator, phase3Commands, 5, new RaisePhase3Walls(this));
         var hurtState = new BossHurtState(this, animator);
         var winState = new BossWinState(this, animator);
         var loseState = new BossLoseState(this, animator);

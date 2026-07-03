@@ -37,9 +37,10 @@ public class BossPhase : BossBaseState
         Debug.Log("Entering Boss Phase");
         currentCommand = enterCommand;
         Sword.OnSwordEffectTriggered += Hurt;
+        SwordAttack.OnSwordAttacked += HurtAnim;
         if (currentCommand != null)
             boss.StartCoroutine(currentCommand.Execute());
-        boss.StartCoroutine(SpawnSword(10f));
+        boss.StartCoroutine(SpawnSword(5f));
     }
 
     public override void Update()
@@ -62,6 +63,7 @@ public class BossPhase : BossBaseState
     public override void OnExit()
     {
         Sword.OnSwordEffectTriggered -= Hurt;
+        SwordAttack.OnSwordAttacked -= HurtAnim;
         boss.StopCoroutine(currentCommandCoroutine);
         if (exitCommand != null)
             boss.StartCoroutine(exitCommand.Execute());
@@ -92,9 +94,22 @@ public class BossPhase : BossBaseState
     {
         health = Mathf.Max(0, health - 1);
         Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}");
-        boss.animator.Play("BossHurt");
-        boss.spriteBlink.Blink();
         spawnSwordCoroutine = boss.StartCoroutine(SpawnSword()); // 5 sec for test
+    }
+
+    public void HurtAnim(Vector3 swordPosition)
+    {
+        // If swordPosition on right flip hurt animation
+        if (swordPosition.x > boss.transform.position.x)
+        {
+            boss.animator.Play("BossHurtLeft");
+        }
+        else
+        {
+            boss.animator.Play("BossHurtRight");
+        }
+
+        boss.spriteBlink.Blink();
     }
 
     public bool IsPhaseEnded()

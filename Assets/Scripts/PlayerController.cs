@@ -188,6 +188,7 @@ public class PlayerController : MonoBehaviour
         lockMoving = true;
         moveSequence = DOTween.Sequence();
         var currentPos = transform.position;
+        bool firstTile = true;
         if (animator != null)
         {
             animator.Play("Walk");
@@ -221,11 +222,20 @@ public class PlayerController : MonoBehaviour
                 var currentCell = GridManager.Instance.WorldToCell(stepStartPos);
                 var nextCell = currentCell + new Vector3Int(dir.x, dir.y, 0);
 
-                if (GridManager.Instance.GetGrid()[currentCell].specialTile.Type == TileType.Slime)
+                if (!GridManager.Instance.GetGrid().TryGetValue(currentCell, out var cellData) || cellData.specialTile == null)
                 {
+                    firstTile = false;
+                    return;
+                }
+
+                if (cellData.specialTile.Type == TileType.Slime && !firstTile)
+                {
+                    Debug.Log("Player stepped on slime, stopping movement.");
                     moveSequence.Kill();
                     lockMoving = false;
+                    return;
                 }
+                firstTile = false;
             });
             moveSequence.Append(transform.DOMove(stepStartPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
                 .SetEase(Ease.Linear).OnComplete(() =>
@@ -274,6 +284,11 @@ public class PlayerController : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            BossController bossController = FindFirstObjectByType<BossController>();
+            if (bossController != null)
+            {
+                bossController.animator.Play("BossWin");
+            }
             OnLoseGame?.Invoke();
         }
     }
