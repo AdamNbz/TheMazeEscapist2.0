@@ -54,6 +54,7 @@ public class Dog : MonoBehaviour
         if (playerDirection.HasValue)
         {
             var path = GridManager.Instance.FindPathFromWorld(transform.position, playerDirection.Value);
+            playerDirection = null; // Reset player direction after using it
             MoveAlongPath(path);
         }
 
@@ -66,6 +67,13 @@ public class Dog : MonoBehaviour
 
     private void UpdatePatrolState()
     {
+        if (FindPlayer() != null)
+        {
+            Debug.Log("[Dog] Player detected, switching to chase state.");
+            SwitchState(DogState.Chase);
+            CancelMovement();
+            SnapToGrid();
+        }
         if (!isMoving)
         {
             if (patrolTimer > 0)
@@ -80,13 +88,6 @@ public class Dog : MonoBehaviour
                     patrolTimer = patrolInterval;
                 }
             }
-        }
-        if (FindPlayer() != null)
-        {
-            Debug.Log("[Dog] Player detected, switching to chase state.");
-            SwitchState(DogState.Chase);
-            CancelMovement();
-            SnapToGrid();
         }
     }
 
@@ -184,10 +185,15 @@ public class Dog : MonoBehaviour
         {
             if (currentState == DogState.Chase)
             {
-                // Lose game
-                // Debug.Log("Player caught by dog! Game Over.");
-                PlayerController.OnLoseGame?.Invoke();
+                SwitchState(DogState.Win);
+                transform.DOShakePosition(1f, new Vector3(0.5f, 0.5f, 0)).OnComplete(() =>
+                {
+                    transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), transform.position.z);
+                    PlayerController.OnLoseGame?.Invoke();
+                });
+                return;
             }
+            AudioManager.Instance.PlaySfx("dog", transform.position);
             SwitchState(DogState.Chase);
         }
     }
@@ -224,5 +230,6 @@ public enum DogState
 {
     Idle,
     Chase,
-    Patrol
+    Patrol,
+    Win
 }

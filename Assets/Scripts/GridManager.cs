@@ -76,11 +76,14 @@ public class GridManager : MonoBehaviour
         };
         Vector3Int toCellPos;
         float stopTime = 0;
+        var cachedStartCellPos = startCellPos;
 
         while (true)
         {
             stopTime = 0; // reset stopTime before checking each cell
             toCellPos = startCellPos + (Vector3Int)direction;
+            if (toCellPos == cachedStartCellPos)
+                break;
             if (!IsWalkable(startCellPos, toCellPos, direction, ref stopTime))
                 break;
 

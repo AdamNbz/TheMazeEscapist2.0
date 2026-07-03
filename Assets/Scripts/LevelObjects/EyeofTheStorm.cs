@@ -61,6 +61,7 @@ public class EyeofTheStorm : MonoBehaviour
             {
                 isMoving = false;
                 targetingPosition = null;
+                AudioManager.Instance.PlaySfx("wind", transform.position);
             });
         }
     }
@@ -72,14 +73,14 @@ public class EyeofTheStorm : MonoBehaviour
 
         var nextNode = currentPath.Dequeue();
         targetingPosition = GridManager.Instance.CellToWorld(nextNode.position) + gridAnchor;
+        if (currentPath.Count == 0)
+            UpdateNewPath();
         return transform.DOMove(targetingPosition.Value, 1f / speed).SetEase(Ease.Linear);
     }
 
     void Update()
     {
         MoveWithCurrentPath();
-        if (!isMoving && currentPath.Count == 0 && moveOnStart)
-            UpdateNewPath();
     }
 
     void OnTriggerEnter2D(Collider2D collision)
