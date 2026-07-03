@@ -374,4 +374,20 @@ public class GridManager : MonoBehaviour
             gridMap[cellPos].specialTile = null;
         }
     }
+
+    public void MakeEffectAtCell(Vector3Int cellPos)
+    {
+        var node = gridMap.TryGetValue(cellPos, out var n) ? n : null;
+        if (n == null)
+            return;
+
+        if (node.specialTile != null && node.specialTile.Type == TileType.OneWayDoor)
+        {
+            var oneWayDoor = node.specialTile as OneWayDoor;
+            if (oneWayDoor != null)
+            {
+                oneWayDoor.Open();
+            }
+        }    
+    }    
 }
