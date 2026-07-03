@@ -47,9 +47,9 @@ public class ThreeByThreeAttack : BossCommand
                 }
             }
 
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(3f);
         }
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(1f);
 
         isExecuting = false;
         isCompleted = true;
