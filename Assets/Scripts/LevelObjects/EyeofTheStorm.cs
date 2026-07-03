@@ -9,14 +9,17 @@ public class EyeofTheStorm : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private Transform player;
     [SerializeField] private Vector3 gridAnchor = new(0.5f, 0.5f, 0);
+    [SerializeField] private bool moveOnStart = true;
 
     private Queue<Node> currentPath = new();
     public static event Action OnTouchPlayer;
 
     private PathFindingLogic pathfindingLogic;
+    private Vector3? targetingPosition = null;
     private bool isMoving = false;
 
     private bool isWandering = true;
+    private bool isFindNewPath = false;
 
     private void Start()
     {
@@ -37,45 +40,46 @@ public class EyeofTheStorm : MonoBehaviour
 
     private void UpdateNewPath()
     {
+        if (!moveOnStart)
+            return;
         currentPath.Clear();
-        var path = pathfindingLogic.FindPathFromWorldPos(transform.position, isWandering ?
-        GridManager.Instance.GetRandomWalkableCellPosition() : player.position);
+        var path = pathfindingLogic.FindPathFromWorldPos(
+            targetingPosition == null ? transform.position : targetingPosition.Value,
+            isWandering ? GridManager.Instance.GetRandomWalkableCellPosition() : player.position);
         foreach (var node in path)
         {
             currentPath.Enqueue(node);
         }
     }
 
-    private async UniTask MoveWithCurrentPath()
+    private void MoveWithCurrentPath()
     {
-        isMoving = true;
-        while (currentPath.Count > 0)
+        if (currentPath.Count > 0 && !isMoving)
         {
-            var nextNode = currentPath.Dequeue();
-            Vector3 targetPosition = GridManager.Instance.CellToWorld(nextNode.position);
-
-            try
+            isMoving = true;
+            PopAndMovePath().OnComplete(() =>
             {
-                await transform.DOMove(targetPosition + gridAnchor, 1f / speed)
-                    .SetEase(Ease.Linear).ToUniTask(cancellationToken: destroyCancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-            }
+                isMoving = false;
+                targetingPosition = null;
+            });
         }
-        isMoving = false;
+    }
+
+    private Tween PopAndMovePath()
+    {
+        if (currentPath.Count <= 0)
+            return null;
+
+        var nextNode = currentPath.Dequeue();
+        targetingPosition = GridManager.Instance.CellToWorld(nextNode.position) + gridAnchor;
+        return transform.DOMove(targetingPosition.Value, 1f / speed).SetEase(Ease.Linear);
     }
 
     void Update()
     {
-        if (!isMoving && currentPath.Count > 0)
-        {
-            MoveWithCurrentPath().Forget();
-        }
-        else if (!isMoving && currentPath.Count == 0)
-        {
+        MoveWithCurrentPath();
+        if (!isMoving && currentPath.Count == 0 && moveOnStart)
             UpdateNewPath();
-        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -93,6 +97,18 @@ public class EyeofTheStorm : MonoBehaviour
         if (data.Type == TileType.Trash || data.Type == TileType.StudentCard)
         {
             isWandering = false;
+            moveOnStart = true;
+            UpdateNewPath();
         }
+    }
+
+    private void PredictNewPosition()
+    {
+
+    }
+
+    void SetPoolNewPath()
+    {
+        isFindNewPath = true;
     }
 }

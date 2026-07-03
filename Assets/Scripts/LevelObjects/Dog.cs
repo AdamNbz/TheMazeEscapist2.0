@@ -44,6 +44,7 @@ public class Dog : MonoBehaviour
                 UpdatePatrolState();
                 break;
         }
+        UpdateAnimation();
     }
 
     private void UpdateChaseState()
@@ -169,7 +170,6 @@ public class Dog : MonoBehaviour
         {
             Debug.Log($"[Dog] Switching state from {currentState} to {newState}");
             currentState = newState;
-            animator.Play(GetStateName(newState));
 
             if (newState == DogState.Patrol)
             {
@@ -192,15 +192,31 @@ public class Dog : MonoBehaviour
         }
     }
 
-    private string GetStateName(DogState state)
+    private string currentAnimState = "";
+
+    private void PlayAnimState(string stateName)
     {
-        return state switch
+        if (currentAnimState != stateName)
         {
-            DogState.Idle => "DogIdle",
-            DogState.Chase => "DogChasing",
-            DogState.Patrol => "DogPatrol",
-            _ => "Unknown"
-        };
+            animator.Play(stateName);
+            currentAnimState = stateName;
+        }
+    }
+
+    private void UpdateAnimation()
+    {
+        if (currentState == DogState.Chase)
+        {
+            PlayAnimState("DogChasing");
+        }
+        else if (currentState == DogState.Idle || !isMoving)
+        {
+            PlayAnimState("DogIdle");
+        }
+        else if (currentState == DogState.Patrol)
+        {
+            PlayAnimState("DogPatrol");
+        }
     }
 }
 
