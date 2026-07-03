@@ -205,6 +205,9 @@ public class PlayerController : MonoBehaviour
             // Add stop time if required
             if (nodeData.stopTime > 0)
             {
+                var curCell = GridManager.Instance.WorldToCell(currentPos);
+                var nextCell = curCell + (Vector3Int)nodeData.direction;
+                moveSequence.AppendCallback(new TweenCallback(() => GridManager.Instance.MakeEffectAtCell(nextCell)));
                 moveSequence.AppendInterval(nodeData.stopTime);
             }
             moveSequence.AppendCallback(() =>
