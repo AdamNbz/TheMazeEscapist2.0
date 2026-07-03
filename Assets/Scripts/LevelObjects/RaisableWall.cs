@@ -7,28 +7,29 @@ using UnityEngine.Events;
 public class RaisableWall : SpecialTile
 {
     [SerializeField] private string soundEffectName = "trash_can_collected";
-    public static UnityAction OnInkEffectTriggered;
     public override TileType Type => TileType.Wall;
-
+    [SerializeField] private GameObject wallSpriteObject;
     void Start()
     {
         //OnInstantiated();
+        if (wallSpriteObject == null)
+        {
+            wallSpriteObject = transform.GetChild(0).gameObject;
+        }
     }
 
     public void Raise()
     {
         this.gameObject.SetActive(true);
-        // Tween y scale from 0 to 1
-        transform.localScale = new Vector3(transform.localScale.x, 0, transform.localScale.z);
-        transform.DOScaleY(1, 1f);
+        // Tween y position of wallSpriteObject to newY
+        var tween = wallSpriteObject.transform.DOLocalMoveY(0, 1f).SetEase(Ease.OutExpo);
     }
 
     public void Lower()
     {
         this.gameObject.SetActive(true);
-        // Tween y scale from 1 to 0
-        transform.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
-        var tween = transform.DOScaleY(0, 1f);
+        float newY = 0f;
+        var tween = wallSpriteObject.transform.DOLocalMoveY(-1.1f, 1f).SetEase(Ease.InExpo);
         tween.OnComplete(() =>
         {
             Destroy(this.gameObject);

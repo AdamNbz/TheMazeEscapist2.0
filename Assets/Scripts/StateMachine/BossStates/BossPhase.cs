@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BossPhase : BossBaseState
@@ -13,12 +14,12 @@ public class BossPhase : BossBaseState
     BossCommand currentCommand;
 
     Coroutine currentCommandCoroutine;
+    Coroutine spawnSwordCoroutine;
 
     float weaponCooldown = 5f;
     float healCooldown = 30f;
 
-    float weaponTimer = 0f;
-    float healTimer = 0f;
+    bool isBossAttacking = false;
 
     public BossPhase(BossController boss, Animator animator, List<BossCommand> attackCommands, int phaseHealth = 3, BossCommand enterCommand = null, BossCommand exitCommand = null, Vector3Int? endAttackPosition = null, List<BossCommand> combinedCommands = null) : base(boss, animator)
     {
@@ -38,34 +39,23 @@ public class BossPhase : BossBaseState
         Sword.OnSwordEffectTriggered += Hurt;
         if (currentCommand != null)
             boss.StartCoroutine(currentCommand.Execute());
+        boss.StartCoroutine(SpawnSword(10f));
     }
 
     public override void Update()
     {
-        if (currentCommand == null || currentCommand.IsCompleted())
+        if (!isBossAttacking && (currentCommand == null || currentCommand.IsCompleted()))
         {
-            // Choose a new random command to execute
-            currentCommand = (health >= (maxHealth / 2) || combinedCommands.Count == 0) ? attackCommands[Random.Range(0, attackCommands.Count)] : combinedCommands[Random.Range(0, combinedCommands.Count)];
-            currentCommandCoroutine = boss.StartCoroutine(currentCommand?.Execute());
-        }
-
-        weaponTimer += Time.deltaTime;
-        if (weaponTimer >= weaponCooldown)
-        {
-            weaponTimer = 0f;
-            if (health > 1 || endAttackPosition == null)
-                boss.TriggerCreateRandomItem(boss.SwordPrefab);
-            else if (endAttackPosition != null)
+            isBossAttacking = true;
+            // Play attack animation
+            boss.animator.Play("BossAttack");
+            boss.StartCoroutine(WaitForBossAnimation(() =>
             {
-                boss.TriggerCreateTile(endAttackPosition.Value, boss.SwordPrefab);
-            }
-        }
-
-        healTimer += Time.deltaTime;
-        if (healTimer >= healCooldown)
-        {
-            healTimer = 0f;
-            boss.TriggerCreateRandomItem(boss.HealPotionPrefab);
+                // After animation completes, execute the next command
+                currentCommand = (health >= (maxHealth / 2) || combinedCommands.Count == 0) ? attackCommands[Random.Range(0, attackCommands.Count)] : combinedCommands[Random.Range(0, combinedCommands.Count)];
+                currentCommandCoroutine = boss.StartCoroutine(currentCommand?.Execute());
+                isBossAttacking = false;
+            }));
         }
     }
 
@@ -75,17 +65,36 @@ public class BossPhase : BossBaseState
         boss.StopCoroutine(currentCommandCoroutine);
         if (exitCommand != null)
             boss.StartCoroutine(exitCommand.Execute());
+        if (spawnSwordCoroutine != null)
+            boss.StopCoroutine(spawnSwordCoroutine);
     }
 
-    void OnTimerFinished()
+    private IEnumerator SpawnSword(float delay = 5f)
     {
-        Debug.Log("Done!");
+        yield return new WaitForSeconds(delay);
+        if (health == 1 && endAttackPosition.HasValue)
+        {
+            boss.TriggerCreateTile(endAttackPosition.Value, boss.SwordPrefab);
+        }
+        else
+        {
+            boss.TriggerCreateRandomItem(boss.SwordPrefab);
+        }
+    }
+
+    private IEnumerator SpawnHeal(float delay = 30f)
+    {
+        yield return new WaitForSeconds(delay);
+        boss.TriggerCreateRandomItem(boss.HealPotionPrefab);
     }
 
     public void Hurt()
     {
         health = Mathf.Max(0, health - 1);
         Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}");
+        boss.animator.Play("BossHurt");
+        boss.spriteBlink.Blink();
+        spawnSwordCoroutine = boss.StartCoroutine(SpawnSword()); // 5 sec for test
     }
 
     public bool IsPhaseEnded()

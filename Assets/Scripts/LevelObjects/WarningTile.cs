@@ -3,16 +3,21 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Animator))]
 public class WarningTile : SpecialTile
 {
     [SerializeField] private string soundEffectName = "trash_can_collected";
-    [SerializeField] private Sprite flashSprite;
     public override TileType Type => TileType.Walkable;
     [SerializeField] private Collider2D damageCollider;
-    private SpriteRenderer spriteRenderer;
+
+    [Header("Animator")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string warningStateName = "Warning";
+    [SerializeField] private string flashingStateName = "Flashing";
+    [SerializeField] private string explodingStateName = "Exploding";
+    [SerializeField] private float baseWarningClipLength = 1f; // length of the Warning clip at speed = 1
+
     private float warningDuration = 1f;
-    const float flasingDuration = 1f;
 
     void Awake()
     {
@@ -21,7 +26,7 @@ public class WarningTile : SpecialTile
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
         damageCollider = GetComponent<Collider2D>();
         damageCollider.enabled = false;
     }
@@ -29,15 +34,40 @@ public class WarningTile : SpecialTile
     public async void Init(float warningDuration)
     {
         this.warningDuration = warningDuration;
+
+        // Stretch/compress the Warning animation to match the requested duration
+        float warningSpeed = baseWarningClipLength / Mathf.Max(warningDuration, 0.0001f);
+        animator.speed = warningSpeed;
+        animator.Play(warningStateName, 0, 0f);
         await UniTask.Delay((int)(warningDuration * 1000));
-        spriteRenderer.sprite = flashSprite;
-        await UniTask.Delay((int)(flasingDuration * 1000));
-        //Check collsion with the player in short amount of time (200ms), if player inside then take damage
+
+        // Reset speed to normal for the fixed-length animations
+        animator.speed = 1f;
+
+        animator.Play(flashingStateName, 0, 0f);
+        float flashingLength = GetStateLength(flashingStateName);
+        await UniTask.Delay((int)(flashingLength * 1000));
+
+        // Check collision with the player in short amount of time, if player inside then take damage
         damageCollider.enabled = true;
-        spriteRenderer.color = Color.black;
-        await UniTask.Delay(500);
+
+        animator.Play(explodingStateName, 0, 0f);
+        float explodingLength = GetStateLength(explodingStateName);
+        await UniTask.Delay((int)(explodingLength * 1000));
+
         damageCollider.enabled = false;
         Destroy(this.gameObject);
+    }
+
+    private float GetStateLength(string stateName)
+    {
+        RuntimeAnimatorController controller = animator.runtimeAnimatorController;
+        foreach (AnimationClip clip in controller.animationClips)
+        {
+            if (clip.name == stateName)
+                return clip.length;
+        }
+        return 0.2f; // fallback default
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -48,5 +78,4 @@ public class WarningTile : SpecialTile
             damageCollider.enabled = false;
         }
     }
-
 }

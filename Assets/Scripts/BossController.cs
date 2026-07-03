@@ -10,7 +10,7 @@ using UnityEngine.Events;
 public class BossController : MonoBehaviour
 {
     StateMachine stateMachine;
-    private Animator animator;
+    public Animator animator;
 
     public float fadeDuration = 1f;
     [SerializeField] private Image InkEffectImage;
@@ -27,6 +27,7 @@ public class BossController : MonoBehaviour
     public static readonly Vector3Int originCell = new Vector3Int(-4, -4, 0);
     public static readonly int size = 7;
     private Tween inkEffectTween;
+    public SpriteBlink spriteBlink;
 
     void OnEnable()
     {
@@ -67,9 +68,9 @@ public class BossController : MonoBehaviour
             new FastDownPencilAttack(this),
         };
 
-        var phase1 = new BossPhase(this, animator, phase1Commands);
-        var phase2 = new BossPhase(this, animator, phase2Commands, 3, new RaisePhase2Walls(this), null, new Vector3Int(-4, -7, 0), phase2CombinedCommands);
-        var phase3 = new BossPhase(this, animator, phase3Commands, 5, new RaisePhase3Walls(this));
+        var phase1 = new BossPhase(this, animator, phase1Commands, 8, null, null, new Vector3Int(-1, -10, 0));
+        var phase2 = new BossPhase(this, animator, phase2Commands, 8, new RaisePhase2Walls(this), null, new Vector3Int(-2, -7, 0), phase2CombinedCommands);
+        var phase3 = new BossPhase(this, animator, phase3Commands, 8, new RaisePhase3Walls(this));
         var hurtState = new BossHurtState(this, animator);
         var winState = new BossWinState(this, animator);
         var loseState = new BossLoseState(this, animator);
@@ -86,6 +87,7 @@ public class BossController : MonoBehaviour
     void Start()
     {
         InkEffectImage.gameObject.SetActive(false);
+        spriteBlink = GetComponent<SpriteBlink>();
     }
 
     void Update()
@@ -109,13 +111,13 @@ public class BossController : MonoBehaviour
         inkEffectTween.OnComplete(() => InkEffectImage.gameObject.SetActive(false));
     }
 
-    public void TriggerPencilAttack(float aimingDuration, float lockDuration, float speed, Vector3Int direction, Vector3Int initialCellPosition)
+    public void TriggerPencilAttack(float lockDuration, float speed, Vector3Int direction, Vector3Int initialCellPosition)
     {
         //Debug.Log("Boss triggered pencil attack!");
         GameObject pencil = Instantiate(PencilAttackPrefab);
         pencil.transform.SetParent(grid.transform, false);
         PencilAttack pencilAttack = pencil.GetComponent<PencilAttack>();
-        pencilAttack.Initialise(aimingDuration, lockDuration, speed, direction, initialCellPosition);
+        pencilAttack.Initialise(lockDuration, speed, direction, initialCellPosition);
     }
 
     public void TriggerRaisingWall(Vector3Int cellPosition)
@@ -175,7 +177,7 @@ public class BossController : MonoBehaviour
             for (int j = originCell.y; j > originCell.y - size; j--)
             {
                 Vector3Int cellPos = new Vector3Int(i, j, 0);
-                if (GridManager.Instance.IsWalkable(cellPos) && !GridManager.Instance.IsItem(cellPos))
+                if (GridManager.Instance.IsWalkable(cellPos) && !GridManager.Instance.IsItem(cellPos) && GridManager.Instance.WorldToCell(playerObject.transform.position) != cellPos)
                 {
                     walkableCells.Add(cellPos);
                 }

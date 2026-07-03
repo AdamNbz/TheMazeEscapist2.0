@@ -86,7 +86,7 @@ public class GridManager : MonoBehaviour
 
             result.directions.Add(new NodeData(direction, stopTime));
 
-            if (gridMap[startCellPos].type == TileType.Slime) // slime stops movement
+            if (gridMap[toCellPos].type == TileType.Slime) // slime stops movement
                 break;
 
             var prevDirection = -direction;
@@ -147,7 +147,8 @@ public class GridManager : MonoBehaviour
         TileType fromTileType = gridMap[fromCellPos].type;
 
         if ((toTileType == TileType.Walkable && fromTileType == TileType.Wall) ||
-            (toTileType == TileType.Wall && fromTileType == TileType.Walkable))
+            (toTileType == TileType.Wall && fromTileType == TileType.Walkable) ||
+            (toTileType == TileType.Wall && fromTileType == TileType.Slime))
             return false;
 
         // Check if the toCellPos is a one way door
@@ -292,9 +293,19 @@ public class GridManager : MonoBehaviour
     {
         if (gridMap.ContainsKey(cellPos) && gridMap[cellPos].type != TileType.Wall)
         {
+            // if currently slime, remove slime first
+            if (gridMap[cellPos].type == TileType.Slime)
+            {
+                var slimeTile = gridMap[cellPos].specialTile as Slime;
+                if (slimeTile != null)
+                {
+                    Destroy(slimeTile.gameObject);
+                }
+            }
             // Instantiate a raisable wall at the given cell position
+
             var worldPos = GetCellCenteredWorldPosition(cellPos);
-            var wallObj = Instantiate(raisableWallPrefab, worldPos - new Vector3(0, grid.cellSize.y, 0), Quaternion.identity, grid.transform);
+            var wallObj = Instantiate(raisableWallPrefab, worldPos, Quaternion.identity, grid.transform);
             var wallTile = wallObj.GetComponent<RaisableWall>();
             if (wallTile != null)
             {

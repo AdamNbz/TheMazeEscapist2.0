@@ -29,7 +29,7 @@ public class OneGapAttack : BossCommand
             for (int j = 0; j < BossController.size; j++)
             {
                 if (j != gapColumnIndex)
-                    boss.TriggerPencilAttack(2f, 1f, 15f, Vector3Int.down, Vector3Int.FloorToInt(new Vector3(BossController.originCell.x + j, BossController.originCell.y, 0)));
+                    boss.TriggerPencilAttack(1f, 15f, Vector3Int.down, Vector3Int.FloorToInt(new Vector3(BossController.originCell.x + j, BossController.originCell.y, 0)));
             }
             yield return new WaitForSeconds(5f);
         }

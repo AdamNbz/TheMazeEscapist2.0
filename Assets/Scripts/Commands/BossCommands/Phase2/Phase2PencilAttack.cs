@@ -57,10 +57,10 @@ public class Phase2PencilAttack : BossCommand
                     bool isTopLeft = Random.value > 0.5f;
                     Vector3Int direction = isTopLeft ? (vertical ? Vector3Int.down : Vector3Int.right) : (vertical ? Vector3Int.up : Vector3Int.left);
                     Vector3Int cellPos = pencilPositions[vertical ? 0 : 1][i];
-                    boss.TriggerPencilAttack(1f, 0.5f, 30, direction, cellPos);
+                    boss.TriggerPencilAttack(1.5f, 30, direction, cellPos);
                 }
             }
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2f);
         }
 
         isExecuting = false;

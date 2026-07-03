@@ -33,12 +33,12 @@ public class OneSquareAttack : BossCommand
             for (int i = originCell.x; i < originCell.x + BossController.size; i++)
             {
                 if (i < squarePosition.x || i >= squarePosition.x + squareSize)
-                    boss.TriggerPencilAttack(2f, 3f, 30f, Vector3Int.down, new Vector3Int(i, originCell.y, 0));
+                    boss.TriggerPencilAttack(3f, 30f, Vector3Int.down, new Vector3Int(i, originCell.y, 0));
             }
             for (int j = originCell.y; j > originCell.y - BossController.size; j--)
             {
                 if (j > squarePosition.y || j <= squarePosition.y - squareSize)
-                    boss.TriggerPencilAttack(2f, 3f, 30f, Vector3Int.right, new Vector3Int(originCell.x, j, 0));
+                    boss.TriggerPencilAttack(3f, 30f, Vector3Int.right, new Vector3Int(originCell.x, j, 0));
             }
             yield return new WaitForSeconds(6f);
         }

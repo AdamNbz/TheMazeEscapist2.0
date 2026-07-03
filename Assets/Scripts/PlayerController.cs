@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
     private int currentHealth;
 
     private bool IsMovementLocked => lockMoving || externalMovementLocks > 0;
+    private SpriteBlink spriteBlink;
+    [SerializeField] private float blinkDuration = 3f;
 
     void OnEnable()
     {
@@ -55,6 +57,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        spriteBlink = GetComponent<SpriteBlink>();
         currentHealth = maxHealth;
     }
     private void TouchGoal()
@@ -183,37 +186,43 @@ public class PlayerController : MonoBehaviour
         lockMoving = true;
         moveSequence = DOTween.Sequence();
         var currentPos = transform.position;
-
         if (animator != null)
         {
             animator.Play("Walk");
         }
-
         OnStartMoving?.Invoke();
         foreach (var nodeData in path.directions)
         {
-            moveSequence.AppendCallback(() =>
+            var localScale = transform.localScale;
+            var dir = nodeData.direction;
+            var stepStartPos = currentPos; // snapshot so closures use the right position
+            if (dir.x != 0)
             {
-                var localScale = transform.localScale;
-                if (dir.x != 0)
-                {
-                    localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
-                    transform.localScale = localScale;
-                }
-            });
+                localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                transform.localScale = localScale;
+            }
 
             // Add stop time if required
-            if(nodeData.stopTime > 0)
+            if (nodeData.stopTime > 0)
             {
                 moveSequence.AppendInterval(nodeData.stopTime);
             }
-
-            moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
+            moveSequence.AppendCallback(() =>
+            {
+                // Check if next square valid
+                var currentCell = GridManager.Instance.WorldToCell(stepStartPos);
+                var nextCell = currentCell + new Vector3Int(dir.x, dir.y, 0);
+                if (!GridManager.Instance.IsWalkable(nextCell))
+                {
+                    moveSequence.Kill();
+                    lockMoving = false;
+                }
+            });
+            moveSequence.Append(transform.DOMove(stepStartPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
                 .SetEase(Ease.Linear).OnComplete(() =>
                 {
                     AudioManager.Instance.PlaySfx("player_move", transform.position);
                 }));
-
             currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
         }
         moveSequence.OnComplete(() =>
@@ -245,8 +254,13 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage()
     {
+        if (spriteBlink.IsBlinking) return; //Invincible 
+
         currentHealth -= 1;
         Debug.Log($"Player took 1 damage. Current health: {currentHealth}");
+
+        spriteBlink.Blink(blinkDuration);
+
 
         if (currentHealth <= 0)
         {
