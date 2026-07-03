@@ -136,17 +136,16 @@ public class Dog : MonoBehaviour
             moveSequence.AppendCallback(() =>
             {
                 var localScale = transform.localScale;
-                if (dir.x != 0)
+                if (dir.direction.x != 0)
                 {
-                    localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                    localScale.x = dir.direction.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
                     transform.localScale = localScale;
                 }
             });
-            moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f / currentSpeed)
+            moveSequence.Append(transform.DOMove(currentPos + new Vector3(dir.direction.x, dir.direction.y, 0) * path.stepLength, 0.1f / currentSpeed)
                 .SetEase(Ease.Linear));
-
-            currentPos += new Vector3(dir.x, dir.y, 0) * path.stepLength;
-            lastMoveDirection = new Vector3(dir.x, dir.y, 0);
+            currentPos += new Vector3(dir.direction.x, dir.direction.y, 0) * path.stepLength;
+            lastMoveDirection = new Vector3(dir.direction.x, dir.direction.y, 0);
         }
         moveSequence.OnComplete(() =>
         {
