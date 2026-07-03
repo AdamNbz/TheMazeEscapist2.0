@@ -88,7 +88,6 @@ public class EyeofTheStorm : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             OnTouchPlayer?.Invoke();
-            // gameObject.SetActive(false);
             isWandering = true;
         }
     }
@@ -101,15 +100,5 @@ public class EyeofTheStorm : MonoBehaviour
             moveOnStart = true;
             UpdateNewPath();
         }
-    }
-
-    private void PredictNewPosition()
-    {
-
-    }
-
-    void SetPoolNewPath()
-    {
-        isFindNewPath = true;
     }
 }

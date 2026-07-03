@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using KingCat.Base;
 
 public class PlayerController : MonoBehaviour
 {
@@ -284,6 +285,7 @@ public class PlayerController : MonoBehaviour
     {
         moveSequence.Pause();
         AudioManager.Instance.PlaySfx("whoosh", transform.position);
+        VibrationController.Instance.PlayHeavy();
         transform.DOShakeRotation(1f, new Vector3(0, 0, 30)).OnComplete(() =>
         {
             transform.rotation = Quaternion.identity;

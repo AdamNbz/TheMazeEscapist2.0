@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using KingCat.Base;
 using UnityEngine;
 
 public class Dog : MonoBehaviour
@@ -186,6 +187,7 @@ public class Dog : MonoBehaviour
             if (currentState == DogState.Chase)
             {
                 SwitchState(DogState.Win);
+                VibrationController.Instance.PlayHeavy();
                 transform.DOShakePosition(1f, new Vector3(0.5f, 0.5f, 0)).OnComplete(() =>
                 {
                     transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), transform.position.z);
