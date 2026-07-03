@@ -295,7 +295,7 @@ public class GridManager : MonoBehaviour
         {
             // Instantiate a raisable wall at the given cell position
             var worldPos = GetCellCenteredWorldPosition(cellPos);
-            var wallObj = Instantiate(raisableWallPrefab, worldPos - new Vector3(0, grid.cellSize.y, 0), Quaternion.identity, grid.transform);
+            var wallObj = Instantiate(raisableWallPrefab, worldPos, Quaternion.identity, grid.transform);
             var wallTile = wallObj.GetComponent<RaisableWall>();
             if (wallTile != null)
             {

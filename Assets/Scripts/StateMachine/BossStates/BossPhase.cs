@@ -77,6 +77,7 @@ public class BossPhase : BossBaseState
         health = Mathf.Max(0, health - 1);
         Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}");
         boss.animator.Play("BossHurt");
+        boss.spriteBlink.Blink();
         boss.StartCoroutine(SpawnSword()); // 5 sec for test
     }
 

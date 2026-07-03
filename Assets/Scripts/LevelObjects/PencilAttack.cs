@@ -7,23 +7,22 @@ class PencilAttack : MonoBehaviour
     public static UnityAction OnPencilAttackTriggered;
 
     bool canFollow = false;
-    float aimingDuration = 2f;
+    float aimingDuration = 1f;
     float lockDuration = 1f;
     float speed = 5f;
+    bool isMove = false;
     Vector3Int direction;
     Vector3Int initialCellPosition; // row or column depending on direction
 
-    Tween fadeTween;
+    Tween pencilTween;
 
     private void Start()
     {
         // For testing purposes, trigger the pencil attack after 5 seconds
-        //Invoke(nameof(TriggerPencilAttack), 5f);
     }
 
-    public void Initialise(float aimingDuration, float lockDuration, float speed, Vector3Int direction, Vector3Int initialCellPosition)
+    public void Initialise(float lockDuration, float speed, Vector3Int direction, Vector3Int initialCellPosition)
     {
-        this.aimingDuration = aimingDuration;
         this.lockDuration = lockDuration;
         this.speed = speed;
         this.direction = direction;
@@ -53,46 +52,53 @@ class PencilAttack : MonoBehaviour
         }
         transform.position = GridManager.Instance.GetCellCenteredWorldPosition(spawnCell);
 
+        Vector3 targetJuicePos = transform.position;
+        float juiceDistance = 1f; // Adjust this value to control how far the pencil moves during the juice effect
+
         if (isHorizontal && direction.x < 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, 180);
+            targetJuicePos += Vector3.right * juiceDistance;
         }
         else if (!isHorizontal && direction.y < 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, -90);
+            targetJuicePos += Vector3.up * juiceDistance;
         }
         else if (!isHorizontal && direction.y > 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, 90);
+            targetJuicePos += Vector3.down * juiceDistance;
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            targetJuicePos += Vector3.left * juiceDistance;
         }
 
         // Use tween to fade in the pencil over the aiming duration
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         Color originalColor = sr.color;
         sr.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0);
-        fadeTween = sr.DOColor(originalColor, aimingDuration).SetLink(gameObject);
+
+
+        pencilTween = DOTween.Sequence()
+            .Append(sr.DOColor(originalColor, aimingDuration))
+            .AppendInterval(lockDuration)
+            .Append(transform.DOMove(targetJuicePos, 0.5f).SetEase(Ease.OutQuad))
+            .OnComplete(() => isMove = true)
+            .SetLink(gameObject);
     }
 
     private void Update()
     {
-        //Wait for aiming duration before moving
-        if (aimingDuration > 0)
-        {
-            aimingDuration -= Time.deltaTime;
-            return;
-        }
-        //Move for lock duration, then destroy        
-        if (lockDuration > 0)
-        {
-            lockDuration -= Time.deltaTime;
-            return;
-        }
+        if (!isMove) return;
         transform.position += (Vector3)direction * speed * Time.deltaTime;
         // If out of camera bounds, destroy the pencil
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
         if (screenPos.x < -100 || screenPos.x > Screen.width + 100 || screenPos.y < -100 || screenPos.y > Screen.height + 100)
         {
-            if (fadeTween != null && fadeTween.IsActive()) fadeTween.Kill();
+            if (pencilTween != null && pencilTween.IsActive()) pencilTween.Kill();
             Destroy(gameObject);
             return;
         }
@@ -103,7 +109,7 @@ class PencilAttack : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             Debug.Log("Player hit by pencil attack!");
-            if (fadeTween != null && fadeTween.IsActive()) fadeTween.Kill();
+            if (pencilTween != null && pencilTween.IsActive()) pencilTween.Kill();
             //Destroy(gameObject);
             var pencilCollider = GetComponent<Collider2D>();
             pencilCollider.enabled = false;

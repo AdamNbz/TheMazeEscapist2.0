@@ -32,7 +32,7 @@ public class FollowAttack : BossCommand
         for (int i = 0; i < attackCount; i++)
         {
             var playerCell = GridManager.Instance.WorldToCell(playerObject.transform.position);
-            boss.TriggerPencilAttack(2f, 1f, 15f, directions[i % directions.Count], playerCell);
+            boss.TriggerPencilAttack(1.5f, 20f, directions[i % directions.Count], playerCell);
             yield return new WaitForSeconds(3f);
         }
 

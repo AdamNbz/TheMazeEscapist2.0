@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     private int currentHealth;
 
     private bool IsMovementLocked => lockMoving || externalMovementLocks > 0;
+    private SpriteBlink spriteBlink;
+    [SerializeField] private float blinkDuration = 3f;
 
     void OnEnable()
     {
@@ -48,6 +50,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        spriteBlink = GetComponent<SpriteBlink>();
         currentHealth = maxHealth;
     }
     private void TouchGoal()
@@ -194,7 +197,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Add stop time if required
-            if(nodeData.stopTime > 0)
+            if (nodeData.stopTime > 0)
             {
                 moveSequence.AppendInterval(nodeData.stopTime);
             }
@@ -236,8 +239,13 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage()
     {
+        if (spriteBlink.IsBlinking) return; //Invincible 
+
         currentHealth -= 1;
         Debug.Log($"Player took 1 damage. Current health: {currentHealth}");
+
+        spriteBlink.Blink(blinkDuration);
+
 
         if (currentHealth <= 0)
         {
