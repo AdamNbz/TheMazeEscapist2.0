@@ -6,6 +6,7 @@ public class BossPhase : BossBaseState
 {
     int health = 3;
     int maxHealth = 3;
+    int hitCount = 0;
     List<BossCommand> attackCommands = new List<BossCommand>();
     List<BossCommand> combinedCommands = new List<BossCommand>();
     Vector3Int? endAttackPosition = null;
@@ -100,6 +101,7 @@ public class BossPhase : BossBaseState
     public void HurtAnim(Vector3 swordPosition)
     {
         // If swordPosition on right flip hurt animation
+        if (boss.animator == null) return;
         if (swordPosition.x > boss.transform.position.x)
         {
             boss.animator.Play("BossHurtLeft");
@@ -110,10 +112,17 @@ public class BossPhase : BossBaseState
         }
 
         boss.spriteBlink.Blink();
+        hitCount++;
     }
 
     public bool IsPhaseEnded()
     {
         return health <= 0;
+    }
+
+    // For final phase
+    public bool IsTheEnd()
+    {
+        return health <= 0 && hitCount == maxHealth;
     }
 }

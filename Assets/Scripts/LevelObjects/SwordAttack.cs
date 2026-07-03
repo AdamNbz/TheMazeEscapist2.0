@@ -24,8 +24,8 @@ public class SwordAttack : MonoBehaviour
     {
         if (collision.CompareTag("Boss"))
         {
-            Debug.Log("Sword attack triggered!");
             OnSwordAttacked?.Invoke(transform.position);
+            AudioManager.Instance.PlaySfx("sword_hit", transform.position);
             Destroy(gameObject);
         }
     }
