@@ -42,6 +42,7 @@ public class BossPhase : BossBaseState
         if (currentCommand != null)
             boss.StartCoroutine(currentCommand.Execute());
         boss.StartCoroutine(SpawnSword(10f));
+        hitCount = 0;
     }
 
     public override void Update()
@@ -100,7 +101,6 @@ public class BossPhase : BossBaseState
     {
         health = Mathf.Max(0, health - 1);
         Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}");
-        AudioManager.Instance.PlaySfx("boss_hurt", Vector3.zero);
         spawnSwordCoroutine = boss.StartCoroutine(SpawnSword()); // 5 sec for test
     }
 
@@ -108,6 +108,8 @@ public class BossPhase : BossBaseState
     {
         // If swordPosition on right flip hurt animation
         if (boss.animator == null) return;
+        AudioManager.Instance.PlaySfx("boss_hurt", Vector3.zero);
+
         if (swordPosition.x > boss.transform.position.x)
         {
             boss.animator.Play("BossHurtLeft");

@@ -15,7 +15,7 @@ public class SnakeChaseAttack : BossCommand
         isCompleted = false;
 
         //Get player's position
-        var attackCount = Random.Range(30, 50);
+        var attackCount = Random.Range(30, 40);
         var playerObject = boss.playerObject;
         var originCell = BossController.originCell;
 

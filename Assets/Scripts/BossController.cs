@@ -57,6 +57,7 @@ public class BossController : MonoBehaviour
         List<BossCommand> phase1CombinedCommands = new List<BossCommand>
         {
             new ThreeByThreeWithPencilAttack(this),
+            new Phase1UltimateAttack(this),
         };
 
         List<BossCommand> phase2Commands = new List<BossCommand>
@@ -68,6 +69,7 @@ public class BossController : MonoBehaviour
         List<BossCommand> phase2CombinedCommands = new List<BossCommand>
         {
             new SnakeChaseAttackWithPencil(this),
+            new Phase2PencilHarderAttack(this),
         };
 
         List<BossCommand> phase3Commands = new List<BossCommand>
@@ -93,7 +95,6 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        InkEffectImage.gameObject.SetActive(false);
         spriteBlink = GetComponent<SpriteBlink>();
         AudioManager.Instance.PlayBGM("boss_bgm");
     }

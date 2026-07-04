@@ -13,7 +13,7 @@ public class SnakeChaseAttackWithPencil : BossCommand
         isCompleted = false;
 
         var snakeAttack = new SnakeChaseAttack(boss);
-        var pencilAttack = new RandomFourDirectionAttack(boss);
+        var pencilAttack = new RandomTwoDirectionAttack(boss);
 
         bool snakeDone = false;
         bool pencilDone = false;

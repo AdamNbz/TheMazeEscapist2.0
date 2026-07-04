@@ -24,7 +24,7 @@ public class ThreeByThreeAttack : BossCommand
         isCompleted = false;
 
         //Get player's position
-        var attackCount = Random.Range(4, 7);
+        var attackCount = Random.Range(2, 4);
         var playerObject = boss.playerObject;
         var originCell = BossController.originCell;
         // Spawn warning tiles around the player
@@ -47,7 +47,7 @@ public class ThreeByThreeAttack : BossCommand
                 }
             }
 
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
         }
         yield return new WaitForSeconds(1f);
 
