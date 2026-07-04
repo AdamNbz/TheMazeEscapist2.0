@@ -19,9 +19,9 @@ MonoBehaviour:
     limitTime: 30
   - levelId: 20
     position: {x: 200, y: 0}
-    limitMove: 0
-    limitTime: 0
+    limitMove: 10
+    limitTime: 15
   - levelId: 21
     position: {x: -100, y: 300}
-    limitMove: 0
-    limitTime: 0
+    limitMove: 15
+    limitTime: 20
