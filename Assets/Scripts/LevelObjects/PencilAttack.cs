@@ -80,7 +80,7 @@ class PencilAttack : MonoBehaviour
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         Color originalColor = sr.color;
         sr.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0);
-
+        AudioManager.Instance.PlaySfx("pencil_appear", transform.position);
 
         pencilTween = DOTween.Sequence()
             .Append(sr.DOColor(originalColor, aimingDuration))
