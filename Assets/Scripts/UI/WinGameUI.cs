@@ -1,10 +1,8 @@
 using DG.Tweening;
-using DG.Tweening.Core.Easing;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 public class WinGameUI : MonoBehaviour
 {

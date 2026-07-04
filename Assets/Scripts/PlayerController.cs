@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using KingCat.Base;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -268,6 +269,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Player took 1 damage. Current health: {currentHealth}");
 
         spriteBlink.Blink(blinkDuration);
+        ShakeAnimation();
 
 
         if (currentHealth <= 0)
@@ -287,20 +289,27 @@ public class PlayerController : MonoBehaviour
 
     private void HandleTouchStorm()
     {
-        moveSequence.Pause();
         AudioManager.Instance.PlaySfx("whoosh", transform.position);
-        VibrationController.Instance.PlayHeavy();
-        transform.DOShakeRotation(1f, new Vector3(0, 0, 30)).OnComplete(() =>
+        ShakeAnimation(() =>
         {
-            transform.rotation = Quaternion.identity;
             foreach (var item in collectedItems)
             {
                 item.Release(transform.position);
             }
             collectedItems.Clear();
+        });
+    }
+
+    private void ShakeAnimation(Action onComplete = null)
+    {
+        moveSequence.Pause();
+        VibrationController.Instance.PlayHeavy();
+        transform.DOShakeRotation(1f, new Vector3(0, 0, 30)).OnComplete(() =>
+        {
+            transform.rotation = Quaternion.identity;
+            onComplete?.Invoke();
             moveSequence.Play();
         });
-
     }
 
     private void HandleSpecialTileInteraction(SpecialTile tile)
