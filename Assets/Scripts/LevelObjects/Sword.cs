@@ -21,6 +21,10 @@ public class Sword : Item
         if (bossController != null)
         {
             bossPosition = bossController.transform.position + bossOffset;
+            if (transform.position.x < bossPosition.x)
+            {
+                transform.localScale = new Vector3(-1, 1, 1); // Flip the sword to face right
+            }
         }
         else
         {

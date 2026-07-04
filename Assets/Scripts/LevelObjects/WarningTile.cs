@@ -33,6 +33,8 @@ public class WarningTile : SpecialTile
 
     public async void Init(float warningDuration)
     {
+        if (animator == null)
+            return;
         this.warningDuration = warningDuration;
 
         // Stretch/compress the Warning animation to match the requested duration
@@ -43,12 +45,14 @@ public class WarningTile : SpecialTile
         await UniTask.Delay((int)(warningDuration * 1000));
 
         // Reset speed to normal for the fixed-length animations
+        if (animator == null) return;
         animator.speed = 1f;
 
         animator.Play(flashingStateName, 0, 0f);
         float flashingLength = GetStateLength(flashingStateName);
         await UniTask.Delay((int)(flashingLength * 1000));
 
+        if (damageCollider == null || animator == null) return;
         // Check collision with the player in short amount of time, if player inside then take damage
         damageCollider.enabled = true;
 
@@ -57,7 +61,7 @@ public class WarningTile : SpecialTile
         AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
 
         await UniTask.Delay((int)(explodingLength * 1000));
-
+        if (damageCollider == null) return;
         damageCollider.enabled = false;
         Destroy(this.gameObject);
     }
