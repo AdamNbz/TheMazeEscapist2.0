@@ -274,6 +274,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Player took 1 damage. Current health: {currentHealth}");
 
         spriteBlink.Blink(blinkDuration);
+        AudioManager.Instance.PlaySfx("player_hurt", transform.position);
 
 
         if (currentHealth <= 0)

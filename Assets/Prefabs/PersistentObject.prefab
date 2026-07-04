@@ -369,7 +369,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.size
-      value: 19
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.size
@@ -450,6 +450,14 @@ PrefabInstance:
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[18]._id
       value: pencil_appear
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._id
+      value: player_hurt
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._id
+      value: boss_hurt
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.data[0]._id
@@ -533,6 +541,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[18]._priority
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._priority
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._priority
       value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
@@ -628,6 +644,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -1201993092187521900, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._mixerGroup
+      value: 
+      objectReference: {fileID: -1201993092187521900, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[1]._maxDistance
       value: 500
       objectReference: {fileID: 0}
@@ -635,6 +655,10 @@ PrefabInstance:
       propertyPath: _sfxEventList.Array.data[1]._minDistance
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._mixerGroup
+      value: 
+      objectReference: {fileID: -1201993092187521900, guid: 36efd4fa579c33e4bb2b8290b675206c, type: 2}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[2]._maxDistance
       value: 500
@@ -780,6 +804,22 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._maxDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._minDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._maxDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._minDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.data[0]._maxDistance
       value: 500
       objectReference: {fileID: 0}
@@ -880,6 +920,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._variationList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._variationList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.data[0]._variationList.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -967,6 +1015,14 @@ PrefabInstance:
       propertyPath: _sfxEventList.Array.data[18]._variationList.Array.data[0]._clip
       value: 
       objectReference: {fileID: 8300000, guid: 624b7e7d2d66aa849a772f90f4857abb, type: 3}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._variationList.Array.data[0]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 3b0d40524c5bff94eb8ae089673879e6, type: 3}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._variationList.Array.data[0]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: d895d5f2700f30d4eb5aadf3d3053dad, type: 3}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _musicEventList.Array.data[0]._variationList.Array.data[0]._clip
       value: 
@@ -1144,12 +1200,28 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._variationList.Array.data[0]._pitchRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._variationList.Array.data[0]._pitchRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._volumeRange.x
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[1]._variationList.Array.data[0]._volumeRange.y
       value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._variationList.Array.data[0]._pitchRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._variationList.Array.data[0]._pitchRange.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[2]._variationList.Array.data[0]._volumeRange.x
@@ -1309,6 +1381,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
       propertyPath: _sfxEventList.Array.data[18]._variationList.Array.data[0]._volumeRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._variationList.Array.data[0]._volumeRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[19]._variationList.Array.data[0]._volumeRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._variationList.Array.data[0]._volumeRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
+      propertyPath: _sfxEventList.Array.data[20]._variationList.Array.data[0]._volumeRange.y
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836013387849663747, guid: d96e45261f9f51c4e937614810690c88, type: 3}
