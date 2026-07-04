@@ -15,11 +15,22 @@ public class SnakeChaseAttackWithPencil : BossCommand
         var snakeAttack = new SnakeChaseAttack(boss);
         var pencilAttack = new RandomFourDirectionAttack(boss);
 
-        pencilAttack.Execute();
-        yield return snakeAttack.Execute();
+        bool snakeDone = false;
+        bool pencilDone = false;
+
+        boss.StartCoroutine(RunAndFlag(snakeAttack.Execute(), () => snakeDone = true));
+        boss.StartCoroutine(RunAndFlag(pencilAttack.Execute(), () => pencilDone = true));
+
+        yield return new WaitUntil(() => snakeDone && pencilDone);
 
         isExecuting = false;
         isCompleted = true;
+    }
+
+    IEnumerator RunAndFlag(IEnumerator routine, System.Action onDone)
+    {
+        yield return routine;
+        onDone();
     }
 }
 

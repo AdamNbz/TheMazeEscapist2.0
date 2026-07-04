@@ -6,8 +6,9 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using KingCat.Base;
+//using KingCat.Base;
 using System;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -35,7 +36,9 @@ public class PlayerController : MonoBehaviour
     private bool IsMovementLocked => lockMoving || externalMovementLocks > 0;
     private SpriteBlink spriteBlink;
     [SerializeField] private float blinkDuration = 3f;
-
+    [SerializeField] private List<Sprite> starsSprites; // On and Off
+    [SerializeField] private List<Image> starImages;
+    int currentStarIndex = 2;
     void OnEnable()
     {
         WinPoint.OnLevelComplete += TouchGoal;
@@ -74,9 +77,14 @@ public class PlayerController : MonoBehaviour
         SceneController.Instance.TransitionToScene(SceneManager.GetActiveScene().name);
     }
 
-    private void UnlockMoving()
+    public void UnlockMoving()
     {
         lockMoving = false;
+    }
+
+    public void LockMoving()
+    {
+        lockMoving = true;
     }
 
     public void SetExternalMovementLock(bool isLocked)
@@ -188,6 +196,7 @@ public class PlayerController : MonoBehaviour
         lockMoving = true;
         moveSequence = DOTween.Sequence();
         var currentPos = transform.position;
+        bool firstTile = true;
         if (animator != null)
         {
             animator.Play("Walk");
@@ -221,11 +230,20 @@ public class PlayerController : MonoBehaviour
                 var currentCell = GridManager.Instance.WorldToCell(stepStartPos);
                 var nextCell = currentCell + new Vector3Int(dir.x, dir.y, 0);
 
-                if (GridManager.Instance.GetGrid()[currentCell].specialTile.Type == TileType.Slime)
+                if (!GridManager.Instance.GetGrid().TryGetValue(currentCell, out var cellData) || cellData.specialTile == null)
                 {
+                    firstTile = false;
+                    return;
+                }
+
+                if (cellData.specialTile.Type == TileType.Slime && !firstTile)
+                {
+                    Debug.Log("Player stepped on slime, stopping movement.");
                     moveSequence.Kill();
                     lockMoving = false;
+                    return;
                 }
+                firstTile = false;
             });
             moveSequence.Append(transform.DOMove(stepStartPos + new Vector3(dir.x, dir.y, 0) * path.stepLength, 0.1f)
                 .SetEase(Ease.Linear).OnComplete(() =>
@@ -264,16 +282,22 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage()
     {
         if (spriteBlink.IsBlinking) return; //Invincible 
-
+        LoseStar();
         currentHealth -= 1;
         Debug.Log($"Player took 1 damage. Current health: {currentHealth}");
 
         spriteBlink.Blink(blinkDuration);
         ShakeAnimation();
+        AudioManager.Instance.PlaySfx("player_hurt", transform.position);
 
 
         if (currentHealth <= 0)
         {
+            BossController bossController = FindFirstObjectByType<BossController>();
+            if (bossController != null)
+            {
+                bossController.animator.Play("BossWin");
+            }
             OnLoseGame?.Invoke();
         }
     }
@@ -303,7 +327,7 @@ public class PlayerController : MonoBehaviour
     private void ShakeAnimation(Action onComplete = null)
     {
         moveSequence.Pause();
-        VibrationController.Instance.PlayHeavy();
+        //VibrationController.Instance.PlayHeavy();
         transform.DOShakeRotation(1f, new Vector3(0, 0, 30)).OnComplete(() =>
         {
             transform.rotation = Quaternion.identity;
@@ -344,5 +368,17 @@ public class PlayerController : MonoBehaviour
 
             TakeDamage();
         }
+    }
+
+    public void LoseStar()
+    {
+        if (currentStarIndex < 0)
+            return;
+        starImages[currentStarIndex].rectTransform
+            .DOPunchScale(Vector3.one * 0.5f, 0.4f, 8, 0.8f)
+            .OnComplete(() =>
+            {
+                starImages[currentStarIndex--].sprite = starsSprites[1];
+            });
     }
 }
