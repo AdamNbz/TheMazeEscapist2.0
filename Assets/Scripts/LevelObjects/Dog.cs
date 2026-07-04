@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using KingCat.Base;
 using UnityEngine;
 
 public class Dog : MonoBehaviour
@@ -44,6 +45,7 @@ public class Dog : MonoBehaviour
                 UpdatePatrolState();
                 break;
         }
+        UpdateAnimation();
     }
 
     private void UpdateChaseState()
@@ -53,6 +55,7 @@ public class Dog : MonoBehaviour
         if (playerDirection.HasValue)
         {
             var path = GridManager.Instance.FindPathFromWorld(transform.position, playerDirection.Value);
+            playerDirection = null; // Reset player direction after using it
             MoveAlongPath(path);
         }
 
@@ -65,6 +68,13 @@ public class Dog : MonoBehaviour
 
     private void UpdatePatrolState()
     {
+        if (FindPlayer() != null)
+        {
+            Debug.Log("[Dog] Player detected, switching to chase state.");
+            SwitchState(DogState.Chase);
+            CancelMovement();
+            SnapToGrid();
+        }
         if (!isMoving)
         {
             if (patrolTimer > 0)
@@ -79,13 +89,6 @@ public class Dog : MonoBehaviour
                     patrolTimer = patrolInterval;
                 }
             }
-        }
-        if (FindPlayer() != null)
-        {
-            Debug.Log("[Dog] Player detected, switching to chase state.");
-            SwitchState(DogState.Chase);
-            CancelMovement();
-            SnapToGrid();
         }
     }
 
@@ -169,7 +172,6 @@ public class Dog : MonoBehaviour
         {
             Debug.Log($"[Dog] Switching state from {currentState} to {newState}");
             currentState = newState;
-            animator.Play(GetStateName(newState));
 
             if (newState == DogState.Patrol)
             {
@@ -184,23 +186,45 @@ public class Dog : MonoBehaviour
         {
             if (currentState == DogState.Chase)
             {
-                // Lose game
-                // Debug.Log("Player caught by dog! Game Over.");
-                PlayerController.OnLoseGame?.Invoke();
+                SwitchState(DogState.Win);
+                VibrationController.Instance.PlayHeavy();
+                transform.DOShakePosition(1f, new Vector3(0.5f, 0.5f, 0)).OnComplete(() =>
+                {
+                    transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), transform.position.z);
+                    PlayerController.OnLoseGame?.Invoke();
+                });
+                return;
             }
+            AudioManager.Instance.PlaySfx("dog", transform.position);
             SwitchState(DogState.Chase);
         }
     }
 
-    private string GetStateName(DogState state)
+    private string currentAnimState = "";
+
+    private void PlayAnimState(string stateName)
     {
-        return state switch
+        if (currentAnimState != stateName)
         {
-            DogState.Idle => "DogIdle",
-            DogState.Chase => "DogChasing",
-            DogState.Patrol => "DogPatrol",
-            _ => "Unknown"
-        };
+            animator.Play(stateName);
+            currentAnimState = stateName;
+        }
+    }
+
+    private void UpdateAnimation()
+    {
+        if (currentState == DogState.Chase)
+        {
+            PlayAnimState("DogChasing");
+        }
+        else if (currentState == DogState.Idle || !isMoving)
+        {
+            PlayAnimState("DogIdle");
+        }
+        else if (currentState == DogState.Patrol)
+        {
+            PlayAnimState("DogPatrol");
+        }
     }
 }
 
@@ -208,5 +232,6 @@ public enum DogState
 {
     Idle,
     Chase,
-    Patrol
+    Patrol,
+    Win
 }

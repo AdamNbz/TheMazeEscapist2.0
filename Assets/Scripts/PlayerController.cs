@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using KingCat.Base;
 
 public class PlayerController : MonoBehaviour
 {
@@ -193,14 +194,17 @@ public class PlayerController : MonoBehaviour
         OnStartMoving?.Invoke();
         foreach (var nodeData in path.directions)
         {
-            var localScale = transform.localScale;
-            var dir = nodeData.direction;
             var stepStartPos = currentPos; // snapshot so closures use the right position
-            if (dir.x != 0)
+            var dir = nodeData.direction;
+            moveSequence.AppendCallback(() =>
             {
-                localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
-                transform.localScale = localScale;
-            }
+                var localScale = transform.localScale;
+                if (dir.x != 0)
+                {
+                    localScale.x = dir.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                    transform.localScale = localScale;
+                }
+            });
 
             // Add stop time if required
             if (nodeData.stopTime > 0)
@@ -284,6 +288,8 @@ public class PlayerController : MonoBehaviour
     private void HandleTouchStorm()
     {
         moveSequence.Pause();
+        AudioManager.Instance.PlaySfx("whoosh", transform.position);
+        VibrationController.Instance.PlayHeavy();
         transform.DOShakeRotation(1f, new Vector3(0, 0, 30)).OnComplete(() =>
         {
             transform.rotation = Quaternion.identity;
