@@ -4304,6 +4304,8 @@ MonoBehaviour:
   - {fileID: 1776040780174048839}
   slideDuration: 0.35
   slideDistance: 1200
+  currentIndex: 0
+  haveToOpen: 0
 --- !u!225 &8646229648830611678
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5345,8 +5347,8 @@ RectTransform:
   - {fileID: 856270132447497749}
   - {fileID: 7950716112138746859}
   - {fileID: 7643119862856799293}
-  - {fileID: 1282241348236704316}
   - {fileID: 7796461342443962774}
+  - {fileID: 1282241348236704316}
   - {fileID: 5539997904615157788}
   - {fileID: 3772336777188860422}
   - {fileID: 517604523276600907}
