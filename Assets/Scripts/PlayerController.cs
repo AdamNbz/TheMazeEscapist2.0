@@ -77,9 +77,14 @@ public class PlayerController : MonoBehaviour
         SceneController.Instance.TransitionToScene(SceneManager.GetActiveScene().name);
     }
 
-    private void UnlockMoving()
+    public void UnlockMoving()
     {
         lockMoving = false;
+    }
+
+    public void LockMoving()
+    {
+        lockMoving = true;
     }
 
     public void SetExternalMovementLock(bool isLocked)

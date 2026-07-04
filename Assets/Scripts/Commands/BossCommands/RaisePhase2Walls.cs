@@ -16,6 +16,8 @@ public class RaisePhase2Walls : BossCommand
     {
         isExecuting = true;
         isCompleted = false;
+
+        boss.playerObject.GetComponent<PlayerController>().LockMoving();
         Debug.Log("Executing RaisePhase2Walls command");
         boss.TriggerCreateTile(BossController.originCell, boss.SlimePrefab);
         boss.TriggerCreateTile(BossController.originCell + new Vector3Int(BossController.size - 1, 0, 0), boss.SlimePrefab);
@@ -34,7 +36,7 @@ public class RaisePhase2Walls : BossCommand
             }
         }
         yield return new WaitForSeconds(2f);
-
+        boss.playerObject.GetComponent<PlayerController>().UnlockMoving();
         isExecuting = false;
         isCompleted = true;
     }
