@@ -37,11 +37,12 @@ public class FastDownPencilAttack : BossCommand
 
         for (int k = 0; k < attackCount; k++)
         {
-            var emptyCell = GetRandomUniqueNumbers(3, 0, size);
+            if (k != 0) boss.animator.Play("BossAttack");
+            var emptyCell = GetRandomUniqueNumbers(2, 0, size);
             for (int i = 0; i < size; i++)
                 if (!emptyCell.Contains(i))
-                    boss.TriggerPencilAttack(1f, 50f, Vector3Int.down, originCell + new Vector3Int(i, size / 2, 0));
-            yield return new WaitForSeconds(1.5f);
+                    boss.TriggerPencilAttack(0.8f, 50f, Vector3Int.down, originCell + new Vector3Int(i, size / 2, 0));
+            yield return new WaitForSeconds(1.3f);
         }
         yield return new WaitForSeconds(3f);
 
