@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -30,6 +31,14 @@ public class Sword : Item
         {
             Debug.LogWarning("BossController not found in the scene.");
         }
+
+        // Fade in the sword over 0.5 seconds
+        var spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = new Color(1, 1, 1, 0); // Start fully transparent
+            spriteRenderer.DOFade(1f, 0.5f); // Fade to fully opaque over 0.5 seconds
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -42,7 +51,8 @@ public class Sword : Item
             // rotate to face the boss
             var directionToBoss = bossPosition - transform.position;
             var rotation = Quaternion.LookRotation(Vector3.forward, directionToBoss);
-            Instantiate(swordAttackPrefab, transform.position, rotation);
+            var swordAttack = Instantiate(swordAttackPrefab, transform.position, rotation);
+            if (transform.localScale.x < 0) swordAttack.gameObject.transform.localScale = new Vector3(-swordAttack.gameObject.transform.localScale.x, swordAttack.gameObject.transform.localScale.y, swordAttack.gameObject.transform.localScale.z); // Flip the sword attack if the sword is facing left
             OnItemInteracted?.Invoke(this);
             AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
             Destroy(gameObject);
