@@ -1,30 +1,39 @@
 using System.Collections;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeChaseAttackWithPencil : BossCommand
+public class ThreeByThreeWithPencilAttack : BossCommand
 {
-    public SnakeChaseAttackWithPencil(BossController boss) : base(boss) { }
-    Vector3Int currentCell;
-    Vector3Int currentDirection = Vector3Int.zero;
+    public ThreeByThreeWithPencilAttack(BossController boss) : base(boss) { }
+    private List<Vector3Int> allDirections = new List<Vector3Int>() {
+        new Vector3Int(1, 0, 0),
+        new Vector3Int(0, -1, 0),
+        new Vector3Int(-1, 0, 0),
+        new Vector3Int(0, 1, 0),
+        new Vector3Int(1, 1, 0),
+        new Vector3Int(-1, -1, 0),
+        new Vector3Int(1, -1, 0),
+        new Vector3Int(-1, 1, 0),
+        new Vector3Int(0, 0, 0)
+    };
     public override IEnumerator Execute()
     {
         isExecuting = true;
         isCompleted = false;
 
-        var snakeAttack = new SnakeChaseAttack(boss);
+        var threeAttack = new ThreeByThreeAttack(boss);
         var pencilAttack = new RandomFourDirectionAttack(boss);
 
-        bool snakeDone = false;
+        bool threeDone = false;
         bool pencilDone = false;
 
-        var snakeCoroutine = boss.StartCoroutine(RunAndFlag(snakeAttack.Execute(), () => snakeDone = true));
+        var threeCoroutine = boss.StartCoroutine(RunAndFlag(threeAttack.Execute(), () => threeDone = true));
         var pencilCoroutine = boss.StartCoroutine(RunAndFlag(pencilAttack.Execute(), () => pencilDone = true));
 
-        activeCoroutines.Add(snakeCoroutine);
+        activeCoroutines.Add(threeCoroutine);
         activeCoroutines.Add(pencilCoroutine);
 
-        yield return new WaitUntil(() => snakeDone && pencilDone);
+        yield return new WaitUntil(() => threeDone && pencilDone);
 
         isExecuting = false;
         isCompleted = true;
@@ -50,4 +59,3 @@ public class SnakeChaseAttackWithPencil : BossCommand
         isCompleted = true;
     }
 }
-

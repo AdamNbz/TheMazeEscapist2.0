@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BossCommand
 {
+    protected List<Coroutine> activeCoroutines = new List<Coroutine>();
+
     protected List<Vector3Int> directions = new List<Vector3Int>() {
         new Vector3Int(1, 0, 0),
         new Vector3Int(0, -1, 0),
@@ -38,5 +40,11 @@ public class BossCommand
     public virtual bool IsExecuting()
     {
         return isExecuting;
+    }
+
+    public virtual void StopExecution()
+    {
+        isExecuting = false;
+        isCompleted = true;
     }
 }

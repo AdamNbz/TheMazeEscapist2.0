@@ -41,7 +41,7 @@ public class BossPhase : BossBaseState
         SwordAttack.OnSwordAttacked += HurtAnim;
         if (currentCommand != null)
             boss.StartCoroutine(currentCommand.Execute());
-        boss.StartCoroutine(SpawnSword(5f));
+        boss.StartCoroutine(SpawnSword(10f));
     }
 
     public override void Update()
@@ -66,10 +66,15 @@ public class BossPhase : BossBaseState
         Sword.OnSwordEffectTriggered -= Hurt;
         SwordAttack.OnSwordAttacked -= HurtAnim;
         boss.StopCoroutine(currentCommandCoroutine);
+        currentCommand.StopExecution();
         if (exitCommand != null)
+        {
             boss.StartCoroutine(exitCommand.Execute());
+        }
         if (spawnSwordCoroutine != null)
+        {
             boss.StopCoroutine(spawnSwordCoroutine);
+        }
     }
 
     private IEnumerator SpawnSword(float delay = 5f)
