@@ -52,6 +52,7 @@ public class BossController : MonoBehaviour
         {
             new RandomFourDirectionAttack(this),
             new ThreeByThreeAttack(this),
+            new LongPlusAttack(this),
         };
         List<BossCommand> phase2Commands = new List<BossCommand>
         {
@@ -70,7 +71,7 @@ public class BossController : MonoBehaviour
         };
 
         var phase1 = new BossPhase(this, animator, phase1Commands, 5, new DoNothing(this), null, new Vector3Int(-1, -10, 0));
-        var phase2 = new BossPhase(this, animator, phase2Commands, 5, new RaisePhase2Walls(this), null, new Vector3Int(-2, -7, 0), phase2CombinedCommands);
+        var phase2 = new BossPhase(this, animator, phase2Commands, 6, new RaisePhase2Walls(this), null, new Vector3Int(-2, -7, 0), phase2CombinedCommands);
         var phase3 = new BossPhase(this, animator, phase3Commands, 5, new RaisePhase3Walls(this));
         var hurtState = new BossHurtState(this, animator);
         var winState = new BossWinState(this, animator);

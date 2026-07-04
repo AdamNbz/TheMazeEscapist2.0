@@ -63,7 +63,7 @@ class PencilAttack : MonoBehaviour
         else if (!isHorizontal && direction.y < 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, -90);
-            targetJuicePos += Vector3.up * juiceDistance;
+            targetJuicePos += Vector3.up * juiceDistance * 2;
         }
         else if (!isHorizontal && direction.y > 0)
         {
