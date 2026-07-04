@@ -133,12 +133,12 @@ public class WinGameUI : MonoBehaviour
 
         int currentLevel = int.Parse(currentScene.Replace("Level ", ""));
 
-        if (currentLevel == 15) BackToSelectLevel();
+        if (currentLevel == 29) BackToSelectLevel();
 
-        //if (currentLevel == PlayerProgress.CurrentLevel)
-        //{
-        //    PlayerProgress.UnlockNextLevel();
-        //}
+        if (currentLevel == PlayerProgress.CurrentLevel)
+        {
+            PlayerProgress.UnlockNextLevel();
+        }
 
         SceneController.Instance.TransitionToScene($"Level {currentLevel + 1}");
     }
