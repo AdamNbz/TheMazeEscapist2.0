@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class WarningTile : SpecialTile
 {
     [SerializeField] private string soundEffectName = "trash_can_collected";
+    [SerializeField] private string soundExplodeEffectName = "explosion";
     public override TileType Type => TileType.Walkable;
     [SerializeField] private Collider2D damageCollider;
 
@@ -54,7 +55,7 @@ public class WarningTile : SpecialTile
 
         animator.Play(explodingStateName, 0, 0f);
         float explodingLength = GetStateLength(explodingStateName);
-        AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
+        AudioManager.Instance.PlaySfx(soundExplodeEffectName, transform.position);
 
         await UniTask.Delay((int)(explodingLength * 1000));
 
