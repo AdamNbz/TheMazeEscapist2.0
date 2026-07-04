@@ -28,6 +28,12 @@ public class StateMachine
         current.State?.OnEnter();
     }
 
+    public void Reset()
+    {
+        current.State?.OnExit();
+        current = null;
+    }
+
     void ChangeState(IState state)
     {
         Debug.Log($"Transitioning to state: {state.GetType().Name}");

@@ -63,7 +63,7 @@ class PencilAttack : MonoBehaviour
         else if (!isHorizontal && direction.y < 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, -90);
-            targetJuicePos += Vector3.up * juiceDistance;
+            targetJuicePos += Vector3.up * juiceDistance * 2;
         }
         else if (!isHorizontal && direction.y > 0)
         {
@@ -80,13 +80,17 @@ class PencilAttack : MonoBehaviour
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         Color originalColor = sr.color;
         sr.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0);
-
+        AudioManager.Instance.PlaySfx("pencil_appear", transform.position);
 
         pencilTween = DOTween.Sequence()
             .Append(sr.DOColor(originalColor, aimingDuration))
             .AppendInterval(lockDuration)
             .Append(transform.DOMove(targetJuicePos, 0.25f).SetEase(Ease.OutQuad))
-            .OnComplete(() => isMove = true)
+            .OnComplete(() =>
+            {
+                isMove = true;
+                AudioManager.Instance.PlaySfx("pencil_attack", transform.position);
+            })
             .SetLink(gameObject);
     }
 

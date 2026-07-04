@@ -37,6 +37,7 @@ public class BossController : MonoBehaviour
     void OnDisable()
     {
         Ink.OnInkEffectTriggered -= TriggerInkEffect;
+        stateMachine.Reset();
     }
 
     void Awake()
@@ -51,6 +52,7 @@ public class BossController : MonoBehaviour
         {
             new RandomFourDirectionAttack(this),
             new ThreeByThreeAttack(this),
+            new LongPlusAttack(this),
         };
         List<BossCommand> phase2Commands = new List<BossCommand>
         {
@@ -68,16 +70,16 @@ public class BossController : MonoBehaviour
             new FastDownPencilAttack(this),
         };
 
-        var phase1 = new BossPhase(this, animator, phase1Commands, 8, null, null, new Vector3Int(-1, -10, 0));
-        var phase2 = new BossPhase(this, animator, phase2Commands, 8, new RaisePhase2Walls(this), null, new Vector3Int(-2, -7, 0), phase2CombinedCommands);
-        var phase3 = new BossPhase(this, animator, phase3Commands, 8, new RaisePhase3Walls(this));
+        var phase1 = new BossPhase(this, animator, phase1Commands, 5, new DoNothing(this), null, new Vector3Int(-1, -10, 0));
+        var phase2 = new BossPhase(this, animator, phase2Commands, 6, new RaisePhase2Walls(this), null, new Vector3Int(-2, -7, 0), phase2CombinedCommands);
+        var phase3 = new BossPhase(this, animator, phase3Commands, 5, new RaisePhase3Walls(this));
         var hurtState = new BossHurtState(this, animator);
         var winState = new BossWinState(this, animator);
         var loseState = new BossLoseState(this, animator);
 
         At(phase1, phase2, new FuncPredicate(() => phase1.IsPhaseEnded()));
         At(phase2, phase3, new FuncPredicate(() => phase2.IsPhaseEnded()));
-        At(phase3, winState, new FuncPredicate(() => phase3.IsPhaseEnded()));
+        At(phase3, winState, new FuncPredicate(() => phase3.IsTheEnd()));
         playerObject = GameObject.Find("Player");
         grid = GameObject.Find("Grid");
 
@@ -88,6 +90,7 @@ public class BossController : MonoBehaviour
     {
         InkEffectImage.gameObject.SetActive(false);
         spriteBlink = GetComponent<SpriteBlink>();
+        AudioManager.Instance.PlayBGM("boss_bgm");
     }
 
     void Update()
@@ -188,4 +191,5 @@ public class BossController : MonoBehaviour
 
     void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
     void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
+
 }

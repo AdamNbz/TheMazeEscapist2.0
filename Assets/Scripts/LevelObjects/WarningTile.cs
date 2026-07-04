@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class WarningTile : SpecialTile
 {
     [SerializeField] private string soundEffectName = "trash_can_collected";
+    [SerializeField] private string soundExplodeEffectName = "explosion";
     public override TileType Type => TileType.Walkable;
     [SerializeField] private Collider2D damageCollider;
 
@@ -33,28 +34,35 @@ public class WarningTile : SpecialTile
 
     public async void Init(float warningDuration)
     {
+        if (animator == null)
+            return;
         this.warningDuration = warningDuration;
 
         // Stretch/compress the Warning animation to match the requested duration
         float warningSpeed = baseWarningClipLength / Mathf.Max(warningDuration, 0.0001f);
         animator.speed = warningSpeed;
         animator.Play(warningStateName, 0, 0f);
+        AudioManager.Instance.PlaySfx(soundEffectName, transform.position);
         await UniTask.Delay((int)(warningDuration * 1000));
 
         // Reset speed to normal for the fixed-length animations
+        if (animator == null) return;
         animator.speed = 1f;
 
         animator.Play(flashingStateName, 0, 0f);
         float flashingLength = GetStateLength(flashingStateName);
         await UniTask.Delay((int)(flashingLength * 1000));
 
+        if (damageCollider == null || animator == null) return;
         // Check collision with the player in short amount of time, if player inside then take damage
         damageCollider.enabled = true;
 
         animator.Play(explodingStateName, 0, 0f);
         float explodingLength = GetStateLength(explodingStateName);
-        await UniTask.Delay((int)(explodingLength * 1000));
+        AudioManager.Instance.PlaySfx(soundExplodeEffectName, transform.position);
 
+        await UniTask.Delay((int)(explodingLength * 1000));
+        if (damageCollider == null) return;
         damageCollider.enabled = false;
         Destroy(this.gameObject);
     }
