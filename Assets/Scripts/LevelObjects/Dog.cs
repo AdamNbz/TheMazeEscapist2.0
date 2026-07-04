@@ -177,6 +177,16 @@ public class Dog : MonoBehaviour
             {
                 patrolTimer = patrolInterval;
             }
+
+            if (newState == DogState.Win)
+            {
+                VibrationController.Instance.PlayHeavy();
+                transform.DOShakePosition(1f, new Vector3(0.5f, 0.5f, 0)).OnComplete(() =>
+                {
+                    transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), transform.position.z);
+                    PlayerController.OnLoseGame?.Invoke();
+                });
+            }
         }
     }
 
@@ -187,12 +197,7 @@ public class Dog : MonoBehaviour
             if (currentState == DogState.Chase)
             {
                 SwitchState(DogState.Win);
-                VibrationController.Instance.PlayHeavy();
-                transform.DOShakePosition(1f, new Vector3(0.5f, 0.5f, 0)).OnComplete(() =>
-                {
-                    transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), transform.position.z);
-                    PlayerController.OnLoseGame?.Invoke();
-                });
+                
                 return;
             }
             AudioManager.Instance.PlaySfx("dog", transform.position);

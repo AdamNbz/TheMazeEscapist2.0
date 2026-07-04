@@ -386,11 +386,25 @@ public class WorldMapRecycler : MonoBehaviour
         SceneController.Instance.TransitionToScene("LevelSelection");
     }
 
+    //public LevelNodeData GetRefById(int levelId)
+    //{
+    //    int index = levelId - 1;
+    //    var data = WorldMapRecycler.Instance.AllData;
+    //    LevelNodeData levelNodeData = data[index / 3].levels[index % 3];
+    //    return levelNodeData;
+    //}
     public LevelNodeData GetRefById(int levelId)
     {
         int index = levelId - 1;
+
         var data = WorldMapRecycler.Instance.AllData;
-        LevelNodeData levelNodeData = data[index / 3].levels[index % 3];
-        return levelNodeData;
+
+        int sectionIndex = index / 3;
+        int levelIndex = index % 3;
+
+        // Đảo lại vì AllData đang bị ngược
+        sectionIndex = data.Count - 1 - sectionIndex;
+
+        return data[sectionIndex].levels[levelIndex];
     }
 }

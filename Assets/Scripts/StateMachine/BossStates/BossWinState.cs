@@ -8,6 +8,7 @@ public class BossWinState : BossBaseState
     public override void OnEnter()
     {
         boss.animator.Play("BossDead");
+        boss.spriteBlink.Blink();
         boss.StartCoroutine(WaitForBossAnimation(() =>
         {
             WinPoint.OnLevelComplete?.Invoke();

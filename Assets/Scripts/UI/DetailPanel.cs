@@ -65,6 +65,7 @@ public class DetailPanel : MonoBehaviour
         required_two.text = $"Hoàn thành với {levelDetail.limitMove} lượt";
         required_three.text = $"Hoàn thành trong {levelDetail.limitTime} giây";
 
+        Debug.Log("LIMITS:  " + levelDetail.limitTime + "  " + levelDetail.limitMove);
 
         List<bool> starData =
             PlayerProgress.GetStarAtLevel(levelId);

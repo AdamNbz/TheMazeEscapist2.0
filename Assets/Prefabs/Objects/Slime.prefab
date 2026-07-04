@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slime
   isEffect: 0
-  soundEffectName: trash_can_collected
+  soundEffectName: slime
 --- !u!212 &1069502133948041758
 SpriteRenderer:
   m_ObjectHideFlags: 0
