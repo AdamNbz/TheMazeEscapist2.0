@@ -6,6 +6,7 @@ public class BossPhase : BossBaseState
 {
     int health = 3;
     int maxHealth = 3;
+    int hitCount = 0;
     List<BossCommand> attackCommands = new List<BossCommand>();
     List<BossCommand> combinedCommands = new List<BossCommand>();
     Vector3Int? endAttackPosition = null;
@@ -37,9 +38,10 @@ public class BossPhase : BossBaseState
         Debug.Log("Entering Boss Phase");
         currentCommand = enterCommand;
         Sword.OnSwordEffectTriggered += Hurt;
+        SwordAttack.OnSwordAttacked += HurtAnim;
         if (currentCommand != null)
             boss.StartCoroutine(currentCommand.Execute());
-        boss.StartCoroutine(SpawnSword(10f));
+        boss.StartCoroutine(SpawnSword(5f));
     }
 
     public override void Update()
@@ -62,6 +64,7 @@ public class BossPhase : BossBaseState
     public override void OnExit()
     {
         Sword.OnSwordEffectTriggered -= Hurt;
+        SwordAttack.OnSwordAttacked -= HurtAnim;
         boss.StopCoroutine(currentCommandCoroutine);
         if (exitCommand != null)
             boss.StartCoroutine(exitCommand.Execute());
@@ -92,13 +95,35 @@ public class BossPhase : BossBaseState
     {
         health = Mathf.Max(0, health - 1);
         Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}");
-        boss.animator.Play("BossHurt");
-        boss.spriteBlink.Blink();
+        AudioManager.Instance.PlaySfx("boss_hurt", Vector3.zero);
         spawnSwordCoroutine = boss.StartCoroutine(SpawnSword()); // 5 sec for test
+    }
+
+    public void HurtAnim(Vector3 swordPosition)
+    {
+        // If swordPosition on right flip hurt animation
+        if (boss.animator == null) return;
+        if (swordPosition.x > boss.transform.position.x)
+        {
+            boss.animator.Play("BossHurtLeft");
+        }
+        else
+        {
+            boss.animator.Play("BossHurtRight");
+        }
+
+        boss.spriteBlink.Blink();
+        hitCount++;
     }
 
     public bool IsPhaseEnded()
     {
         return health <= 0;
+    }
+
+    // For final phase
+    public bool IsTheEnd()
+    {
+        return health <= 0 && hitCount == maxHealth;
     }
 }
