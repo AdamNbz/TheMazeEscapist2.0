@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using KingCat.Base;
+//using KingCat.Base;
 using System;
 using UnityEngine.UI;
 
@@ -288,6 +288,7 @@ public class PlayerController : MonoBehaviour
 
         spriteBlink.Blink(blinkDuration);
         ShakeAnimation();
+        AudioManager.Instance.PlaySfx("player_hurt", transform.position);
 
 
         if (currentHealth <= 0)
@@ -326,7 +327,7 @@ public class PlayerController : MonoBehaviour
     private void ShakeAnimation(Action onComplete = null)
     {
         moveSequence.Pause();
-        VibrationController.Instance.PlayHeavy();
+        //VibrationController.Instance.PlayHeavy();
         transform.DOShakeRotation(1f, new Vector3(0, 0, 30)).OnComplete(() =>
         {
             transform.rotation = Quaternion.identity;

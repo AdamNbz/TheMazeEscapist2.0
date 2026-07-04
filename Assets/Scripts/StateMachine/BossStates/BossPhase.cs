@@ -95,6 +95,7 @@ public class BossPhase : BossBaseState
     {
         health = Mathf.Max(0, health - 1);
         Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}");
+        AudioManager.Instance.PlaySfx("boss_hurt", Vector3.zero);
         spawnSwordCoroutine = boss.StartCoroutine(SpawnSword()); // 5 sec for test
     }
 
