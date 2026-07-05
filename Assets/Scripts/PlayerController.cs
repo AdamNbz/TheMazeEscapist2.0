@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
         if (IsMovementLocked) return;
 
         var input = value.Get<Vector2>();
-        Debug.Log($"Move: {input}");
+        //Debug.Log($"Move: {input}");
 
         var direction = Vector2Int.RoundToInt(input);
         if (direction == Vector2Int.zero)

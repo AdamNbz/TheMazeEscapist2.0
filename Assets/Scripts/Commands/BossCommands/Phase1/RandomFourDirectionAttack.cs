@@ -12,7 +12,7 @@ public class RandomFourDirectionAttack : BossCommand
         isCompleted = false;
 
         //Get player's position
-        var attackCount = Random.Range(2, 4);
+        var attackCount = Random.Range(4, 7);
         var playerObject = boss.playerObject;
         var originCell = BossController.originCell;
         // Spawn warning tiles around the player

@@ -18,6 +18,25 @@ public class ThreeByThreeAttack : BossCommand
         new Vector3Int(-1, 1, 0),
         new Vector3Int(0, 0, 0)
     };
+
+    private void Attack()
+    {
+        boss.animator.Play("BossAttack");
+        var playerCell = GridManager.Instance.WorldToCell(boss.playerObject.transform.position);
+
+        for (int i = 0; i < allDirections.Count; i++)
+        {
+            var direction = allDirections[i];
+            var targetCell = playerCell + direction;
+
+            if (GridManager.Instance.IsWalkable(targetCell))
+            {
+                var warningTile = boss.TriggerCreateTile(targetCell, boss.WarningTilePrefab);
+                var warningTileComponent = warningTile.GetComponent<WarningTile>();
+                warningTileComponent.Init(1.5f);
+            }
+        }
+    }
     public override IEnumerator Execute()
     {
         isExecuting = true;
@@ -31,25 +50,12 @@ public class ThreeByThreeAttack : BossCommand
 
         for (int k = 0; k < attackCount; k++)
         {
-            boss.animator.Play("BossAttack");
-            var playerCell = GridManager.Instance.WorldToCell(playerObject.transform.position);
-
-            for (int i = 0; i < allDirections.Count; i++)
-            {
-                var direction = allDirections[i];
-                var targetCell = playerCell + direction;
-
-                if (GridManager.Instance.IsWalkable(targetCell))
-                {
-                    var warningTile = boss.TriggerCreateTile(targetCell, boss.WarningTilePrefab);
-                    var warningTileComponent = warningTile.GetComponent<WarningTile>();
-                    warningTileComponent.Init(1.5f);
-                }
-            }
-
+            Attack();
+            yield return new WaitForSeconds(0.75f);
+            Attack();
             yield return new WaitForSeconds(2f);
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.25f);
 
         isExecuting = false;
         isCompleted = true;
