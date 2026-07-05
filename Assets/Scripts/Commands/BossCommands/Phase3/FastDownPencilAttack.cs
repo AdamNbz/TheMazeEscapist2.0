@@ -44,7 +44,7 @@ public class FastDownPencilAttack : BossCommand
                     boss.TriggerPencilAttack(0.8f, 50f, Vector3Int.down, originCell + new Vector3Int(i, size / 2, 0));
             yield return new WaitForSeconds(1.3f);
         }
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2.8f);
 
         isExecuting = false;
         isCompleted = true;

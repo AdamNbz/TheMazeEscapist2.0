@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WarningTile
   isEffect: 0
   soundEffectName: warning
+  soundExplodeEffectName: explosion
   damageCollider: {fileID: 8947528353321134636}
   animator: {fileID: 206006318136411673}
   warningStateName: Warning

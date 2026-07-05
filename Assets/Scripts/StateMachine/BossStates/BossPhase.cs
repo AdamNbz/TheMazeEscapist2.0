@@ -42,6 +42,7 @@ public class BossPhase : BossBaseState
         if (currentCommand != null)
             boss.StartCoroutine(currentCommand.Execute());
         boss.StartCoroutine(SpawnSword(10f));
+        hitCount = 0;
     }
 
     public override void Update()
@@ -54,7 +55,7 @@ public class BossPhase : BossBaseState
             boss.StartCoroutine(WaitForBossAnimation(() =>
             {
                 // After animation completes, execute the next command
-                currentCommand = (health >= (maxHealth / 2) || combinedCommands.Count == 0) ? attackCommands[Random.Range(0, attackCommands.Count)] : combinedCommands[Random.Range(0, combinedCommands.Count)];
+                currentCommand = (health > (maxHealth / 2) || combinedCommands.Count == 0) ? attackCommands[Random.Range(0, attackCommands.Count)] : combinedCommands[Random.Range(0, combinedCommands.Count)];
                 currentCommandCoroutine = boss.StartCoroutine(currentCommand?.Execute());
                 isBossAttacking = false;
             }));
@@ -99,8 +100,7 @@ public class BossPhase : BossBaseState
     public void Hurt()
     {
         health = Mathf.Max(0, health - 1);
-        Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}");
-        AudioManager.Instance.PlaySfx("boss_hurt", Vector3.zero);
+        Debug.Log($"Boss Phase hurt! Health: {health}/{maxHealth}, Hit Count: {hitCount}");
         spawnSwordCoroutine = boss.StartCoroutine(SpawnSword()); // 5 sec for test
     }
 
@@ -108,6 +108,8 @@ public class BossPhase : BossBaseState
     {
         // If swordPosition on right flip hurt animation
         if (boss.animator == null) return;
+        AudioManager.Instance.PlaySfx("boss_hurt", Vector3.zero);
+
         if (swordPosition.x > boss.transform.position.x)
         {
             boss.animator.Play("BossHurtLeft");
@@ -119,6 +121,7 @@ public class BossPhase : BossBaseState
 
         boss.spriteBlink.Blink();
         hitCount++;
+        Debug.Log($"Boss Phase hurt anim! Health: {health}/{maxHealth}, Hit Count: {hitCount}");
     }
 
     public bool IsPhaseEnded()
@@ -129,6 +132,10 @@ public class BossPhase : BossBaseState
     // For final phase
     public bool IsTheEnd()
     {
-        return health <= 0 && hitCount == maxHealth;
+        if (health <= 0 && hitCount == maxHealth)
+        {
+            Debug.Log("Final Phase ended!");
+        }
+        return health <= 0 && hitCount == maxHealth + 1; //Dirty fix for dead anim
     }
 }
