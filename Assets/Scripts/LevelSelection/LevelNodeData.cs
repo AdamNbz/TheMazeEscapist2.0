@@ -68,12 +68,16 @@ public static class PlayerProgress
             .GetString($"Level{level}", "false|false|false")
             .Split('|');
 
+        Debug.Log($"[DataLoaded] Level {level} Stars: {string.Join(", ", data)}");
+
         List<bool> result = new List<bool>();
 
         foreach (string item in data)
         {
             result.Add(bool.Parse(item));
         }
+
+        Debug.Log($"[DataParsed] Level {level} Stars: {string.Join(", ", result)}");
 
         return result;
     }

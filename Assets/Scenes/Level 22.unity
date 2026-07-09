@@ -1175,63 +1175,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a97e85a9f64bf85dbff382b91a7d424, type: 3}
---- !u!1001 &1055698610
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1678900682}
-    m_Modifications:
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -2.52
-      objectReference: {fileID: 0}
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 10.47
-      objectReference: {fileID: 0}
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1851869025085367263, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-      propertyPath: m_Name
-      value: Rock
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
 --- !u!1001 &1457410334
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1289,11 +1232,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3502f8b29695389a58e30791eb299d4d, type: 3}
---- !u!4 &1471109722 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 492424249141658865, guid: a93cba6983a824724ab44c46c99707b8, type: 3}
-  m_PrefabInstance: {fileID: 1055698610}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1505354937
 GameObject:
   m_ObjectHideFlags: 0
@@ -1753,11 +1691,6 @@ MonoBehaviour:
   pulseSpeed: 0.8
   pulseTargetColor: {r: 1, g: 1, b: 1, a: 1}
   restoreOriginalColorsOnDisable: 1
---- !u!4 &1678900682 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3752442272104891909, guid: 994d421013effea24b9479f10c757ceb, type: 3}
-  m_PrefabInstance: {fileID: 6102986581605240652}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1719159653
 GameObject:
   m_ObjectHideFlags: 0
@@ -13654,9 +13587,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9080038777866752906, guid: 994d421013effea24b9479f10c757ceb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 302644253}
-    - targetCorrespondingSourceObject: {fileID: 3752442272104891909, guid: 994d421013effea24b9479f10c757ceb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1471109722}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 994d421013effea24b9479f10c757ceb, type: 3}
 --- !u!4 &6102986581605240653 stripped

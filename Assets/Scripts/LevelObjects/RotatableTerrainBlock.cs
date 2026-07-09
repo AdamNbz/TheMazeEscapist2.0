@@ -68,8 +68,10 @@ public class RotatableTerrainBlock : MonoBehaviour
         return TryRotateClockwiseTurns(-1);
     }
 
+    public static event UnityAction RotationStartedGlobal;
     public bool TryRotateClockwiseTurns(int quarterTurns)
     {
+        RotationStartedGlobal?.Invoke();
         var normalizedTurns = NormalizeQuarterTurns(quarterTurns);
         if (IsRotating || normalizedTurns == 0)
             return false;
